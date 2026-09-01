@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Trademark Similarity Search — check your name against recent USPTO filings | TM Watch</title>
+<meta name="description" content="Type a brand name, instantly see confusingly-similar recent US trademark applications. Free, no login, runs in your browser. Edit-distance + phonetic matching benchmarked on real §2(d) cases.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"TM Watch — free trademark similarity search","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Instant similarity report of a brand name against recent USPTO trademark applications."}
+</script>
+<style>
+:root{--ink:#1a1a24;--mut:#666;--acc:#0b5fff;--bg:#fff;--soft:#f4f6fa;--warn:#b00020}
+*{box-sizing:border-box}body{margin:0;font:16px/1.55 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+main{max-width:760px;margin:0 auto;padding:28px 20px 60px}
+h1{font-size:1.7rem;line-height:1.25;margin:.4em 0}
+.sub{color:var(--mut)}
+form{display:flex;gap:10px;margin:22px 0 6px}
+input[type=text]{flex:1;font-size:1.05rem;padding:12px 14px;border:2px solid #ccd3e0;border-radius:8px}
+input[type=text]:focus{outline:none;border-color:var(--acc)}
+button{font-size:1.05rem;padding:12px 22px;border:0;border-radius:8px;background:var(--acc);color:#fff;cursor:pointer}
+button:disabled{opacity:.5}
+.note{font-size:.85rem;color:var(--mut)}
+#status{margin:14px 0;color:var(--mut)}
+.hit{border:1px solid #e2e6ef;border-left:4px solid var(--warn);border-radius:8px;padding:12px 14px;margin:10px 0;background:var(--soft)}
+.hit b{font-size:1.05rem}
+.hit .why{font-size:.85rem;color:var(--mut)}
+.clear{border-left-color:#1a9c4b}
+.cta{margin:34px 0;padding:18px;border:1px solid #dfe5f0;border-radius:10px;background:var(--soft)}
+.cta a{display:inline-block;margin-top:8px;background:var(--acc);color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none}
+footer{margin-top:44px;font-size:.85rem;color:var(--mut);border-top:1px solid #eee;padding-top:16px}
+code{background:var(--soft);padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<main>
+<h1>Is a confusingly-similar trademark already being filed?</h1>
+<p class="sub">Type your brand name. This page checks it against <span id="corpus">recent US trademark applications</span> using edit-distance + phonetic matching — the same open-source matcher we <a href="https://github.com/APProj/trademark-watch">benchmark publicly</a> on real USPTO §2(d) conflict pairs (20/20 recall, 0 false positives). Free, no login, runs entirely in your browser.</p>
+
+<form id="f">
+<input type="text" id="q" placeholder="e.g. Northstar Coffee" autocomplete="off" maxlength="120" required>
+<button id="go" type="submit">Check name</button>
+</form>
+<p class="note">Nothing you type leaves your browser — the filing index is downloaded to you.</p>
+<div id="status"></div>
+<div id="results"></div>
+
+<div class="cta" id="cta" hidden>
+<b>Someone can file tomorrow, too.</b>
+<p style="margin:.4em 0">This page only sees filings up to <span id="fresh">today</span>. TM Watch runs this exact check for your mark against <i>every new application, every day, for a year</i> and alerts you the moment a similar one is filed — $49/yr per mark (attorney watch services start ~$200/yr).</p>
+<a href="https://approj.gumroad.com/l/pwvfma">Get daily watch — $49/yr</a>
+</div>
+
+<footer>
+<p><b>Not legal advice.</b> A flag means "a human should look", not "this is infringement"; no flag does not mean your name is clear (design marks, common-law rights and older registrations are out of scope of this index). Data: USPTO Trademark Daily XML (applications). Matcher source, benchmark and methodology: <a href="https://github.com/APProj/trademark-watch">github.com/APProj/trademark-watch</a>.</p>
+</footer>
+</main>
+
+<script src="matcher.js"></script>
+<script src="report.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var manifest = null, shardCache = {};
+  fetch("index/manifest.json").then(function (r) { return r.json(); }).then(function (m) {
+    manifest = m;
+    $("corpus").textContent = m.total.toLocaleString() + " US trademark applications (filed " + m.base + " to " + m.generated + ")";
+    $("fresh").textContent = m.generated;
+  }).catch(function () { $("status").textContent = "Index failed to load — refresh, or check back shortly."; });
+
+  function fetchShard(ch) {
+    if (shardCache[ch]) return shardCache[ch];
+    shardCache[ch] = (manifest && manifest.shards && manifest.shards[ch] == null)
+      ? Promise.resolve([])
+      : fetch("index/shard-" + ch + ".json")
+          .then(function (r) { return r.ok ? r.json() : { marks: [] }; })
+          .then(function (d) { return d.marks || []; })
+          .catch(function () { return []; });
+    return shardCache[ch];
+  }
+
+  $("f").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var q = $("q").value.trim();
+    if (!q) return;
+    $("go").disabled = true;
+    $("status").textContent = "Checking…";
+    $("results").innerHTML = "";
+    tmReport.report(q, fetchShard).then(function (rep) {
+      $("go").disabled = false;
+      var res = $("results");
+      if (!rep.matches.length) {
+        $("status").textContent = "";
+        res.innerHTML = '<div class="hit clear"><b>No similar recent applications found</b><div class="why">Scanned ' + rep.scanned.toLocaleString() + ' candidate filings. Remember: this covers recent applications only — not existing registrations.</div></div>';
+      } else {
+        $("status").textContent = rep.matches.length + " similar application" + (rep.matches.length > 1 ? "s" : "") + " found (scanned " + rep.scanned.toLocaleString() + " candidates):";
+        var top = rep.matches.slice(0, 50);
+        for (var i = 0; i < top.length; i++) {
+          var m = top[i], d = document.createElement("div");
+          d.className = "hit";
+          d.innerHTML = "<b></b><div class='why'></div>";
+          d.querySelector("b").textContent = m.mark;
+          d.querySelector(".why").textContent = "Serial " + m.serial + " · filed " + m.filed +
+            (m.classes && m.classes.length ? " · class " + m.classes.join(", ") : "") +
+            " · why: " + m.reasons.join(", ");
+          res.appendChild(d);
+        }
+      }
+      $("cta").hidden = false;
+    }).catch(function (e) {
+      $("go").disabled = false;
+      $("status").textContent = "Something broke: " + e;
+    });
+  });
+})();
+</script>
+</body>
+</html>
