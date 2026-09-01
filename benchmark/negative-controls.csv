@@ -1,0 +1,21 @@
+mark1,mark2,note
+BLUEFIN ANALYTICS,CARTWHEEL MEDIA,plain distinct
+SOLSTICE COFFEE,MERIDIAN BAKERY,plain distinct
+KODIAK OUTDOORS,VELVETINE COSMETICS,plain distinct
+NIMBUS SOFTWARE,ORCHARD LANE,plain distinct
+REDWOOD CAPITAL,IRONGATE SECURITY,plain distinct
+LANTERN BOOKS,PLUMB LEVEL TOOLS,plain distinct
+HARVEST MOON FARMS,CITYLINE TRANSIT,plain distinct
+QUARTZ KITCHEN,MAPLECREST DENTAL,plain distinct
+FALCON RIDGE,SUGARPINE CANDLES,plain distinct
+BRIGHTWATER LABS,ONYX MOTORWORKS,plain distinct
+PACIFIC CREST FINANCIAL,PACIFIC HARBOR MEDIA,hard: one shared distinctive token of three
+IRON HORSE BREWING,IRON PEAK CLIMBING,hard: one shared distinctive token of two
+DELTA DENTAL PLUS,ATLAS DENTAL CARE,hard: shared near-generic token only
+SUMMIT SOLUTIONS,SEQUOIA CONSULTING,hard: shared S+generic-suffix shape
+GREENFIELD ORGANICS,GRANDVIEW OPTICS,hard: same initials different sounds
+MARITIME SUPPLY,MERCANTILE EXCHANGE,hard: M-R-T consonant skeleton overlap
+NORTHSTAR YOGA,NORTHWIND KAYAKS,hard: shared prefix NORTH different marks
+CLEARBROOK FARMS,CLARINET MUSIC SCHOOL,hard: CL prefix
+VANTAGE POINT REALTY,ADVANTAGE AUTO GLASS,hard: containment-ish across word boundary
+LUMEN ELECTRIC,LIMEHOUSE GRILL,hard: L_M skeleton

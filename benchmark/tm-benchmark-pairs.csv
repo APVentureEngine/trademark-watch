@@ -1,0 +1,25 @@
+mark1,mark2,confusion_found,matcher_should_flag,test_class,citation,source
+XCEED,X-SEED,yes,yes,phonetic+spelling,"In re Viterra Inc., 671 F.3d 1358 (Fed. Cir. 2012)",TMEP 1207.01(b)(iv) via bitlaw.com fetched 2026-09-01
+ISHINE,ICE SHINE,yes,yes,phonetic,"Centraz Indus. v. Spartan Chem., 77 USPQ2d 1698 (TTAB 2006)",TMEP 1207.01(b)(iv)
+SEYCOS,SEIKO,yes,yes,phonetic,"Kabushiki Kaisha Hattori Tokeiten v. Scuotto, 228 USPQ 461 (TTAB 1985)",TMEP 1207.01(b)(iv)
+CAYNA,CANA,yes,yes,phonetic,"In re Great Lakes Canning, 227 USPQ 483 (TTAB 1985)",TMEP 1207.01(b)(iv)
+ENTELEC,INTELECT,yes,yes,phonetic,"In re Energy Telecomms. & Elec. Ass'n, 222 USPQ 350 (TTAB 1983)",TMEP 1207.01(b)(iv)
+CRESCO,KRESSCO,yes,yes,phonetic,"In re Cresco Mfg., 138 USPQ 401 (TTAB 1963)",TMEP 1207.01(b)(iv)
+TMM,TMS,yes,yes,appearance-short,"Weiss Assocs. v. HRL Assocs., 902 F.2d 1546 (Fed. Cir. 1990)",TMEP 1207.01(b)(ii)
+COMMCASH,COMMUNICASH,yes,yes,contraction,"Canadian Imperial Bank v. Wells Fargo, 811 F.2d 1490 (Fed. Cir. 1987)",TMEP 1207.01(b)(ii)
+AUDIO BSS USA,BOSS AUDIO SYSTEMS,yes,yes,token-reorder+vowel-drop,"Ava Enters. v. Audio Boss USA, 77 USPQ2d 1783 (TTAB 2006)",TMEP 1207.01(b)(ii)
+TRUCOOL,TURCOOL,yes,yes,transposition,"In re Lamson Oil, 6 USPQ2d 1041 (TTAB 1987)",TMEP 1207.01(b)(ii)
+NEWPORTS,NEWPORT,yes,yes,plural,"In re Pix of Am., 225 USPQ 691 (TTAB 1985)",TMEP 1207.01(b)(ii)
+MILTRON,MILLTRONICS,yes,yes,truncation,"In re Pellerin Milnor, 221 USPQ 558 (TTAB 1983)",TMEP 1207.01(b)(ii)
+LUTEX,LUTEXAL,yes,yes,suffix,"In re BASF A.G., 189 USPQ 424 (TTAB 1975)",TMEP 1207.01(b)(ii)
+GASPARILLA,GASPARILLA TREASURES,yes,yes,containment,"TTAB 2025 precedential (beverageware/clothing)",TTABlog 2025 review fetched 2026-09-01
+I AM,I AM,yes,yes,identical,"In re i.am.symbolic, 866 F.3d 1315 (Fed. Cir. 2017)",TMEP 1207.01(b)(v)
+GASPER ROOFING,JASPER CONTRACTORS,no,acceptable-flag,near-phonetic-but-reversed,"TTAB 2025 precedential (roofing services)",TTABlog 2025 review
+CROSS-OVER,CROSSOVER,no,acceptable-flag,identical-string-different-meaning,"In re Sears Roebuck, 2 USPQ2d 1312 (TTAB 1987)",TMEP 1207.01(b)(v)
+PLAYERS,PLAYERS,no,acceptable-flag,identical-different-goods-context,"In re British Bulldog, 224 USPQ 854 (TTAB 1984)",TMEP 1207.01(b)(v)
+BOTTOMS UP,BOTTOMS UP,no,acceptable-flag,identical-different-goods-context,"In re Sydel Lingerie, 197 USPQ 629 (TTAB 1977)",TMEP 1207.01(b)(v)
+ML,ML MARK LEES,yes,yes,whole-mark-containment,"In re Mighty Leaf Tea, 601 F.3d 1342 (Fed. Cir. 2010)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-01
+TITAN,VANTAGE TITAN,yes,yes,containment-addition,"In re Toshiba Med. Sys., 91 USPQ2d 1266 (TTAB 2009)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-01
+STONE LION CAPITAL,LION CAPITAL,yes,yes,containment-addition,"Stone Lion Capital Partners v. Lion Capital, 746 F.3d 1317 (Fed. Cir. 2014)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-01
+MACHO,MACHO COMBOS,yes,yes,containment-addition,"In re El Torito Rests., 9 USPQ2d 2002 (TTAB 1988)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-01
+CAREER IMAGE,CREST CAREER IMAGES,yes,yes,containment-addition-plural,"In re U.S. Shoe Corp., 229 USPQ 707 (TTAB 1985)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-01

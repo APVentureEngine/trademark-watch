@@ -1,0 +1,1285 @@
+{
+ "generated_by": "gen_vectors.py (matcher.py ground truth)",
+ "phonetic": [
+  {
+   "code": "",
+   "s": ""
+  },
+  {
+   "code": "A",
+   "s": "A"
+  },
+  {
+   "code": "",
+   "s": ""
+  },
+  {
+   "code": "A",
+   "s": "A"
+  },
+  {
+   "code": "NK",
+   "s": "NIKE"
+  },
+  {
+   "code": "NKNK",
+   "s": "Nike, Inc."
+  },
+  {
+   "code": "BKS",
+   "s": "BIGG'S"
+  },
+  {
+   "code": "BKS",
+   "s": "Bigg\u2019s"
+  },
+  {
+   "code": "FS",
+   "s": "PHASE"
+  },
+  {
+   "code": "KST",
+   "s": "GHOST"
+  },
+  {
+   "code": "SKL",
+   "s": "SCHOOL"
+  },
+  {
+   "code": "KSN",
+   "s": "SHINE"
+  },
+  {
+   "code": "TNK",
+   "s": "THINK"
+  },
+  {
+   "code": "L",
+   "s": "WHALE"
+  },
+  {
+   "code": "MJK",
+   "s": "MAGIC"
+  },
+  {
+   "code": "JM",
+   "s": "GEM"
+  },
+  {
+   "code": "ST",
+   "s": "CITY"
+  },
+  {
+   "code": "LJK",
+   "s": "LOGIC"
+  },
+  {
+   "code": "ANLTK",
+   "s": "ANALYTIC"
+  },
+  {
+   "code": "STRTJK",
+   "s": "STRATEGIC"
+  },
+  {
+   "code": "K",
+   "s": "QUIK"
+  },
+  {
+   "code": "SBR",
+   "s": "ZEBRA"
+  },
+  {
+   "code": "FD",
+   "s": "VIVID"
+  },
+  {
+   "code": "KSRKS",
+   "s": "XEROX"
+  },
+  {
+   "code": "",
+   "s": "WHO"
+  },
+  {
+   "code": "A",
+   "s": "OH"
+  },
+  {
+   "code": "A",
+   "s": "AAA"
+  },
+  {
+   "code": "BKPR",
+   "s": "BOOKKEEPER"
+  },
+  {
+   "code": "2PLS",
+   "s": "H2O PLUS"
+  },
+  {
+   "code": "MRK7",
+   "s": "MARK 7"
+  },
+  {
+   "code": "BLSK",
+   "s": "BLUE-SKY"
+  },
+  {
+   "code": "RDNDBLK",
+   "s": "RED & BLACK"
+  },
+  {
+   "code": "APLSTRS",
+   "s": "A+ TUTORS"
+  },
+  {
+   "code": "KFL",
+   "s": "CAF\u00c9 OL\u00c9"
+  },
+  {
+   "code": "TKLBLTKSKRP",
+   "s": "THE GLOBAL TECH GROUP"
+  },
+  {
+   "code": "SNFLFRMS",
+   "s": "SUN VALLEY FARMS"
+  },
+  {
+   "code": "ARNKLD",
+   "s": "IRONCLAD"
+  },
+  {
+   "code": "APKS",
+   "s": "APEX"
+  },
+  {
+   "code": "AKM",
+   "s": "ACME"
+  },
+  {
+   "code": "AB",
+   "s": "AB"
+  },
+  {
+   "code": "",
+   "s": "W"
+  },
+  {
+   "code": "AL",
+   "s": "YELLOW"
+  }
+ ],
+ "vectors": [
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "XCEED",
+   "m2": "X-SEED",
+   "norm1": "XCEED",
+   "norm2": "X SEED",
+   "phon1": "KSD",
+   "phon2": "KSD"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "phonetic-near"
+   ],
+   "m1": "ISHINE",
+   "m2": "ICE SHINE",
+   "norm1": "ISHINE",
+   "norm2": "ICE SHINE",
+   "phon1": "AKSN",
+   "phon2": "ASKSN"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "phonetic-near"
+   ],
+   "m1": "SEYCOS",
+   "m2": "SEIKO",
+   "norm1": "SEYCOS",
+   "norm2": "SEIKO",
+   "phon1": "SKS",
+   "phon2": "SK"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "CAYNA",
+   "m2": "CANA",
+   "norm1": "CAYNA",
+   "norm2": "CANA",
+   "phon1": "KN",
+   "phon2": "KN"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "phonetic-near"
+   ],
+   "m1": "ENTELEC",
+   "m2": "INTELECT",
+   "norm1": "ENTELEC",
+   "norm2": "INTELECT",
+   "phon1": "ANTLK",
+   "phon2": "ANTLKT"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "CRESCO",
+   "m2": "KRESSCO",
+   "norm1": "CRESCO",
+   "norm2": "KRESSCO",
+   "phon1": "KRSK",
+   "phon2": "KRSK"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "edit-short",
+    "phonetic-near"
+   ],
+   "m1": "TMM",
+   "m2": "TMS",
+   "norm1": "TMM",
+   "norm2": "TMS",
+   "phon1": "TM",
+   "phon2": "TMS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "phonetic-near"
+   ],
+   "m1": "COMMCASH",
+   "m2": "COMMUNICASH",
+   "norm1": "COMMCASH",
+   "norm2": "COMMUNICASH",
+   "phon1": "KMKS",
+   "phon2": "KMNKS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "tokens"
+   ],
+   "m1": "AUDIO BSS USA",
+   "m2": "BOSS AUDIO SYSTEMS",
+   "norm1": "AUDIO BSS USA",
+   "norm2": "BOSS AUDIO SYSTEMS",
+   "phon1": "ADBS",
+   "phon2": "BSDSTMS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "TRUCOOL",
+   "m2": "TURCOOL",
+   "norm1": "TRUCOOL",
+   "norm2": "TURCOOL",
+   "phon1": "TRKL",
+   "phon2": "TRKL"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "edit",
+    "phonetic-near"
+   ],
+   "m1": "NEWPORTS",
+   "m2": "NEWPORT",
+   "norm1": "NEWPORTS",
+   "norm2": "NEWPORT",
+   "phon1": "NPRTS",
+   "phon2": "NPRT"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment"
+   ],
+   "m1": "MILTRON",
+   "m2": "MILLTRONICS",
+   "norm1": "MILTRON",
+   "norm2": "MILLTRONICS",
+   "phon1": "MLTRN",
+   "phon2": "MLTRNKS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "phonetic-near"
+   ],
+   "m1": "LUTEX",
+   "m2": "LUTEXAL",
+   "norm1": "LUTEX",
+   "norm2": "LUTEXAL",
+   "phon1": "LTKS",
+   "phon2": "LTKSL"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens"
+   ],
+   "m1": "GASPARILLA",
+   "m2": "GASPARILLA TREASURES",
+   "norm1": "GASPARILLA",
+   "norm2": "GASPARILLA TREASURES",
+   "phon1": "KSPRL",
+   "phon2": "KSPRLTRSRS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "identical",
+    "edit-short",
+    "phonetic-equal",
+    "tokens"
+   ],
+   "m1": "I AM",
+   "m2": "I AM",
+   "norm1": "I AM",
+   "norm2": "I AM",
+   "phon1": "AM",
+   "phon2": "AM"
+  },
+  {
+   "expect": "any",
+   "flag": false,
+   "kinds": [],
+   "m1": "GASPER ROOFING",
+   "m2": "JASPER CONTRACTORS",
+   "norm1": "GASPER ROOFING",
+   "norm2": "JASPER CONTRACTORS",
+   "phon1": "KSPRFNK",
+   "phon2": "JSPRKNTRKTRS"
+  },
+  {
+   "expect": "any",
+   "flag": true,
+   "kinds": [
+    "identical",
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "CROSS-OVER",
+   "m2": "CROSSOVER",
+   "norm1": "CROSS OVER",
+   "norm2": "CROSSOVER",
+   "phon1": "KRSFR",
+   "phon2": "KRSFR"
+  },
+  {
+   "expect": "any",
+   "flag": true,
+   "kinds": [
+    "identical",
+    "whole-mark-token",
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "PLAYERS",
+   "m2": "PLAYERS",
+   "norm1": "PLAYERS",
+   "norm2": "PLAYERS",
+   "phon1": "PLRS",
+   "phon2": "PLRS"
+  },
+  {
+   "expect": "any",
+   "flag": true,
+   "kinds": [
+    "identical",
+    "edit",
+    "phonetic-equal",
+    "tokens"
+   ],
+   "m1": "BOTTOMS UP",
+   "m2": "BOTTOMS UP",
+   "norm1": "BOTTOMS UP",
+   "norm2": "BOTTOMS UP",
+   "phon1": "BTMSP",
+   "phon2": "BTMSP"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "whole-mark-token",
+    "tokens"
+   ],
+   "m1": "ML",
+   "m2": "ML MARK LEES",
+   "norm1": "ML",
+   "norm2": "ML MARK LEES",
+   "phon1": "ML",
+   "phon2": "MLMRKLS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens"
+   ],
+   "m1": "TITAN",
+   "m2": "VANTAGE TITAN",
+   "norm1": "TITAN",
+   "norm2": "VANTAGE TITAN",
+   "phon1": "TN",
+   "phon2": "FNTJTN"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens"
+   ],
+   "m1": "STONE LION CAPITAL",
+   "m2": "LION CAPITAL",
+   "norm1": "STONE LION CAPITAL",
+   "norm2": "LION CAPITAL",
+   "phon1": "STNLNKPTL",
+   "phon2": "LNKPTL"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens"
+   ],
+   "m1": "MACHO",
+   "m2": "MACHO COMBOS",
+   "norm1": "MACHO",
+   "norm2": "MACHO COMBOS",
+   "phon1": "MKS",
+   "phon2": "MKSKMBS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens"
+   ],
+   "m1": "CAREER IMAGE",
+   "m2": "CREST CAREER IMAGES",
+   "norm1": "CAREER IMAGE",
+   "norm2": "CREST CAREER IMAGES",
+   "phon1": "KRMJ",
+   "phon2": "KRSTKRMJS"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "BLUEFIN ANALYTICS",
+   "m2": "CARTWHEEL MEDIA",
+   "norm1": "BLUEFIN ANALYTICS",
+   "norm2": "CARTWHEEL MEDIA",
+   "phon1": "BLFNLTKS",
+   "phon2": "KRTLMD"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "SOLSTICE COFFEE",
+   "m2": "MERIDIAN BAKERY",
+   "norm1": "SOLSTICE COFFEE",
+   "norm2": "MERIDIAN BAKERY",
+   "phon1": "SLSTSKF",
+   "phon2": "MRDNBKR"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "KODIAK OUTDOORS",
+   "m2": "VELVETINE COSMETICS",
+   "norm1": "KODIAK OUTDOORS",
+   "norm2": "VELVETINE COSMETICS",
+   "phon1": "KDKTDRS",
+   "phon2": "FLFTNKSMTKS"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "NIMBUS SOFTWARE",
+   "m2": "ORCHARD LANE",
+   "norm1": "NIMBUS SOFTWARE",
+   "norm2": "ORCHARD LANE",
+   "phon1": "NMBSFTR",
+   "phon2": "ARKSRDLN"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "REDWOOD CAPITAL",
+   "m2": "IRONGATE SECURITY",
+   "norm1": "REDWOOD CAPITAL",
+   "norm2": "IRONGATE SECURITY",
+   "phon1": "RDKPTL",
+   "phon2": "ARNKTSKRT"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "LANTERN BOOKS",
+   "m2": "PLUMB LEVEL TOOLS",
+   "norm1": "LANTERN BOOKS",
+   "norm2": "PLUMB LEVEL TOOLS",
+   "phon1": "LNTRNBKS",
+   "phon2": "PLMBLFLTLS"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "HARVEST MOON FARMS",
+   "m2": "CITYLINE TRANSIT",
+   "norm1": "HARVEST MOON FARMS",
+   "norm2": "CITYLINE TRANSIT",
+   "phon1": "RFSTMNFRMS",
+   "phon2": "STLNTRNST"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "QUARTZ KITCHEN",
+   "m2": "MAPLECREST DENTAL",
+   "norm1": "QUARTZ KITCHEN",
+   "norm2": "MAPLECREST DENTAL",
+   "phon1": "KRTSKTKSN",
+   "phon2": "MPLKRSTDNTL"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "FALCON RIDGE",
+   "m2": "SUGARPINE CANDLES",
+   "norm1": "FALCON RIDGE",
+   "norm2": "SUGARPINE CANDLES",
+   "phon1": "FLKNRDJ",
+   "phon2": "SKRPNKNDLS"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "BRIGHTWATER LABS",
+   "m2": "ONYX MOTORWORKS",
+   "norm1": "BRIGHTWATER LABS",
+   "norm2": "ONYX MOTORWORKS",
+   "phon1": "BRKTRLBS",
+   "phon2": "ANKSMTRKS"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "PACIFIC CREST FINANCIAL",
+   "m2": "PACIFIC HARBOR MEDIA",
+   "norm1": "PACIFIC CREST FINANCIAL",
+   "norm2": "PACIFIC HARBOR MEDIA",
+   "phon1": "PSFKRSTFNSL",
+   "phon2": "PSFKSRBRMD"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "IRON HORSE BREWING",
+   "m2": "IRON PEAK CLIMBING",
+   "norm1": "IRON HORSE BREWING",
+   "norm2": "IRON PEAK CLIMBING",
+   "phon1": "ARNRSBRNK",
+   "phon2": "ARNPKLMBNK"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "DELTA DENTAL PLUS",
+   "m2": "ATLAS DENTAL CARE",
+   "norm1": "DELTA DENTAL PLUS",
+   "norm2": "ATLAS DENTAL CARE",
+   "phon1": "DLTDNTLPLS",
+   "phon2": "ATLSDNTLKR"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "SUMMIT SOLUTIONS",
+   "m2": "SEQUOIA CONSULTING",
+   "norm1": "SUMMIT SOLUTIONS",
+   "norm2": "SEQUOIA CONSULTING",
+   "phon1": "SMTSLTNS",
+   "phon2": "SKNSLTNK"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "GREENFIELD ORGANICS",
+   "m2": "GRANDVIEW OPTICS",
+   "norm1": "GREENFIELD ORGANICS",
+   "norm2": "GRANDVIEW OPTICS",
+   "phon1": "KRNFLDRKNKS",
+   "phon2": "KRNDFPTKS"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "MARITIME SUPPLY",
+   "m2": "MERCANTILE EXCHANGE",
+   "norm1": "MARITIME SUPPLY",
+   "norm2": "MERCANTILE EXCHANGE",
+   "phon1": "MRTMSPL",
+   "phon2": "MRKNTLKSKSNJ"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "NORTHSTAR YOGA",
+   "m2": "NORTHWIND KAYAKS",
+   "norm1": "NORTHSTAR YOGA",
+   "norm2": "NORTHWIND KAYAKS",
+   "phon1": "NRTSTRK",
+   "phon2": "NRTNDKS"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "CLEARBROOK FARMS",
+   "m2": "CLARINET MUSIC SCHOOL",
+   "norm1": "CLEARBROOK FARMS",
+   "norm2": "CLARINET MUSIC SCHOOL",
+   "phon1": "KLRBRKFRMS",
+   "phon2": "KLRNTMSKSKL"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "VANTAGE POINT REALTY",
+   "m2": "ADVANTAGE AUTO GLASS",
+   "norm1": "VANTAGE POINT REALTY",
+   "norm2": "ADVANTAGE AUTO GLASS",
+   "phon1": "FNTJPNTRLT",
+   "phon2": "ADFNTJTKLS"
+  },
+  {
+   "expect": "neg",
+   "flag": false,
+   "kinds": [],
+   "m1": "LUMEN ELECTRIC",
+   "m2": "LIMEHOUSE GRILL",
+   "norm1": "LUMEN ELECTRIC",
+   "norm2": "LIMEHOUSE GRILL",
+   "phon1": "LMNLKTRK",
+   "phon2": "LMSKRL"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "",
+   "m2": "",
+   "norm1": "",
+   "norm2": "",
+   "phon1": "",
+   "phon2": ""
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "A",
+   "m2": "",
+   "norm1": "A",
+   "norm2": "",
+   "phon1": "A",
+   "phon2": ""
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "",
+   "m2": "B",
+   "norm1": "",
+   "norm2": "B",
+   "phon1": "",
+   "phon2": "B"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "identical",
+    "whole-mark-token",
+    "edit-short"
+   ],
+   "m1": "A",
+   "m2": "A",
+   "norm1": "A",
+   "norm2": "A",
+   "phon1": "A",
+   "phon2": "A"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit-short",
+    "phonetic-equal"
+   ],
+   "m1": "NIKE",
+   "m2": "NYKE",
+   "norm1": "NIKE",
+   "norm2": "NYKE",
+   "phon1": "NK",
+   "phon2": "NK"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "whole-mark-token"
+   ],
+   "m1": "Nike, Inc.",
+   "m2": "NIKE",
+   "norm1": "NIKE INC",
+   "norm2": "NIKE",
+   "phon1": "NKNK",
+   "phon2": "NK"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "BIGG'S",
+   "m2": "BIGS",
+   "norm1": "BIGGS",
+   "norm2": "BIGS",
+   "phon1": "BKS",
+   "phon2": "BKS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "identical",
+    "whole-mark-token",
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "Bigg\u2019s",
+   "m2": "BIGGS",
+   "norm1": "BIGGS",
+   "norm2": "BIGGS",
+   "phon1": "BKS",
+   "phon2": "BKS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "PHASE",
+   "m2": "FAZE",
+   "norm1": "PHASE",
+   "norm2": "FAZE",
+   "phon1": "FS",
+   "phon2": "FS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "GHOST",
+   "m2": "KOST",
+   "norm1": "GHOST",
+   "norm2": "KOST",
+   "phon1": "KST",
+   "phon2": "KST"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "SCHOOL",
+   "m2": "SKOOL",
+   "norm1": "SCHOOL",
+   "norm2": "SKOOL",
+   "phon1": "SKL",
+   "phon2": "SKL"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "SHINE",
+   "m2": "CHINE",
+   "norm1": "SHINE",
+   "norm2": "CHINE",
+   "phon1": "KSN",
+   "phon2": "KSN"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "THINK",
+   "m2": "TINK",
+   "norm1": "THINK",
+   "norm2": "TINK",
+   "phon1": "TNK",
+   "phon2": "TNK"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit"
+   ],
+   "m1": "WHALE",
+   "m2": "WALE",
+   "norm1": "WHALE",
+   "norm2": "WALE",
+   "phon1": "L",
+   "phon2": "L"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "MAGIC",
+   "m2": "MAJIK",
+   "norm1": "MAGIC",
+   "norm2": "MAJIK",
+   "phon1": "MJK",
+   "phon2": "MJK"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit-short",
+    "phonetic-equal"
+   ],
+   "m1": "GEM",
+   "m2": "JEM",
+   "norm1": "GEM",
+   "norm2": "JEM",
+   "phon1": "JM",
+   "phon2": "JM"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit-short",
+    "phonetic-equal"
+   ],
+   "m1": "CITY",
+   "m2": "SITY",
+   "norm1": "CITY",
+   "norm2": "SITY",
+   "phon1": "ST",
+   "phon2": "ST"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "LOGIC",
+   "m2": "LOJIK",
+   "norm1": "LOGIC",
+   "norm2": "LOJIK",
+   "phon1": "LJK",
+   "phon2": "LJK"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "edit",
+    "phonetic-near"
+   ],
+   "m1": "ANALYTIC",
+   "m2": "ANALYTICS",
+   "norm1": "ANALYTIC",
+   "norm2": "ANALYTICS",
+   "phon1": "ANLTK",
+   "phon2": "ANLTKS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "STRATEGIC",
+   "m2": "STRATEJIK",
+   "norm1": "STRATEGIC",
+   "norm2": "STRATEJIK",
+   "phon1": "STRTJK",
+   "phon2": "STRTJK"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit"
+   ],
+   "m1": "QUIK",
+   "m2": "QUICK",
+   "norm1": "QUIK",
+   "norm2": "QUICK",
+   "phon1": "K",
+   "phon2": "K"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "ZEBRA",
+   "m2": "SEBRA",
+   "norm1": "ZEBRA",
+   "norm2": "SEBRA",
+   "phon1": "SBR",
+   "phon2": "SBR"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "VIVID",
+   "m2": "FIFID",
+   "norm1": "VIVID",
+   "norm2": "FIFID",
+   "phon1": "FD",
+   "phon2": "FD"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-near"
+   ],
+   "m1": "XEROX",
+   "m2": "ZEROKS",
+   "norm1": "XEROX",
+   "norm2": "ZEROKS",
+   "phon1": "KSRKS",
+   "phon2": "SRKS"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "WHO",
+   "m2": "HOO",
+   "norm1": "WHO",
+   "norm2": "HOO",
+   "phon1": "",
+   "phon2": ""
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit-short"
+   ],
+   "m1": "OH",
+   "m2": "O",
+   "norm1": "OH",
+   "norm2": "O",
+   "phon1": "A",
+   "phon2": "A"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "AAA",
+   "m2": "A",
+   "norm1": "AAA",
+   "norm2": "A",
+   "phon1": "A",
+   "phon2": "A"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "BOOKKEEPER",
+   "m2": "BOKEPER",
+   "norm1": "BOOKKEEPER",
+   "norm2": "BOKEPER",
+   "phon1": "BKPR",
+   "phon2": "BKPR"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit",
+    "phonetic-near"
+   ],
+   "m1": "H2O PLUS",
+   "m2": "H20 PLUS",
+   "norm1": "H2O PLUS",
+   "norm2": "H20 PLUS",
+   "phon1": "2PLS",
+   "phon2": "20PLS"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "MARK 7",
+   "m2": "MARK SEVEN",
+   "norm1": "MARK 7",
+   "norm2": "MARK SEVEN",
+   "phon1": "MRK7",
+   "phon2": "MRKSFN"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "identical",
+    "edit",
+    "phonetic-equal"
+   ],
+   "m1": "BLUE-SKY",
+   "m2": "BLUESKY",
+   "norm1": "BLUE SKY",
+   "norm2": "BLUESKY",
+   "phon1": "BLSK",
+   "phon2": "BLSK"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "identical",
+    "edit",
+    "phonetic-equal",
+    "tokens"
+   ],
+   "m1": "RED & BLACK",
+   "m2": "RED AND BLACK",
+   "norm1": "RED AND BLACK",
+   "norm2": "RED AND BLACK",
+   "phon1": "RDNDBLK",
+   "phon2": "RDNDBLK"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "identical",
+    "edit",
+    "phonetic-equal",
+    "tokens"
+   ],
+   "m1": "A+ TUTORS",
+   "m2": "A PLUS TUTORS",
+   "norm1": "A PLUS TUTORS",
+   "norm2": "A PLUS TUTORS",
+   "phon1": "APLSTRS",
+   "phon2": "APLSTRS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "CAF\u00c9 OL\u00c9",
+   "m2": "CAFE OLE",
+   "norm1": "CAF OL",
+   "norm2": "CAFE OLE",
+   "phon1": "KFL",
+   "phon2": "KFL"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "THE GLOBAL TECH GROUP",
+   "m2": "GLOBAL SYSTEMS",
+   "norm1": "THE GLOBAL TECH GROUP",
+   "norm2": "GLOBAL SYSTEMS",
+   "phon1": "TKLBLTKSKRP",
+   "phon2": "KLBLSTMS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "edit",
+    "phonetic-near"
+   ],
+   "m1": "SUN VALLEY FARMS",
+   "m2": "SUNVALLEY FARM",
+   "norm1": "SUN VALLEY FARMS",
+   "norm2": "SUNVALLEY FARM",
+   "phon1": "SNFLFRMS",
+   "phon2": "SNFLFRM"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "containment"
+   ],
+   "m1": "IRONCLAD",
+   "m2": "IRON CLAD SERVICES",
+   "norm1": "IRONCLAD",
+   "norm2": "IRON CLAD SERVICES",
+   "phon1": "ARNKLD",
+   "phon2": "ARNKLDSRFS"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "APEX",
+   "m2": "APEXX LABS",
+   "norm1": "APEX",
+   "norm2": "APEXX LABS",
+   "phon1": "APKS",
+   "phon2": "APKSKSLBS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit-short",
+    "phonetic-near"
+   ],
+   "m1": "ACME",
+   "m2": "ACNE",
+   "norm1": "ACME",
+   "norm2": "ACNE",
+   "phon1": "AKM",
+   "phon2": "AKN"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit-short"
+   ],
+   "m1": "AB",
+   "m2": "BA",
+   "norm1": "AB",
+   "norm2": "BA",
+   "phon1": "AB",
+   "phon2": "B"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit-short"
+   ],
+   "m1": "W",
+   "m2": "H",
+   "norm1": "W",
+   "norm2": "H",
+   "phon1": "",
+   "phon2": ""
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "phonetic-equal"
+   ],
+   "m1": "YELLOW",
+   "m2": "ELLO",
+   "norm1": "YELLOW",
+   "norm2": "ELLO",
+   "phon1": "AL",
+   "phon2": "AL"
+  }
+ ]
+}
