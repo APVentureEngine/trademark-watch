@@ -19,8 +19,13 @@ from matcher import compare  # noqa: E402
 # engine root = 3 dirs up from product/ (fixed c66: os.getcwd() broke when
 # refresh.sh cd'd into product/ — resolve from __file__, never from cwd)
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
+HERE = os.path.dirname(os.path.abspath(__file__))
 BENCH = os.path.join(ROOT, "state/research/tm-benchmark-pairs.csv")
-NEG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "negative-controls.csv")
+if not os.path.exists(BENCH):  # public-repo layout: CSVs live in benchmark/
+    BENCH = os.path.join(HERE, "benchmark", "tm-benchmark-pairs.csv")
+NEG = os.path.join(HERE, "negative-controls.csv")
+if not os.path.exists(NEG):
+    NEG = os.path.join(HERE, "benchmark", "negative-controls.csv")
 
 
 def run():
