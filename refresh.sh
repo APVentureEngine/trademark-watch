@@ -20,12 +20,21 @@ python3 selftest_js.py               # matcher.js parity (quickjs)
 python3 selftest_site.py             # report.js sharding+pipeline parity
 python3 gen_index.py --selftest      # index build round-trip + determinism
 python3 fulfill.py --selftest        # custom-field extraction
+python3 fetch_trtdxfap.py --selftest # merge/window/new-serial logic
+python3 watch_run.py --selftest      # alert generation + expiry handling
+python3 selftest_e2e.py              # synthetic TDXF -> full pipeline
+
+# STAGE fetch (A010): with the key in env, pull new daily files first.
+# FATAL if it fails while a key is present — a silently stale dataset is
+# worse than a loud crash (honesty rail).
+if [ -n "$USPTO_ODP_API_KEY" ]; then
+  python3 fetch_trtdxfap.py
+fi
 
 if [ -f marks.jsonl ]; then
   MODE=real
-  # STAGE fetch (A010): fetch_trtdxfap.py must have written/refreshed marks.jsonl
-  # before this script (or be called here once it exists — BACKLOG #1).
   python3 gen_index.py --in marks.jsonl --out site/index
+  python3 gen_seo.py --in marks.jsonl --out site
 else
   MODE=synth
   echo "SYNTH MODE: no marks.jsonl (A010 pending) — local index only, no push"
@@ -36,6 +45,10 @@ if [ "$MODE" = "real" ]; then
   # sync site -> public repo (repo/ is the git clone of APProj/trademark-watch)
   cp site/index.html site/report.js repo/
   mkdir -p repo/index && cp site/index/*.json repo/index/
+  cp site/sitemap.xml repo/ 2>/dev/null || echo "note: no sitemap.xml yet"
+  if [ -d site/filings ]; then
+    mkdir -p repo/filings && cp site/filings/*.html repo/filings/
+  fi
   ( cd repo
     git add -A
     if ! git diff --cached --quiet; then
@@ -43,9 +56,11 @@ if [ "$MODE" = "real" ]; then
       git push https://x-access-token:$GITHUB_TOKEN@github.com/APProj/trademark-watch.git main
     fi
   )
-  # TODO(A010+launch): sitemap + indexnow_submit.py once SEO pages exist;
-  # watch_run.py (paid marks vs today's filings -> alert files -> push
-  # tm-watch-alerts) — needs real daily data.
+  # paid watches vs today's new filings -> alert files -> push alerts repo.
+  # FATAL on failure (set -e): a paying subscriber silently missing alerts
+  # is the worst failure this product can have.
+  python3 watch_run.py
+  # TODO(launch): IndexNow ping once Pages is enabled and sitemap is live.
 fi
 
 # paid fulfillment: Gumroad sale -> alerts-repo invite + watchlist entry.
