@@ -14,15 +14,40 @@ ALLU, OLLY, IUL; "Blue Lotus Yoga" flagged ACA, EGA, AIC. Measured on the
 live 203,147-mark corpus with the same harness as v2 (every mark compared
 to the query; hits attributed to the rule that fired):
 
-| query | v2 total hits | v2 token-only junk | v2.1 total | v2.1 token-only |
+| query | v2 total hits | v2 token-only junk | v2.1 total | v2.1 token-only (first 3) |
 |---|---:|---:|---:|---:|
 | Veuve Royale | 289 | 212 | 78 | 1 (ROYAL SERVICE) |
-| Gaspar's Ale | 139 | 137 | 12 | 10 (ALA, ALEO, ALO — 3-letter tokens one edit from ALE) |
+| Gaspar's Ale | 139 | 137 | 12 | 10 (ALA, ALAÏA, ALEO — one edit from ALE) |
+| Kodiak Coffee | 144 | 127 | 33 | 16 (CADEKEO, COFFEE &, CUDACO) |
+| Blue Lotus Yoga | ~290 (run cut; c77 note) | — | 23 | 17 (BLUE SYSTEM, HALTZ, HEALTHYHAUS) |
+| Tesla Motors | not measured | — | 17 | 12 (HOTCELL, HOTZILLA, HUITSOL) |
+| Patagonia Provisions | not measured | — | 6 | 1 (PETQUEEN) |
+| Redwood Labs | not measured | — | 16 | 0 |
+| Northstar Dental | not measured | — | 10 | 2 (DAWNTALE, DENTELLE) |
+| Pacific Brew | not measured | — | 1 | 0 |
+| Sunrise Bakery | not measured | — | 27 | 25 (BAIGUER, BAKEHER, BAKR) |
+| Iron Peak Fitness | not measured | — | 61 | 57 (A ARENA, AARONAI, AERION) |
+| Lumina Skin | not measured | — | 71 | 60 (CIKON, CO-SIGN, HILLMOON) |
+| Apex Logistics | not measured | — | 22 | 20 (A APEX, AEPOCH, APACHE) |
+| Vivid Vape | not measured | — | 6 | 0 |
+| Hafifa | not measured | — | 2 | 0 |
 
-(Remaining 13 queries of the same 15-query set are being measured as this
-is written; the full table lands in the next refresh of this file. Harness:
-every mark in `marks.jsonl` compared to the query, hits attributed to the
-rule that fired, "token-only" = flagged by rule 5 and nothing else.)
+Measured 2026-09-02 (cycles 77–79) on the 203,147-mark corpus of the
+2026-09-01 issue. The v2 baseline run was stopped after three queries to free
+the CPU, so most "before" cells are honestly blank rather than reconstructed.
+Harness: every mark in `marks.jsonl` compared to the query, hits attributed
+to the rule that fired; "token-only" = flagged by rule 5 (token overlap) and
+by nothing else. All 15 queries of the fixed set measured (913 s single-run).
+
+**What v2.1 still gets wrong (open, measured, not yet fixed):** the guard only
+covers 1–2 character codes. Three-character codes are still weak evidence for
+common English words: IRON → "ARN" matches AIRN/AERION/A ARENA (57 token-only
+hits for "Iron Peak Fitness"), BAKERY → "BKR" matches BAKR/BCR/BGRY (25 for
+"Sunrise Bakery"), LUMINA → "LMN" / SKIN → "SKN" match HILLMOON/HOLMAN/CIKON
+(60 for "Lumina Skin"). The remaining noise is concentrated in queries whose
+distinctive token is a short common word. Candidate fix, to be measured with
+the same harness before it ships: require a phonetic token match to also be
+within two edits of the query token, or to share the first letter.
 
 Fix: a phonetic token match now requires the shared code to be ≥3 characters,
 OR (short code AND the two tokens within one edit, e.g. ALE/AIL). Three-plus
