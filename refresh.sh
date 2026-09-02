@@ -66,6 +66,13 @@ if [ "$MODE" = "real" ]; then
     rm -f .sitemap_changed
     python3 indexnow_submit.py || echo "WARN: indexnow submit failed (non-fatal)"
   fi
+  # Hugging Face mirror (second discovery channel, c73). Non-fatal.
+  if [ -n "${HF_TOKEN:-}" ]; then
+    python3 hf_mirror.py 2>&1 | grep -v -i warning
+    if [ "${PIPESTATUS[0]}" = "0" ]; then echo "hf_mirror: OK"; else echo "hf_mirror: FAILED (non-fatal)"; fi
+  else
+    echo "hf_mirror: HF_TOKEN absent, skipped"
+  fi
   # paid watches vs today's new filings -> alert files -> push alerts repo.
   # FATAL on failure (set -e): a paying subscriber silently missing alerts
   # is the worst failure this product can have.
