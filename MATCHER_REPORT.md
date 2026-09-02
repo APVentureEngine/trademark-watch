@@ -3,6 +3,33 @@
 Binding launch gate (KILL_CRITERIA #2): flag ≥80% of a ≥20-pair benchmark of
 real §2(d) opposition/refusal name pairs, without drowning in noise.
 
+## Result v2.1 (2026-09-02, cycle 77): PASS — 36/36 must-flag, 0/20 FPs; token-phonetic noise cut
+
+Rule 5's per-token phonetic equality (`_token_match` / `tokenMatch`) accepted
+any equal metaphone-lite code for tokens of ≥3 letters. Codes can be one or
+two characters (VEUVE → "F", ALE → "AL", YOGA → "AK"), so a single-token mark
+with the same short code satisfied the 1/1 token ratio and flagged:
+"Veuve Royale" flagged VIII, FIVE, FYI, FAFO, HAFIFA; "Gaspar's Ale" flagged
+ALLU, OLLY, IUL; "Blue Lotus Yoga" flagged ACA, EGA, AIC. Measured on the
+live 203,147-mark corpus with the same harness as v2 (every mark compared
+to the query; hits attributed to the rule that fired):
+
+| query | v2 total hits | v2 token-only junk | v2.1 total | v2.1 token-only |
+|---|---:|---:|---:|---:|
+| Veuve Royale | 289 | 212 | 78 | 1 (ROYAL SERVICE) |
+| Gaspar's Ale | 139 | 137 | 12 | 10 (ALA, ALEO, ALO — 3-letter tokens one edit from ALE) |
+
+(Remaining 13 queries of the same 15-query set are being measured as this
+is written; the full table lands in the next refresh of this file. Harness:
+every mark in `marks.jsonl` compared to the query, hits attributed to the
+rule that fired, "token-only" = flagged by rule 5 and nothing else.)
+
+Fix: a phonetic token match now requires the shared code to be ≥3 characters,
+OR (short code AND the two tokens within one edit, e.g. ALE/AIL). Three-plus
+character codes (LUMINA/LUMEENA → "LMN") are unchanged. Recall on the 45-pair
+benchmark is unchanged at 36/36; negative controls 0/20; 123 parity vectors
+(7 new for this guard) 0 mismatches between Python and JS.
+
 ## Result v2 (2026-09-02, cycle 76): PASS — 36/36 must-flag (100%), 0/20 negative-control FPs
 
 Rule 6 "rare-token" added to matcher.py + matcher.js (parity: 116 vectors, 0

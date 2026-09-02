@@ -202,6 +202,34 @@
    "s": "FYOU PMEC"
   },
   {
+   "code": "FRL",
+   "s": "VEUVE ROYALE"
+  },
+  {
+   "code": "FRL",
+   "s": "VEUVE ROYALE"
+  },
+  {
+   "code": "KSPRSL",
+   "s": "GASPAR'S ALE"
+  },
+  {
+   "code": "KSPRSL",
+   "s": "GASPAR'S ALE"
+  },
+  {
+   "code": "BRL",
+   "s": "BREW ALE"
+  },
+  {
+   "code": "LMN",
+   "s": "LUMINA"
+  },
+  {
+   "code": "KDKF",
+   "s": "KODIAK COFFEE"
+  },
+  {
    "code": "RDSPRS",
    "s": "REDWOODS PRESS"
   }
@@ -1709,6 +1737,89 @@
    "norm2": "VEUVE ROYALE",
    "phon1": "FPMK",
    "phon2": "FRL"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "VEUVE ROYALE",
+   "m2": "VIII",
+   "norm1": "VEUVE ROYALE",
+   "norm2": "VIII",
+   "phon1": "FRL",
+   "phon2": "F"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "VEUVE ROYALE",
+   "m2": "FIVE",
+   "norm1": "VEUVE ROYALE",
+   "norm2": "FIVE",
+   "phon1": "FRL",
+   "phon2": "F"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "GASPAR'S ALE",
+   "m2": "ALLU",
+   "norm1": "GASPARS ALE",
+   "norm2": "ALLU",
+   "phon1": "KSPRSL",
+   "phon2": "AL"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "GASPAR'S ALE",
+   "m2": "ALE HOUSE",
+   "norm1": "GASPARS ALE",
+   "norm2": "ALE HOUSE",
+   "phon1": "KSPRSL",
+   "phon2": "ALS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "edit",
+    "phonetic-equal",
+    "tokens"
+   ],
+   "m1": "BREW ALE",
+   "m2": "BREW AILE",
+   "norm1": "BREW ALE",
+   "norm2": "BREW AILE",
+   "phon1": "BRL",
+   "phon2": "BRL"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "tokens"
+   ],
+   "m1": "LUMINA",
+   "m2": "LUMEENA SKIN",
+   "norm1": "LUMINA",
+   "norm2": "LUMEENA SKIN",
+   "phon1": "LMN",
+   "phon2": "LMNSKN"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "KODIAK COFFEE",
+   "m2": "KODIAC BREW",
+   "norm1": "KODIAK COFFEE",
+   "norm2": "KODIAC BREW",
+   "phon1": "KDKF",
+   "phon2": "KDKBR"
   },
   {
    "expect": "parity",

@@ -124,7 +124,11 @@
   function tokenMatch(t1, t2) {
     if (t1 === t2) return true;
     if (stripPlural(t1) === stripPlural(t2)) return true;
-    if (t1.length >= 3 && t2.length >= 3 && metaphoneLite(t1) === metaphoneLite(t2)) return true;
+    if (t1.length >= 3 && t2.length >= 3) {
+      var c1 = metaphoneLite(t1), c2 = metaphoneLite(t2);
+      // v2.1: 1-2 char codes only count when the tokens are within one edit
+      if (c1 === c2 && (c1.length >= 3 || dlDistance(t1, t2) <= 1)) return true;
+    }
     return false;
   }
 

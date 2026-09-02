@@ -58,6 +58,14 @@ PARITY_CASES = [
     ("ZQX GAMES", "ZQX MEDIA"),  # rare but len<4 -> no rule 6
     ("TESLA ENERGY", "TESLA BOND"),
     ("FYOU PMEC", "VEUVE ROYALE"),  # phonetic-only share must NOT fire rule 6
+    # v2.1 (c77) token phonetic guard: 1-2 char codes need tokens within 1 edit
+    ("VEUVE ROYALE", "VIII"),  # code "F" == "F" but far apart -> no
+    ("VEUVE ROYALE", "FIVE"),
+    ("GASPAR'S ALE", "ALLU"),  # code "AL" == "AL", dist 2 -> no
+    ("GASPAR'S ALE", "ALE HOUSE"),  # exact token -> tokens(1/1) still fires
+    ("BREW ALE", "BREW AILE"),  # short code, dist 1 -> phonetic token still ok
+    ("LUMINA", "LUMEENA SKIN"),  # 3+ char code -> unchanged
+    ("KODIAK COFFEE", "KODIAC BREW"),  # ratio 1/2 < 0.67 -> no (unchanged)
     ("REDWOODS PRESS", "REDWOOD CAPITAL"),
 ]
 

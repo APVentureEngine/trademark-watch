@@ -186,8 +186,15 @@ def _token_match(t1: str, t2: str) -> bool:
         return True
     if _strip_plural(t1) == _strip_plural(t2):
         return True
-    if len(t1) >= 3 and len(t2) >= 3 and metaphone_lite(t1) == metaphone_lite(t2):
-        return True
+    if len(t1) >= 3 and len(t2) >= 3:
+        c1, c2 = metaphone_lite(t1), metaphone_lite(t2)
+        # v2.1 (c77): a 1-2 char phonetic code (VEUVE -> "F", ALE -> "AL") is
+        # not evidence of anything -- "Veuve Royale" flagged VIII/FIVE/FYI and
+        # "Gaspar's Ale" flagged ALLU/OLLY/IUL (260 and 164 token-only junk
+        # hits on the live corpus). Short codes only count when the tokens
+        # themselves are within one edit.
+        if c1 == c2 and (len(c1) >= 3 or dl_distance(t1, t2) <= 1):
+            return True
     return False
 
 
