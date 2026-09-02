@@ -1,27 +1,34 @@
 #!/usr/bin/env python3
-"""TM Watch paid fulfillment: Gumroad sale -> (a) private alerts-repo invite,
-(b) watchlist.json entry the daily watch runner matches against new filings.
+"""TM Watch paid fulfillment: Gumroad sale -> watchlist.json entry the weekly
+watch runner matches against new Gazette filings, plus delivery setup:
+  (a) EMAIL (primary, c73): alerts go to the purchaser's Gumroad email via
+      mailer.py (Brevo). A welcome email confirms what happens next. If the
+      mailer is not configured yet (A014 open) the entry is still recorded and
+      the sale is flagged in needs_attention so nothing is silently lost.
+  (b) GitHub private repo invite (secondary/optional): if the buyer gave a
+      valid GitHub username, invite -> APVentureEngine/tm-watch-alerts.
 
-Adapted from warn-feed fulfill.py (proven live c65) with tm-watch deltas:
-  - product yqoJ16p67-UfQ1hnOtExvQ== ($49/yr, 1 mark) -> APVentureEngine/tm-watch-alerts
-  - TWO custom fields: "Trademark to watch (exact text of your mark)" and
-    "GitHub username (for private alert repo access)" (both required at
-    checkout; verified on the live unpublished product c66).
-  - watchlist.json: sale_id -> {mark, user, start, expires(+365d)}. The watch
-    runner (needs A010 data) reads this; expiry enforcement is the runner's
-    job, fulfill only records dates.
+Custom fields on product yqoJ16p67-UfQ1hnOtExvQ== ($49/yr, 1 mark):
+  "Trademark to watch (exact text of your mark)"   required
+  "GitHub username ..."                            optional once email is live
+watchlist.json: sale_id -> {mark, email, user|null, start, expires(+365d)}.
+Expiry enforcement is the runner's job; fulfill only records dates.
 
 Idempotent via fulfilled.json. Failures -> needs_attention.json + loud
 FULFILL-ATTENTION lines. Refunded sales skipped. v1: no access revocation on
 refund (manual, same policy as warn-feed).
 
 Usage: python3 fulfill.py [--dry-run] [--selftest]
-Env: GUMROAD_ACCESS_TOKEN, GITHUB_ORG_TOKEN. Never prints tokens.
+Env: GUMROAD_ACCESS_TOKEN, GITHUB_ORG_TOKEN (+ BREVO_* for email). Never
+prints tokens.
 LESSON c65: unit selftest proves the component — refresh.sh must live-fire
 this and its "fulfill:" summary line must appear in refresh stdout.
 """
 import json, os, re, sys, urllib.request, urllib.parse, urllib.error
 from datetime import datetime, timezone, timedelta
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import mailer  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FULFILLED = os.path.join(HERE, "fulfilled.json")
@@ -34,6 +41,33 @@ GH_FIELD_HINT = "github"
 MARK_FIELD_HINT = "trademark"
 SALES_AFTER = "2026-09-01"
 USER_RE = re.compile(r"^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$")
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+SITE = "https://apventureengine.github.io/trademark-watch/"
+
+
+def extract_email(sale):
+    v = str((sale or {}).get("email") or "").strip().lower()
+    return v if EMAIL_RE.match(v) and len(v) <= 254 else None
+
+
+def welcome_message(mark, expires, user):
+    repo_line = ("Your GitHub user %s has also been invited to the private alert-history "
+                 "repo github.com/%s/%s.\n" % (user, OWNER, ALERTS_REPO)) if user else ""
+    text = ("Your TM Watch is active.\n\n"
+            "Watched mark: %s\nActive until: %s (one-time payment; we email a reminder "
+            "two weeks before expiry)\n\n"
+            "Every Tuesday the USPTO publishes the Trademark Official Gazette. The same "
+            "day we run your mark against every newly published and newly registered "
+            "word mark (name + phonetic + common-variant forms). If anything similar "
+            "appears you get an email at this address listing serial, mark, Gazette "
+            "date, classes, why it was flagged, and the USPTO TSDR status link. "
+            "A published mark can be opposed (or an extension requested) for 30 days "
+            "from its Gazette date.\n\n"
+            "Quiet weeks mean no email. %s"
+            "Refund: full refund within 14 days of purchase via Gumroad.\n"
+            % (mark, expires, repo_line))
+    return "TM Watch is active for %s" % mark, text
+
 
 
 def _pairs(custom_fields):
@@ -145,7 +179,20 @@ def selftest():
         ({"Your mark text": "ZED"}, "ZED"),
         ({}, None), (None, None),
     ]
+    cases_email = [
+        ({"email": "Buyer@Example.com"}, "buyer@example.com"),
+        ({"email": " x@y.zz "}, "x@y.zz"),
+        ({"email": "nope"}, None), ({"email": ""}, None), ({}, None), (None, None),
+    ]
     ok = True
+    for sale, want in cases_email:
+        got = extract_email(sale)
+        if got != want:
+            ok = False; print("SELFTEST FAIL email: %r -> %r (want %r)" % (sale, got, want))
+    subj, body = welcome_message("ACME", "2027-09-01", None)
+    assert "ACME" in subj and "2027-09-01" in body and "Tuesday" in body and "github.com" not in body
+    subj, body = welcome_message("ACME", "2027-09-01", "octocat")
+    assert "octocat" in body and ALERTS_REPO in body
     for cf, want in cases_user:
         got = extract_username(cf)
         if got != want:
@@ -155,7 +202,7 @@ def selftest():
         if got != want:
             ok = False; print("SELFTEST FAIL mark: %r -> %r (want %r)" % (cf, got, want))
     print("selftest: %s (%d cases)" % ("PASS" if ok else "FAIL",
-                                       len(cases_user) + len(cases_mark)))
+                                       len(cases_user) + len(cases_mark) + len(cases_email) + 2))
     return 0 if ok else 1
 
 
@@ -184,40 +231,60 @@ def main():
             continue
         user = extract_username(s.get("custom_fields"))
         mark = extract_mark(s.get("custom_fields"))
+        email = extract_email(s)
         stamp = datetime.now(timezone.utc)
         ts = stamp.strftime("%Y-%m-%dT%H:%M:%SZ")
-        if not user or not mark:
-            attention[sid] = {"why": "missing username or mark text",
+        expires = (stamp + timedelta(days=365)).strftime("%Y-%m-%d")
+        if not mark or not (email or user):
+            attention[sid] = {"why": "missing mark text, or neither email nor username",
                               "raw": s.get("custom_fields"), "ts": ts}
-            print("FULFILL-ATTENTION: sale %s: user=%r mark=%r unusable" % (sid, user, mark))
-            continue
-        st, _ = api("https://api.github.com/users/" + urllib.parse.quote(user), token=gh)
-        if st != 200:
-            attention[sid] = {"why": "github user not found (%s)" % st,
-                              "user": user, "ts": ts}
-            print("FULFILL-ATTENTION: sale %s: user %r not on GitHub (%s)" % (sid, user, st))
+            print("FULFILL-ATTENTION: sale %s: mark=%r email=%s user=%r unusable"
+                  % (sid, mark, "yes" if email else "no", user))
             continue
         if dry:
-            print("fulfill DRY-RUN: would invite %s -> %s/%s and watch %r (sale %s)"
-                  % (user, OWNER, ALERTS_REPO, mark, sid))
+            print("fulfill DRY-RUN: would watch %r for sale %s (email=%s, user=%r)"
+                  % (mark, sid, "yes" if email else "no", user))
             continue
-        st, body = api(
-            "https://api.github.com/repos/%s/%s/collaborators/%s"
-            % (OWNER, ALERTS_REPO, urllib.parse.quote(user)),
-            method="PUT", token=gh, body={"permission": "pull"},
-            accept="application/vnd.github+json")
-        if st in (201, 204):
-            watchlist[sid] = {"mark": mark, "user": user, "start": ts,
-                              "expires": (stamp + timedelta(days=365)).strftime("%Y-%m-%d")}
-            fulfilled[sid] = {"status": "invited" if st == 201 else "already_collaborator",
-                              "user": user, "ts": ts}
+        delivery, problems = [], []
+        # (b) optional private-repo invite
+        if user:
+            st, _ = api("https://api.github.com/users/" + urllib.parse.quote(user), token=gh)
+            if st != 200:
+                problems.append("github user %r not found (%s)" % (user, st))
+                user = None
+            else:
+                st, body = api(
+                    "https://api.github.com/repos/%s/%s/collaborators/%s"
+                    % (OWNER, ALERTS_REPO, urllib.parse.quote(user)),
+                    method="PUT", token=gh, body={"permission": "pull"},
+                    accept="application/vnd.github+json")
+                if st in (201, 204):
+                    delivery.append("repo")
+                else:
+                    problems.append("invite failed status=%s msg=%s" % (st, body.get("message")))
+                    user = None
+        # (a) email welcome (primary channel)
+        if email and mailer.configured():
+            subj, text = welcome_message(mark, expires, user)
+            ok, info = mailer.send(email, subj, text)
+            if ok:
+                delivery.append("email")
+            else:
+                problems.append("welcome email failed: " + info)
+        elif email:
+            problems.append("email delivery not configured yet (A014) — alerts held until it is")
+        watchlist[sid] = {"mark": mark, "email": email, "user": user,
+                          "start": ts, "expires": expires}
+        fulfilled[sid] = {"status": "watching", "delivery": delivery, "ts": ts}
+        n_new += 1
+        if delivery:
             attention.pop(sid, None)
-            n_new += 1
-            print("fulfill: %s -> %s/%s, watching %r" % (user, OWNER, ALERTS_REPO, mark))
         else:
-            attention[sid] = {"why": "invite failed status=%s msg=%s" % (st, body.get("message")),
+            attention[sid] = {"why": "NO LIVE DELIVERY CHANNEL: " + "; ".join(problems),
                               "user": user, "ts": ts}
-            print("FULFILL-ATTENTION: invite %s failed (%s)" % (user, st))
+        for pr in problems:
+            print("FULFILL-ATTENTION: sale %s: %s" % (sid, pr))
+        print("fulfill: watching %r for sale %s via %s" % (mark, sid, "+".join(delivery) or "NONE"))
     if not dry:
         save(FULFILLED, fulfilled)
         save(ATTENTION, attention)

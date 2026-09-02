@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://apventureengine.github.io/trademark-watch/sitemap.xml

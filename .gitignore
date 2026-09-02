@@ -1,3 +1,19 @@
 __pycache__/
 *.pyc
 .venv/
+# runtime state never belongs in the public repo
+watchlist.json
+fulfilled.json
+needs_attention.json
+alerts_sent.json
+pipeline.log
+.pipeline.last
+.sitemap_changed
+indexnow_key.txt
+alerts_repo/
+downloads/
+marks.jsonl
+new_marks.jsonl
+*_last_response.json
+seen_keys.json
+fetched_issues.json

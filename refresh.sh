@@ -20,7 +20,8 @@ python3 selftest.py                  # benchmark recall/FP gate (§2(d) pairs)
 python3 selftest_js.py               # matcher.js parity (quickjs)
 python3 selftest_site.py             # report.js sharding+pipeline parity
 python3 gen_index.py --selftest      # index build round-trip + determinism
-python3 fulfill.py --selftest        # custom-field extraction
+python3 fulfill.py --selftest        # custom-field extraction + email welcome
+python3 mailer.py --selftest         # Brevo payload/rails (no network)
 python3 fetch_trtdxfap.py --selftest # legacy ODP path (kept; keyless now)
 python3 tmog_parse.py --selftest     # ST.96 gazette parser
 python3 fetch_tmog.py --selftest     # merge/window/new-key logic
@@ -47,21 +48,28 @@ if [ "$MODE" = "real" ]; then
   cp site/index.html site/report.js repo/
   mkdir -p repo/index && cp site/index/*.json repo/index/
   cp site/sitemap.xml repo/ 2>/dev/null || echo "note: no sitemap.xml yet"
+  cp site/robots.txt repo/robots.txt
+  cp indexnow_key.txt "repo/$(cat indexnow_key.txt).txt"
   if [ -d site/filings ]; then
     mkdir -p repo/filings && cp site/filings/*.html repo/filings/
   fi
   ( cd repo
     git add -A
     if ! git diff --cached --quiet; then
+      if ! git diff --cached --quiet -- sitemap.xml; then touch ../.sitemap_changed; fi
       git commit -m "index refresh $(date -u +%F)"
       git push https://x-access-token:$GITHUB_ORG_TOKEN@github.com/APVentureEngine/trademark-watch.git main
     fi
   )
+  # IndexNow only when the URL set changed (warn-feed c52 policy); non-fatal.
+  if [ -f .sitemap_changed ]; then
+    rm -f .sitemap_changed
+    python3 indexnow_submit.py || echo "WARN: indexnow submit failed (non-fatal)"
+  fi
   # paid watches vs today's new filings -> alert files -> push alerts repo.
   # FATAL on failure (set -e): a paying subscriber silently missing alerts
   # is the worst failure this product can have.
   python3 watch_run.py
-  # TODO(launch): IndexNow ping once Pages is enabled and sitemap is live.
 fi
 
 # paid fulfillment: Gumroad sale -> alerts-repo invite + watchlist entry.
