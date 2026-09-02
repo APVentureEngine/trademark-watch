@@ -134,11 +134,17 @@ def merge(existing, incoming, seen_keys):
     return rows, new_rows, sorted(k for k in seen if k in live)
 
 
+def floor_date(newest):
+    y, m, d = map(int, newest.split("-"))
+    return (date(y, m, d) - timedelta(days=MAX_AGE_DAYS)).isoformat()
+
+
 def probe():
     issues = list_issues()
     fetched = _load(FETCHED, {})
     print("issues listed: %d (newest %s)" % (len(issues), issues[-1] if issues else "none"))
-    print("unfetched: %s" % [d for d in issues if d not in fetched][-6:])
+    print("unfetched (in window, newest 6): %s"
+          % [d for d in issues if d not in fetched and d >= floor_date(issues[-1])][-6:])
     return 0
 
 
@@ -148,7 +154,10 @@ def run():
         print("fetch_tmog: 0 issues listed — see tmog_last_response.json", file=sys.stderr)
         return 1
     fetched = _load(FETCHED, {})
-    todo = [d for d in issues if d not in fetched]
+    # only issues inside the rolling window are ever candidates — never crawl
+    # the 13-year archive (682 issues) three at a time forever.
+    floor = floor_date(issues[-1])
+    todo = [d for d in issues if d not in fetched and d >= floor]
     limit = BACKFILL_ISSUES if not fetched else MAX_ISSUES_PER_RUN
     if len(todo) > limit:
         print("fetch_tmog: %d unfetched issues, taking newest %d" % (len(todo), limit))
