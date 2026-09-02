@@ -85,13 +85,30 @@ def run(watchlist, filings, today, out_dir=None, write=True):
     for sid, w in sorted(watchlist.items()):
         if w.get("expires") and w["expires"] < today:
             continue
+        safe_user = "".join(c for c in w.get("user", "unknown")
+                            if c.isalnum() or c in "-_") or "unknown"
+        # expiry reminder promised on the landing page: one idempotent file
+        # when ≤14 days remain (same filename each run -> git no-ops).
+        if write and out_dir and w.get("expires"):
+            try:
+                ey, em, ed = map(int, w["expires"].split("-"))
+                ty, tm, td = map(int, today.split("-"))
+                left = (date(ey, em, ed) - date(ty, tm, td)).days
+            except ValueError:
+                left = 99
+            if 0 <= left <= 14:
+                d = os.path.join(out_dir, "alerts", safe_user)
+                os.makedirs(d, exist_ok=True)
+                with open(os.path.join(d, "expiry-reminder.md"), "w") as f:
+                    f.write("# Your TM Watch for %s expires on %s\n\n"
+                            "Renew for another year at "
+                            "https://approj.gumroad.com/l/pwvfma (enter the same "
+                            "mark and GitHub username).\n" % (w["mark"], w["expires"]))
         hits = hits_for(w["mark"], filings)
         if not hits:
             continue
         path = None
         if write and out_dir:
-            safe_user = "".join(c for c in w.get("user", "unknown")
-                                if c.isalnum() or c in "-_") or "unknown"
             d = os.path.join(out_dir, "alerts", safe_user)
             os.makedirs(d, exist_ok=True)
             path = os.path.join(d, "%s.md" % today)

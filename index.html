@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Free Trademark Similarity Search — check your name against newly published USPTO trademarks | TM Watch</title>
-<meta name="description" content="Type a brand name, instantly see confusingly-similar recent US trademark applications. Free, no login, runs in your browser. Edit-distance + phonetic matching benchmarked on real §2(d) cases.">
+<title>Free trademark similarity check + $49/yr watch | TM Watch</title>
+<meta name="description" content="Type a brand name, instantly see confusingly-similar US trademarks published or registered in the last 4 months. Free, no login, runs in your browser. Then watch every weekly Gazette issue for $49/yr.">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"TM Watch — free trademark similarity search","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Instant similarity report of a brand name against US trademarks published or registered in the last ~4 months (USPTO Official Gazette, updated every Tuesday)."}
 </script>
@@ -26,7 +26,11 @@ button:disabled{opacity:.5}
 .hit .why{font-size:.85rem;color:var(--mut)}
 .clear{border-left-color:#1a9c4b}
 .cta{margin:34px 0;padding:18px;border:1px solid #dfe5f0;border-radius:10px;background:var(--soft)}
-.cta a{display:inline-block;margin-top:8px;background:var(--acc);color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none}
+.cta a.btn{display:inline-block;margin-top:8px;background:var(--acc);color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none}
+.price{font-size:1.25rem;font-weight:700}
+table.sample{width:100%;border-collapse:collapse;font-size:.82rem;margin:8px 0}table.sample td,table.sample th{border-bottom:1px solid #dfe5f0;padding:5px 6px;text-align:left;vertical-align:top}
+h2{font-size:1.2rem;margin:34px 0 .4em}
+.faq p{margin:.5em 0}
 footer{margin-top:44px;font-size:.85rem;color:var(--mut);border-top:1px solid #eee;padding-top:16px}
 code{background:var(--soft);padding:1px 5px;border-radius:4px}
 </style>
@@ -44,14 +48,34 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
 <div id="status"></div>
 <div id="results"></div>
 
-<div class="cta" id="cta" hidden>
-<b>Next Tuesday's Gazette can carry a mark like yours — and you get 30 days to oppose it.</b>
-<p style="margin:.4em 0">This page only sees the Gazette through <span id="fresh">the latest issue</span>. TM Watch runs this exact check for your mark against <i>every new Gazette issue, every week, for a year</i> and alerts you the day a similar mark is published — while the 30-day opposition window is still open. $49/yr per mark (attorney watch services start ~$200/yr).</p>
-<a href="https://approj.gumroad.com/l/pwvfma">Get weekly Gazette watch — $49/yr</a>
+<div class="cta" id="cta">
+<b id="cta-head">Next Tuesday's Gazette can carry a mark like yours — and you get 30 days to oppose it.</b>
+<p style="margin:.4em 0">This page only sees the Gazette through <span id="fresh">the latest issue</span>. TM Watch runs this exact check for your mark against <i>every new Gazette issue, every Tuesday, for a year</i> and alerts you the same day a similar mark is published — while the 30-day opposition window is still open.</p>
+<p class="price">$49 for one mark, 12 months — one-time payment, no auto-renewal</p>
+<p class="note">Attorney watch services start around $200/yr; the cheapest software watch we could find is $55/yr.</p>
+<a class="btn" id="buy" href="https://approj.gumroad.com/l/pwvfma?wanted=true">Watch my mark every Tuesday — $49/yr</a>
+</div>
+
+<h2>What an alert looks like</h2>
+<p class="note">Real alert generated for the watched mark <b>STELLANITE</b> against the 2026-09-01 Gazette issue (trimmed). Every row links to the mark's live USPTO status page.</p>
+<table class="sample"><tr><th>Serial</th><th>Mark</th><th>Gazette date</th><th>Event</th><th>Classes</th><th>Why flagged</th></tr>
+<tr><td>50001495</td><td>STELLANITE</td><td>2026-09-01</td><td>Published for opposition</td><td>11</td><td>identical, whole-mark-token, phonetic-equal (STLNT)</td></tr>
+<tr><td>50001643</td><td>STEELANITE</td><td>2026-09-01</td><td>Published for opposition</td><td>11</td><td>edit (sim 0.90), phonetic-equal (STLNT)</td></tr>
+<tr><td>98152938</td><td>STELLA ARTE</td><td>2026-07-21</td><td>Registered</td><td>3</td><td>edit (sim 0.80), phonetic-near (STLNT~STLRT)</td></tr>
+</table>
+<p>A mark <i>published for opposition</i> can be opposed — or an extension of time to oppose requested — for <b>30 days from its Gazette date</b>. Miss the window and your only remaining route is a cancellation proceeding after it registers, which is slower and costlier. A weekly check on the day the issue lands is the whole point of a watch.</p>
+
+<h2 id="faq">How it works, refunds, contact</h2>
+<div class="faq">
+<p><b>Buying.</b> Pay $49 on Gumroad, enter the exact text of your mark and your GitHub username. Within one refresh cycle (≤24h) you are invited to a private GitHub repository; from then on every Tuesday issue is matched against your mark and any hits are written there as a dated alert file. Click "Watch" on the repo and GitHub emails you each time an alert lands. Need a different delivery channel (plain email, Slack)? Ask via the contact link below — it is on the roadmap and existing buyers get it at no charge.</p>
+<p><b>What is watched.</b> Every word mark in the two Gazette sections that matter: applications published for opposition (~10,000/week) and registrations issued. Design-only marks (logos without words) are out of scope. Matching = edit distance + phonetic + variant forms; the matcher and its 24-pair §2(d) benchmark are <a href="https://github.com/APVentureEngine/trademark-watch">open source</a>, so you can verify exactly what it will and will not catch.</p>
+<p><b>Term.</b> 12 months from purchase, one mark, no auto-renewal. You get a reminder alert file two weeks before expiry. Several marks: buy once per mark (multi-mark bundles coming; ask).</p>
+<p><b>Refunds.</b> Full refund within 14 days of purchase, no questions — request it through Gumroad.</p>
+<p><b>Contact.</b> <a href="https://github.com/APVentureEngine/trademark-watch/issues/new">Open an issue on the repo</a> (no account needed to read; a free GitHub account to post) or reply to your Gumroad receipt — both reach the operator directly.</p>
 </div>
 
 <footer>
-<p><b>Not legal advice.</b> A flag means "a human should look", not "this is infringement"; no flag does not mean your name is clear (design-only marks, common-law rights, pending applications not yet published, and registrations older than this window are out of scope of this index). Data: USPTO Trademark Official Gazette weekly XML (applications published for opposition + registrations issued). Matcher source, benchmark and methodology: <a href="https://github.com/APVentureEngine/trademark-watch">github.com/APVentureEngine/trademark-watch</a>.</p>
+<p><b>Not legal advice.</b> A flag means "a human should look", not "this is infringement"; no flag does not mean your name is clear (design-only marks, common-law rights, pending applications not yet published, and registrations older than this window are out of scope of this index). Data: USPTO Trademark Official Gazette weekly XML (applications published for opposition + registrations issued), public domain. Matcher source, benchmark and methodology: <a href="https://github.com/APVentureEngine/trademark-watch">github.com/APVentureEngine/trademark-watch</a>. <a href="#faq">Refunds &amp; contact</a>.</p>
 </footer>
 </main>
 
@@ -105,7 +129,11 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
           res.appendChild(d);
         }
       }
-      $("cta").hidden = false;
+      $("cta-head").textContent = "Next Tuesday's Gazette can carry a mark like \u201c" + q + "\u201d \u2014 and you get 30 days to oppose it.";
+      $("buy").textContent = "Watch \u201c" + q + "\u201d every Tuesday \u2014 $49/yr";
+      $("buy").href = "https://approj.gumroad.com/l/pwvfma?wanted=true&" +
+        encodeURIComponent("Trademark to watch (exact text of your mark)") + "=" + encodeURIComponent(q);
+      $("cta").scrollIntoView({ behavior: "smooth", block: "nearest" });
     }).catch(function (e) {
       $("go").disabled = false;
       $("status").textContent = "Something broke: " + e;
