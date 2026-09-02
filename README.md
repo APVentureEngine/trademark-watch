@@ -23,6 +23,13 @@ We keep two sections: *Applications publishing for opposition* and
 (no verbal element) are out of scope; cancellations/renewals are skipped.
 Rolling 120-day window, regenerated after every issue.
 
+The whole window as one CSV (serial, mark, event, Gazette date, filing date,
+classes, owner, status), refreshed with every issue:
+**https://huggingface.co/datasets/APProjects/uspto-gazette-word-marks**
+
+Delivery for paid watches: email (primary, via `mailer.py`) plus an optional
+private alert-history repo; both idempotent per watch per day.
+
 ## Pipeline (stdlib Python, deterministic)
 
 - `fetch_tmog.py` — list issues → download new ones → `tmog_parse.py`
