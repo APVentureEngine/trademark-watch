@@ -55,7 +55,7 @@ def _key():
 def _get(url, key, binary=False):
     req = urllib.request.Request(url, headers={
         "X-API-KEY": key, "Accept": "*/*",
-        "User-Agent": "tm-watch/1.0 (contact via github.com/APProj/trademark-watch)"})
+        "User-Agent": "tm-watch/1.0 (contact via github.com/APVentureEngine/trademark-watch)"})
     ctx = ssl.create_default_context()
     with urllib.request.urlopen(req, timeout=120, context=ctx) as r:
         data = r.read()

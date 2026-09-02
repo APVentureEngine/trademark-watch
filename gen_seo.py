@@ -20,7 +20,7 @@ import json
 import os
 import sys
 
-BASE_DEFAULT = "https://approj.github.io/trademark-watch"
+BASE_DEFAULT = "https://apventureengine.github.io/trademark-watch"
 MAX_ROWS = 200
 RECENT_DAYS = 14  # overview table window
 
@@ -56,7 +56,7 @@ def cta(base):
 FOOT = ('<p class="note">Source: USPTO trademark daily application XML files '
         '(TRTDXFAP), regenerated daily. Informational only — not legal advice, '
         'no opinion on likelihood of confusion. '
-        '<a href="https://github.com/APProj/trademark-watch">Data pipeline is '
+        '<a href="https://github.com/APVentureEngine/trademark-watch">Data pipeline is '
         'open source.</a></p>')
 
 

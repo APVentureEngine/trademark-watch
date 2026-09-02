@@ -42,7 +42,7 @@ else
 fi
 
 if [ "$MODE" = "real" ]; then
-  # sync site -> public repo (repo/ is the git clone of APProj/trademark-watch)
+  # sync site -> public repo (repo/ is the git clone of APVentureEngine/trademark-watch)
   cp site/index.html site/report.js repo/
   mkdir -p repo/index && cp site/index/*.json repo/index/
   cp site/sitemap.xml repo/ 2>/dev/null || echo "note: no sitemap.xml yet"
@@ -53,7 +53,7 @@ if [ "$MODE" = "real" ]; then
     git add -A
     if ! git diff --cached --quiet; then
       git commit -m "index refresh $(date -u +%F)"
-      git push https://x-access-token:$GITHUB_TOKEN@github.com/APProj/trademark-watch.git main
+      git push https://x-access-token:$GITHUB_ORG_TOKEN@github.com/APVentureEngine/trademark-watch.git main
     fi
   )
   # paid watches vs today's new filings -> alert files -> push alerts repo.

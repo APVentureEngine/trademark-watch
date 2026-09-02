@@ -5,7 +5,7 @@ For every ACTIVE watch (not past `expires`), compare the watched mark against
 every NEW filing (new_marks.jsonl from fetch_trtdxfap.py) with matcher.compare
 — against the filing's mark text AND its pseudo-mark variants. Hits become one
 markdown alert file per watch per day in the PRIVATE alerts repo
-(APProj/tm-watch-alerts), which subscribers watch — GitHub sends the email
+(APVentureEngine/tm-watch-alerts), which subscribers watch — GitHub sends the email
 (proven warn-feed pattern; zero recurring human steps).
 
 Modes:
@@ -34,7 +34,7 @@ import matcher  # noqa: E402
 WATCHLIST = os.path.join(HERE, "watchlist.json")
 NEW_MARKS = os.path.join(HERE, "new_marks.jsonl")
 ALERTS_DIR = os.path.join(HERE, "alerts_repo")
-OWNER, REPO = "APProj", "tm-watch-alerts"
+OWNER, REPO = "APVentureEngine", "tm-watch-alerts"
 
 DISCLAIMER = ("_Automated similarity flags for human review. Not legal advice; "
               "no opinion on likelihood of confusion. Verify at the TSDR link._")
@@ -123,10 +123,10 @@ def real_run(dry=False):
         for sid, user, mark, n, _p in run(watchlist, filings, today, write=False):
             print("watch_run DRY: %s (%s) %r -> %d hit(s)" % (sid, user, mark, n))
         return 0
-    tok = os.environ.get("GITHUB_TOKEN", "")
+    tok = os.environ.get("GITHUB_ORG_TOKEN", "")
     if not os.path.isdir(os.path.join(ALERTS_DIR, ".git")):
         if not tok:
-            print("watch_run: GITHUB_TOKEN missing, cannot clone alerts repo",
+            print("watch_run: GITHUB_ORG_TOKEN missing, cannot clone alerts repo",
                   file=sys.stderr)
             return 1
         r = _git(["clone", "https://x-access-token:%s@github.com/%s/%s.git"

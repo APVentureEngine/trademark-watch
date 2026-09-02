@@ -3,7 +3,7 @@
 (b) watchlist.json entry the daily watch runner matches against new filings.
 
 Adapted from warn-feed fulfill.py (proven live c65) with tm-watch deltas:
-  - product yqoJ16p67-UfQ1hnOtExvQ== ($49/yr, 1 mark) -> APProj/tm-watch-alerts
+  - product yqoJ16p67-UfQ1hnOtExvQ== ($49/yr, 1 mark) -> APVentureEngine/tm-watch-alerts
   - TWO custom fields: "Trademark to watch (exact text of your mark)" and
     "GitHub username (for private alert repo access)" (both required at
     checkout; verified on the live unpublished product c66).
@@ -16,7 +16,7 @@ FULFILL-ATTENTION lines. Refunded sales skipped. v1: no access revocation on
 refund (manual, same policy as warn-feed).
 
 Usage: python3 fulfill.py [--dry-run] [--selftest]
-Env: GUMROAD_ACCESS_TOKEN, GITHUB_TOKEN. Never prints tokens.
+Env: GUMROAD_ACCESS_TOKEN, GITHUB_ORG_TOKEN. Never prints tokens.
 LESSON c65: unit selftest proves the component — refresh.sh must live-fire
 this and its "fulfill:" summary line must appear in refresh stdout.
 """
@@ -27,7 +27,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FULFILLED = os.path.join(HERE, "fulfilled.json")
 ATTENTION = os.path.join(HERE, "needs_attention.json")
 WATCHLIST = os.path.join(HERE, "watchlist.json")
-OWNER = "APProj"
+OWNER = "APVentureEngine"
 ALERTS_REPO = "tm-watch-alerts"
 PRODUCT_IDS = {"yqoJ16p67-UfQ1hnOtExvQ=="}
 GH_FIELD_HINT = "github"
@@ -164,9 +164,9 @@ def main():
         sys.exit(selftest())
     dry = "--dry-run" in sys.argv
     gr = os.environ.get("GUMROAD_ACCESS_TOKEN")
-    gh = os.environ.get("GITHUB_TOKEN")
+    gh = os.environ.get("GITHUB_ORG_TOKEN")
     if not gr or not gh:
-        print("fulfill: missing GUMROAD_ACCESS_TOKEN or GITHUB_TOKEN in env")
+        print("fulfill: missing GUMROAD_ACCESS_TOKEN or GITHUB_ORG_TOKEN in env")
         sys.exit(1)
     fulfilled = load(FULFILLED)
     attention = load(ATTENTION)
