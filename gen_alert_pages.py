@@ -14,8 +14,10 @@ the delivery channel that needs NO account, NO email key and NO human:
 
 The buyer opens <site>/alerts/, types the mark + purchase email; the browser
 computes the same SHA-256 (WebCrypto) and jumps to the page. The URL is
-unguessable without the purchase email but is NOT a password: the page holds
-only the watched mark and public USPTO records (stated on the page).
+unlisted, but the hosting repo is PUBLIC (its tree lists every slug), so the
+page holds only the watched mark and public USPTO records — never name or
+email — and says so. Upgrade path (BACKLOG): client-side AES-GCM with a key
+derived from mark|email so the repo holds only ciphertext.
 
 Inputs:  watchlist.json (fulfill.py), alert_history.json (watch_run.py:
          {sid: {"checked": [days], "days": {day: [hit, ...]}}}).
@@ -114,9 +116,11 @@ def render_page(w, hist, today):
     parts.append("<h2>Issues checked</h2><p class=\"note\">%s</p>" % (
         ", ".join(checked) if checked else
         "none yet — the first check runs with the next Gazette issue (Tuesdays)."))
-    parts.append("<p class=\"note\">This URL is unlisted (not indexed, not in the sitemap) and cannot be "
-                 "guessed without your purchase email, but it is not a password: it shows only your "
-                 "watched mark and public USPTO records. Lost the link? Rebuild it at "
+    parts.append("<p class=\"note\">Privacy, plainly: this page is unlisted (not indexed, not linked, not in "
+                 "the sitemap) and its address is derived from your purchase email, but the site is served "
+                 "from a public GitHub repository, so anyone browsing that repository can see it. It "
+                 "therefore holds only your watched mark and public USPTO records — never your name or "
+                 "email. Lost the link? Rebuild it at "
                  "<a href=\"../\">%salerts/</a>. Questions: reply to your Gumroad receipt or "
                  "<a href=\"https://github.com/APVentureEngine/trademark-watch/issues/new\">open an issue</a>. "
                  "Run by APProjects (Gumroad seller <i>approj</i>).</p></body></html>" % SITE)
@@ -156,7 +160,8 @@ FINDER = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <h1>Open your private alert page</h1>
 <p>Bought a <a href="%s">TM Watch</a>? Type the mark exactly as you entered it at checkout and the
 email you paid with. Nothing is sent anywhere: your browser computes the page address locally
-(SHA-256) and jumps to it.</p>
+(SHA-256) and jumps to it. Your page never shows your name or email — only the watched mark and
+public USPTO records — because the site is hosted from a public repository.</p>
 <form id="f"><label>Watched mark<input id="m" autocomplete="off" required></label>
 <label>Purchase email<input id="e" type="email" autocomplete="email" required></label>
 <button type="submit">Open my alerts</button></form>
