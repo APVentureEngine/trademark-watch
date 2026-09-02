@@ -38,8 +38,10 @@ private alert-history repo; both idempotent per watch per day.
   phonetic-first-letter shards, precomputed metaphone + squeezed forms).
 - `gen_seo.py` — per-class "newly published & registered" pages + sitemap.
 - `matcher.py` / `matcher.js` — the deterministic similarity matcher
-  (identical ports; `selftest_js.py` enforces parity on 86 vectors before any
-  push).
+  (identical ports; `selftest_js.py` enforces parity on 116 vectors before any
+  push). `gen_rarity.py` → `common-tokens.json`: the corpus common-word table
+  behind the v2 rare-shared-word rule (regenerated from the live corpus each
+  refresh; a word is "rare" iff it appears in <10 of the ~200k marks).
 - `watch_run.py` — paid watches vs the latest issue → alert markdown → private
   alerts repo. `fulfill.py` — Gumroad sale → repo invite + watchlist entry.
 - `refresh.sh` — runs every self-test gate first (fatal), then the above.
@@ -48,11 +50,16 @@ private alert-history repo; both idempotent per watch per day.
 
 `benchmark/tm-benchmark-pairs.csv` — 45 real §2(d) pairs from public TTAB /
 Federal Circuit records (every row cited; 36 must-flag, 9 where either outcome
-is defensible). Matcher v1: 34/36 must-flag pairs caught (94% recall), 0 false
-positives on the 20 pairs in `benchmark/negative-controls.csv`. The two misses
-(VEUVE ROYALE / VEUVE CLICQUOT, GASPAR'S ALE / JOSE GASPAR GOLD — one shared
-distinctive token inside longer multi-word marks) are documented in
-`MATCHER_REPORT.md` as the known v1 gap.
+is defensible). Matcher v2 (2026-09-02): 36/36 must-flag pairs caught, 0 false
+positives on the 20 pairs in `benchmark/negative-controls.csv`. The two v1
+misses (VEUVE ROYALE / VEUVE CLICQUOT, GASPAR'S ALE / JOSE GASPAR GOLD — one
+shared distinctive token inside longer multi-word marks) are now caught by the
+rare-shared-word rule; `MATCHER_REPORT.md` has the design, the measured noise
+cost (+1.7 extra hits per query on the live corpus, all sharing the actual
+rare word), and why phonetic token equality was deliberately excluded from it.
+`benchmark/RESULTS.txt` is the full per-pair table, rewritten by every refresh
+against the shipped `common-tokens.json` — if a corpus change ever moves a
+result, that file changes with it, not this paragraph.
 
 **Not legal advice.** A flag means "a human should look" — never a legal
 opinion on likelihood of confusion.

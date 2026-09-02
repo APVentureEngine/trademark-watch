@@ -1,9 +1,38 @@
-# TM Watch matcher v1 — benchmark report (2026-09-01, cycle 64)
+# TM Watch matcher — benchmark report (v1 2026-09-01 c64 · v2 2026-09-02 c76)
 
 Binding launch gate (KILL_CRITERIA #2): flag ≥80% of a ≥20-pair benchmark of
 real §2(d) opposition/refusal name pairs, without drowning in noise.
 
-## Result (2026-09-02, benchmark expanded to 45 pairs): PASS — 34/36 must-flag (94%), 0/20 negative-control FPs
+## Result v2 (2026-09-02, cycle 76): PASS — 36/36 must-flag (100%), 0/20 negative-control FPs
+
+Rule 6 "rare-token" added to matcher.py + matcher.js (parity: 116 vectors, 0
+mismatches). Design: `gen_rarity.py` counts per-token document frequency over
+the distinctive, plural-stripped tokens of every mark in the live Gazette
+corpus (203,147 marks on 2026-09-02) and ships the COMMON set (df ≥ 10 →
+4,571 tokens, 39 KB) as `common-tokens.json`; a token is rare iff absent from
+it. Two marks that share one EXACT (or plural-stripped) distinctive token of
+≥4 letters that is rare → flag, even when the 2/3 token-overlap rule does not
+fire. VEUVE and GASPAR have df 0; PACIFIC 51, IRON 108, DENTAL 81, NORTH 106
+(the negative controls) are common and stay silent.
+
+What was measured before shipping, on the real corpus:
+- First draft reused rule 5's token matcher INCLUDING phonetic equality.
+  Metaphone-lite codes are short (VEUVE → "F", GASPARS → "KSPRS"), so "Veuve
+  Royale" gained +112 junk hits (FAFO GAMES, VIVI…, WAVY DAZE) and "Gaspar's
+  Ale" matched XPRESS marks. Rejected.
+- Shipped version = exact/plural share only. Over 15 realistic queries the
+  rule added 0–7 hits each (mean +1.7), every one sharing the actual rare word:
+  KODIAK OUTDOORS → KODIAK BUILDING PARTNERS, TESLA ENERGY → TESLA BOND,
+  PATAGONIA PROVISIONS → PATAGONIA WELLNESS, REDWOOD CAPITAL → REDWOODS PRESS.
+  Those are flags a paid watch SHOULD raise. Borderline: MARITIME (df 9) —
+  descriptive words just under the line will occasionally fire; the df
+  threshold is one constant (`MIN_DF` in gen_rarity.py) if that proves noisy.
+- Known limitation: the corpus is a rolling ~120-day Gazette window, so
+  rarity is measured against recent filings, not the whole register. The
+  table is regenerated every refresh and `benchmark/RESULTS.txt` is rewritten
+  from it, so a published number can never outlive the data it was true for.
+
+## Result v1 (2026-09-02, benchmark expanded to 45 pairs): PASS — 34/36 must-flag (94%), 0/20 negative-control FPs
 
 Expansion (cycle 75): +16 must-flag and +5 acceptable-flag pairs, all from
 TMEP 1207.01(b)(iii) (marks sharing a dominant term; fetch-verified on

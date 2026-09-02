@@ -168,6 +168,42 @@
   {
    "code": "AL",
    "s": "YELLOW"
+  },
+  {
+   "code": "FRL",
+   "s": "VEUVE ROYALE"
+  },
+  {
+   "code": "KSPRSL",
+   "s": "GASPAR'S ALE"
+  },
+  {
+   "code": "PSFKRSTFNSL",
+   "s": "PACIFIC CREST FINANCIAL"
+  },
+  {
+   "code": "KDKTDRS",
+   "s": "KODIAK OUTDOORS"
+  },
+  {
+   "code": "KDKSTDRS",
+   "s": "KODIAKS OUTDOORS"
+  },
+  {
+   "code": "SKSKMS",
+   "s": "ZQX GAMES"
+  },
+  {
+   "code": "TSLNRJ",
+   "s": "TESLA ENERGY"
+  },
+  {
+   "code": "FPMK",
+   "s": "FYOU PMEC"
+  },
+  {
+   "code": "RDSPRS",
+   "s": "REDWOODS PRESS"
   }
  ],
  "vectors": [
@@ -352,7 +388,8 @@
    "flag": true,
    "kinds": [
     "containment",
-    "tokens"
+    "tokens",
+    "rare-token"
    ],
    "m1": "GASPARILLA",
    "m2": "GASPARILLA TREASURES",
@@ -482,7 +519,8 @@
    "flag": true,
    "kinds": [
     "containment",
-    "tokens"
+    "tokens",
+    "rare-token"
    ],
    "m1": "MACHO",
    "m2": "MACHO COMBOS",
@@ -504,6 +542,298 @@
    "norm2": "CREST CAREER IMAGES",
    "phon1": "KRMJ",
    "phon2": "KRSTKRMJS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "VEUVE ROYALE",
+   "m2": "VEUVE CLICQUOT",
+   "norm1": "VEUVE ROYALE",
+   "norm2": "VEUVE CLICQUOT",
+   "phon1": "FRL",
+   "phon2": "FKLKT"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "GASPAR'S ALE",
+   "m2": "JOSE GASPAR GOLD",
+   "norm1": "GASPARS ALE",
+   "norm2": "JOSE GASPAR GOLD",
+   "phon1": "KSPRSL",
+   "phon2": "JSKSPRKLD"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "tokens",
+    "rare-token"
+   ],
+   "m1": "PACKARD TECHNOLOGIES",
+   "m2": "HEWLETT PACKARD",
+   "norm1": "PACKARD TECHNOLOGIES",
+   "norm2": "HEWLETT PACKARD",
+   "phon1": "PKRDTKSNLJS",
+   "phon2": "LTPKRD"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "whole-mark-token",
+    "tokens"
+   ],
+   "m1": "STONE LION CAPITAL",
+   "m2": "LION",
+   "norm1": "STONE LION CAPITAL",
+   "norm2": "LION",
+   "phon1": "STNLNKPTL",
+   "phon2": "LN"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "identical",
+    "whole-mark-token",
+    "edit-short",
+    "phonetic-equal"
+   ],
+   "m1": "MAX",
+   "m2": "MAX",
+   "norm1": "MAX",
+   "norm2": "MAX",
+   "phon1": "MKS",
+   "phon2": "MKS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens",
+    "rare-token"
+   ],
+   "m1": "SAM EDELMAN",
+   "m2": "EDELMAN",
+   "norm1": "SAM EDELMAN",
+   "norm2": "EDELMAN",
+   "phon1": "SMDLMN",
+   "phon2": "ADLMN"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens",
+    "rare-token"
+   ],
+   "m1": "CORAZON BY CHICA",
+   "m2": "CORAZON",
+   "norm1": "CORAZON BY CHICA",
+   "norm2": "CORAZON",
+   "phon1": "KRSNBKSK",
+   "phon2": "KRSN"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "whole-mark-token",
+    "tokens"
+   ],
+   "m1": "CSC ADVANCED BUSINESS SYSTEMS",
+   "m2": "CSC",
+   "norm1": "CSC ADVANCED BUSINESS SYSTEMS",
+   "norm2": "CSC",
+   "phon1": "KSKDFNSDBSNSTMS",
+   "phon2": "KSK"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens"
+   ],
+   "m1": "RESPONSE CARD",
+   "m2": "RESPONSE",
+   "norm1": "RESPONSE CARD",
+   "norm2": "RESPONSE",
+   "phon1": "RSPNSKRD",
+   "phon2": "RSPNS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens"
+   ],
+   "m1": "SPARKS BY SASSAFRAS",
+   "m2": "SPARKS",
+   "norm1": "SPARKS BY SASSAFRAS",
+   "norm2": "SPARKS",
+   "phon1": "SPRKSBSFRS",
+   "phon2": "SPRKS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment"
+   ],
+   "m1": "CONFIRMCELLS",
+   "m2": "CONFIRM",
+   "norm1": "CONFIRMCELLS",
+   "norm2": "CONFIRM",
+   "phon1": "KNFRMSLS",
+   "phon2": "KNFRM"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens"
+   ],
+   "m1": "SMART-SCAN",
+   "m2": "SMART",
+   "norm1": "SMART SCAN",
+   "norm2": "SMART",
+   "phon1": "SMRTSKN",
+   "phon2": "SMRT"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens",
+    "rare-token"
+   ],
+   "m1": "PERRY'S PIZZA",
+   "m2": "PERRY'S",
+   "norm1": "PERRYS PIZZA",
+   "norm2": "PERRYS",
+   "phon1": "PRSPS",
+   "phon2": "PRS"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens",
+    "rare-token"
+   ],
+   "m1": "RICHARD PETTY'S ACCU TUNE",
+   "m2": "ACCU-TUNE",
+   "norm1": "RICHARD PETTYS ACCU TUNE",
+   "norm2": "ACCU TUNE",
+   "phon1": "RKSRDPTSKTN",
+   "phon2": "AKTN"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "tokens"
+   ],
+   "m1": "COLLEGIAN OF CALIFORNIA",
+   "m2": "COLLEGIENNE",
+   "norm1": "COLLEGIAN OF CALIFORNIA",
+   "norm2": "COLLEGIENNE",
+   "phon1": "KLJNFKLFRN",
+   "phon2": "KLJN"
+  },
+  {
+   "expect": "yes",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens"
+   ],
+   "m1": "PEDI-RELAX",
+   "m2": "RELAX",
+   "norm1": "PEDI RELAX",
+   "norm2": "RELAX",
+   "phon1": "PDRLKS",
+   "phon2": "RLKS"
+  },
+  {
+   "expect": "any",
+   "flag": false,
+   "kinds": [],
+   "m1": "CAPITAL CITY BANK",
+   "m2": "CITIBANK",
+   "norm1": "CAPITAL CITY BANK",
+   "norm2": "CITIBANK",
+   "phon1": "KPTLSTBNK",
+   "phon2": "STBNK"
+  },
+  {
+   "expect": "any",
+   "flag": true,
+   "kinds": [
+    "whole-mark-token",
+    "tokens",
+    "rare-token"
+   ],
+   "m1": "THE RITZ KIDS",
+   "m2": "RITZ",
+   "norm1": "THE RITZ KIDS",
+   "norm2": "RITZ",
+   "phon1": "TRTSKDS",
+   "phon2": "RTS"
+  },
+  {
+   "expect": "any",
+   "flag": false,
+   "kinds": [],
+   "m1": "DEER-B-GON",
+   "m2": "DEER AWAY",
+   "norm1": "DEER B GON",
+   "norm2": "DEER AWAY",
+   "phon1": "DRBKN",
+   "phon2": "DR"
+  },
+  {
+   "expect": "any",
+   "flag": true,
+   "kinds": [
+    "containment",
+    "tokens",
+    "rare-token"
+   ],
+   "m1": "CATFISH BOBBERS",
+   "m2": "BOBBER",
+   "norm1": "CATFISH BOBBERS",
+   "norm2": "BOBBER",
+   "phon1": "KTFKSBRS",
+   "phon2": "BR"
+  },
+  {
+   "expect": "any",
+   "flag": true,
+   "kinds": [
+    "tokens",
+    "rare-token"
+   ],
+   "m1": "GOLDEN CRUST",
+   "m2": "ADOLPH'S GOLD'N CRUST",
+   "norm1": "GOLDEN CRUST",
+   "norm2": "ADOLPHS GOLDN CRUST",
+   "phon1": "KLDNKRST",
+   "phon2": "ADLFSKLDNKRST"
   },
   {
    "expect": "neg",
@@ -1156,7 +1486,8 @@
     "identical",
     "edit",
     "phonetic-equal",
-    "tokens"
+    "tokens",
+    "rare-token"
    ],
    "m1": "A+ TUTORS",
    "m2": "A PLUS TUTORS",
@@ -1280,6 +1611,117 @@
    "norm2": "ELLO",
    "phon1": "AL",
    "phon2": "AL"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "VEUVE ROYALE",
+   "m2": "VEUVE CLICQUOT",
+   "norm1": "VEUVE ROYALE",
+   "norm2": "VEUVE CLICQUOT",
+   "phon1": "FRL",
+   "phon2": "FKLKT"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "GASPAR'S ALE",
+   "m2": "JOSE GASPAR GOLD",
+   "norm1": "GASPARS ALE",
+   "norm2": "JOSE GASPAR GOLD",
+   "phon1": "KSPRSL",
+   "phon2": "JSKSPRKLD"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "PACIFIC CREST FINANCIAL",
+   "m2": "PACIFIC HARBOR MEDIA",
+   "norm1": "PACIFIC CREST FINANCIAL",
+   "norm2": "PACIFIC HARBOR MEDIA",
+   "phon1": "PSFKRSTFNSL",
+   "phon2": "PSFKSRBRMD"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "KODIAK OUTDOORS",
+   "m2": "KODIAK BUILDING PARTNERS",
+   "norm1": "KODIAK OUTDOORS",
+   "norm2": "KODIAK BUILDING PARTNERS",
+   "phon1": "KDKTDRS",
+   "phon2": "KDKBLDNKPRTNRS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "KODIAKS OUTDOORS",
+   "m2": "KODIAK BUILDING",
+   "norm1": "KODIAKS OUTDOORS",
+   "norm2": "KODIAK BUILDING",
+   "phon1": "KDKSTDRS",
+   "phon2": "KDKBLDNK"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "ZQX GAMES",
+   "m2": "ZQX MEDIA",
+   "norm1": "ZQX GAMES",
+   "norm2": "ZQX MEDIA",
+   "phon1": "SKSKMS",
+   "phon2": "SKSMD"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "TESLA ENERGY",
+   "m2": "TESLA BOND",
+   "norm1": "TESLA ENERGY",
+   "norm2": "TESLA BOND",
+   "phon1": "TSLNRJ",
+   "phon2": "TSLBND"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "FYOU PMEC",
+   "m2": "VEUVE ROYALE",
+   "norm1": "FYOU PMEC",
+   "norm2": "VEUVE ROYALE",
+   "phon1": "FPMK",
+   "phon2": "FRL"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "REDWOODS PRESS",
+   "m2": "REDWOOD CAPITAL",
+   "norm1": "REDWOODS PRESS",
+   "norm2": "REDWOOD CAPITAL",
+   "phon1": "RDSPRS",
+   "phon2": "RDKPTL"
   }
  ]
 }

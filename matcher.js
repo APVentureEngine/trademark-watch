@@ -1,4 +1,4 @@
-/* TM Watch matcher v1 — JS port of matcher.py (deterministic trademark-name
+/* TM Watch matcher v2 — JS port of matcher.py (deterministic trademark-name
  * similarity flagging). MUST mirror matcher.py exactly; parity is enforced by
  * selftest.js against parity-vectors.json (generated from the Python side).
  * Contract: identical flag + reason kinds + phonetic codes + normalized forms.
@@ -6,6 +6,10 @@
  * the comparisons themselves are raw IEEE doubles and identical.
  *
  * UMD-lite: works as a Node require() and as a browser <script> (window.tmMatcher).
+ * Rule 6 (rare-token, v2/c76) needs the common-token set: call
+ * tmMatcher.setCommonTokens(arrayFromCommonTokensJson) first; until then the
+ * rule is OFF and compare() behaves exactly like v1 (same as Python without
+ * common-tokens.json).
  * NOT legal advice: a flag means "a human should look".
  */
 (function (root, factory) {
@@ -110,6 +114,13 @@
     return toks.filter(function (t) { return !STOPWORDS.has(t); });
   }
 
+  var COMMON = null;            // Set of common tokens, or null = rule 6 off
+  var RARE_MIN_LEN = 4;
+  function setCommonTokens(list) { COMMON = list ? new Set(list) : null; }
+  function isRare(tok) {
+    return COMMON !== null && tok.length >= RARE_MIN_LEN && !COMMON.has(tok);
+  }
+
   function tokenMatch(t1, t2) {
     if (t1 === t2) return true;
     if (stripPlural(t1) === stripPlural(t2)) return true;
@@ -178,6 +189,17 @@
       if (matched >= 1 && ratio >= 0.67) {
         reasons.push("tokens(" + matched + "/" + smaller.length + ")");
       }
+
+      // 6. rare shared token (v2): exact/plural-stripped share only (no phonetics)
+      var rare = null;
+      for (var x = 0; x < smaller.length && rare === null; x++) {
+        var sa = stripPlural(smaller[x]);
+        if (!isRare(sa)) continue;
+        for (var y = 0; y < larger.length; y++) {
+          if (stripPlural(larger[y]) === sa) { rare = sa; break; }
+        }
+      }
+      if (rare !== null) reasons.push("rare-token(" + rare + ")");
     }
 
     var detail = { norm1: n1, norm2: n2, phon1: p1, phon2: p2,
@@ -189,5 +211,6 @@
     normalize: normalize, squeeze: squeeze, dedouble: dedouble,
     dlDistance: dlDistance, dlSimilarity: dlSimilarity,
     metaphoneLite: metaphoneLite, compare: compare,
+    setCommonTokens: setCommonTokens, isRare: isRare,
   };
 });

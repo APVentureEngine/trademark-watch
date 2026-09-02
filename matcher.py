@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""TM Watch matcher v1 — deterministic trademark-name similarity flagging.
+"""TM Watch matcher v2 — deterministic trademark-name similarity flagging.
 
 Given two mark names, decide whether a watch service should FLAG the pair
 for human review. Signals (any one fires => flag):
@@ -13,6 +13,15 @@ for human review. Signals (any one fires => flag):
   5. tokens         — >= 2/3 of the smaller mark's distinctive tokens match
                       the other mark's tokens (exact, plural-stripped, or
                       phonetic-equal)
+  6. rare-token     — (v2, c76) the two marks share ONE distinctive token
+                      (len >= 4, exact or plural-stripped — NOT phonetic) that is RARE in the
+                      live Gazette corpus: not in common-tokens.json
+                      (gen_rarity.py, df >= 10 over ~200k marks). Catches
+                      VEUVE ROYALE / VEUVE CLICQUOT and GASPAR'S ALE / JOSE
+                      GASPAR GOLD (the two v1 benchmark misses) while
+                      PACIFIC / IRON / DENTAL / NORTH (common) stay silent.
+                      If common-tokens.json is absent the rule is OFF
+                      (compare() then behaves exactly like v1).
 
 Deterministic, stdlib-only, no network. NOT legal advice: flags mean
 "a human should look", never "confusingly similar" in the s.2(d) sense.
@@ -20,6 +29,8 @@ Deterministic, stdlib-only, no network. NOT legal advice: flags mean
 CLI: python3 matcher.py "MARK ONE" "MARK TWO"   -> prints verdict + reasons
 """
 
+import json
+import os
 import re
 import sys
 
@@ -131,6 +142,37 @@ def _strip_plural(tok: str) -> str:
     return tok
 
 
+COMMON_TOKENS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  "common-tokens.json")
+_COMMON = None          # frozenset of common tokens, or None = rule 6 disabled
+_COMMON_LOADED = False
+RARE_MIN_LEN = 4
+
+
+def set_common_tokens(tokens):
+    """Install the common-token set (iterable of str) or None to disable rule 6."""
+    global _COMMON, _COMMON_LOADED
+    _COMMON = frozenset(tokens) if tokens is not None else None
+    _COMMON_LOADED = True
+
+
+def common_tokens():
+    """Lazy-load common-tokens.json next to this file (once)."""
+    global _COMMON_LOADED
+    if not _COMMON_LOADED:
+        _COMMON_LOADED = True
+        if os.path.exists(COMMON_TOKENS_FILE):
+            with open(COMMON_TOKENS_FILE) as f:
+                set_common_tokens(json.load(f)["tokens"])
+    return _COMMON
+
+
+def _is_rare(tok: str) -> bool:
+    """tok is a plural-stripped distinctive token. Rare = not in the common set."""
+    common = common_tokens()
+    return common is not None and len(tok) >= RARE_MIN_LEN and tok not in common
+
+
 def _tokens(norm: str):
     return [t for t in norm.split(" ") if t]
 
@@ -199,6 +241,26 @@ def compare(name1: str, name2: str):
         ratio = matched / len(smaller)
         if matched >= 1 and ratio >= 0.67:
             reasons.append(f"tokens({matched}/{len(smaller)})")
+
+        # 6. rare shared token (v2): an EXACT (or plural-stripped) shared token
+        #    that is rare in the corpus. Phonetic token equality is deliberately
+        #    NOT used here: metaphone-lite codes are short (VEUVE -> "F") and
+        #    would match FAFO/VIVI/WAVY — measured +112 junk hits on the live
+        #    corpus for "Veuve Royale" (c76). Exact-only measured +0..+11 per
+        #    query, all sharing the actual rare word (KODIAK, NORTHSTAR).
+        rare = None
+        for a in smaller:
+            sa = _strip_plural(a)
+            if not _is_rare(sa):
+                continue
+            for b in larger:
+                if _strip_plural(b) == sa:
+                    rare = sa
+                    break
+            if rare:
+                break
+        if rare:
+            reasons.append(f"rare-token({rare})")
 
     detail = {"norm1": n1, "norm2": n2, "phon1": p1, "phon2": p2,
               "edit_sim": round(sim, 3)}

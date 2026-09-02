@@ -20,6 +20,7 @@ python3 selftest.py                  # benchmark recall/FP gate (§2(d) pairs)
 python3 selftest_js.py               # matcher.js parity (quickjs)
 python3 selftest_site.py             # report.js sharding+pipeline parity
 python3 gen_index.py --selftest      # index build round-trip + determinism
+python3 gen_rarity.py --selftest     # common-token table (matcher rule 6)
 python3 fulfill.py --selftest        # custom-field extraction + email welcome
 python3 mailer.py --selftest         # Brevo payload/rails (no network)
 python3 fetch_trtdxfap.py --selftest # legacy ODP path (kept; keyless now)
@@ -35,6 +36,13 @@ python3 fetch_tmog.py
 
 if [ -f marks.jsonl ]; then
   MODE=real
+  # rule-6 rarity table from the (possibly just-updated) corpus, then RE-RUN
+  # the matcher gates against it: a new issue can move a token across the
+  # df>=10 line, and the published benchmark claim must reflect the shipped
+  # table, not last week's. Fatal (set -e).
+  python3 gen_rarity.py --in marks.jsonl
+  python3 selftest.py > benchmark-results.txt
+  python3 selftest_js.py
   python3 gen_index.py --in marks.jsonl --out site/index
   python3 gen_seo.py --in marks.jsonl --out site
 else
@@ -45,7 +53,8 @@ fi
 
 if [ "$MODE" = "real" ]; then
   # sync site -> public repo (repo/ is the git clone of APVentureEngine/trademark-watch)
-  cp site/index.html site/report.js repo/
+  cp site/index.html site/report.js site/common-tokens.json repo/
+  cp benchmark-results.txt repo/benchmark/RESULTS.txt   # per-pair table, regenerated each refresh
   mkdir -p repo/index && cp site/index/*.json repo/index/
   cp site/sitemap.xml repo/ 2>/dev/null || echo "note: no sitemap.xml yet"
   cp site/robots.txt repo/robots.txt

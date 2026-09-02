@@ -1,0 +1,72 @@
+== BENCHMARK (real s.2(d) pairs) ==
+  [OK     ] 'XCEED' vs 'X-SEED'  -> edit(sim=0.80),phonetic-equal(KSD)
+  [OK     ] 'ISHINE' vs 'ICE SHINE'  -> phonetic-near(AKSN~ASKSN,sim=0.75)
+  [OK     ] 'SEYCOS' vs 'SEIKO'  -> phonetic-near(SKS~SK,sim=0.50)
+  [OK     ] 'CAYNA' vs 'CANA'  -> edit(sim=0.80),phonetic-equal(KN)
+  [OK     ] 'ENTELEC' vs 'INTELECT'  -> phonetic-near(ANTLK~ANTLKT,sim=0.75)
+  [OK     ] 'CRESCO' vs 'KRESSCO'  -> phonetic-equal(KRSK)
+  [OK     ] 'TMM' vs 'TMS'  -> edit-short(dist=1),phonetic-near(TM~TMS,sim=0.67)
+  [OK     ] 'COMMCASH' vs 'COMMUNICASH'  -> phonetic-near(KMKS~KMNKS,sim=0.73)
+  [OK     ] 'AUDIO BSS USA' vs 'BOSS AUDIO SYSTEMS'  -> tokens(2/2)
+  [OK     ] 'TRUCOOL' vs 'TURCOOL'  -> edit(sim=0.86),phonetic-equal(TRKL)
+  [OK     ] 'NEWPORTS' vs 'NEWPORT'  -> containment,edit(sim=0.88),phonetic-near(NPRTS~NPRT,sim=0.88)
+  [OK     ] 'MILTRON' vs 'MILLTRONICS'  -> containment
+  [OK     ] 'LUTEX' vs 'LUTEXAL'  -> containment,phonetic-near(LTKS~LTKSL,sim=0.71)
+  [OK     ] 'GASPARILLA' vs 'GASPARILLA TREASURES'  -> containment,tokens(1/1),rare-token(GASPARILLA)
+  [OK     ] 'I AM' vs 'I AM'  -> identical,edit-short(dist=0),phonetic-equal(AM),tokens(2/2)
+  [ok(any)] 'GASPER ROOFING' vs 'JASPER CONTRACTORS'  -> -
+  [ok(any)] 'CROSS-OVER' vs 'CROSSOVER'  -> identical,edit(sim=1.00),phonetic-equal(KRSFR)
+  [ok(any)] 'PLAYERS' vs 'PLAYERS'  -> identical,whole-mark-token,edit(sim=1.00),phonetic-equal(PLRS)
+  [ok(any)] 'BOTTOMS UP' vs 'BOTTOMS UP'  -> identical,edit(sim=1.00),phonetic-equal(BTMSP),tokens(2/2)
+  [OK     ] 'ML' vs 'ML MARK LEES'  -> whole-mark-token,tokens(1/1)
+  [OK     ] 'TITAN' vs 'VANTAGE TITAN'  -> containment,tokens(1/1)
+  [OK     ] 'STONE LION CAPITAL' vs 'LION CAPITAL'  -> containment,tokens(2/2)
+  [OK     ] 'MACHO' vs 'MACHO COMBOS'  -> containment,tokens(1/1),rare-token(MACHO)
+  [OK     ] 'CAREER IMAGE' vs 'CREST CAREER IMAGES'  -> containment,tokens(2/2)
+  [OK     ] 'VEUVE ROYALE' vs 'VEUVE CLICQUOT'  -> rare-token(VEUVE)
+  [OK     ] "GASPAR'S ALE" vs 'JOSE GASPAR GOLD'  -> rare-token(GASPAR)
+  [OK     ] 'PACKARD TECHNOLOGIES' vs 'HEWLETT PACKARD'  -> tokens(1/1),rare-token(PACKARD)
+  [OK     ] 'STONE LION CAPITAL' vs 'LION'  -> whole-mark-token,tokens(1/1)
+  [OK     ] 'MAX' vs 'MAX'  -> identical,whole-mark-token,edit-short(dist=0),phonetic-equal(MKS)
+  [OK     ] 'SAM EDELMAN' vs 'EDELMAN'  -> containment,tokens(1/1),rare-token(EDELMAN)
+  [OK     ] 'CORAZON BY CHICA' vs 'CORAZON'  -> containment,tokens(1/1),rare-token(CORAZON)
+  [OK     ] 'CSC ADVANCED BUSINESS SYSTEMS' vs 'CSC'  -> whole-mark-token,tokens(1/1)
+  [OK     ] 'RESPONSE CARD' vs 'RESPONSE'  -> containment,tokens(1/1)
+  [OK     ] 'SPARKS BY SASSAFRAS' vs 'SPARKS'  -> containment,tokens(1/1)
+  [OK     ] 'CONFIRMCELLS' vs 'CONFIRM'  -> containment
+  [OK     ] 'SMART-SCAN' vs 'SMART'  -> containment,tokens(1/1)
+  [OK     ] "PERRY'S PIZZA" vs "PERRY'S"  -> containment,tokens(1/1),rare-token(PERRY)
+  [OK     ] "RICHARD PETTY'S ACCU TUNE" vs 'ACCU-TUNE'  -> containment,tokens(2/2),rare-token(ACCU)
+  [OK     ] 'COLLEGIAN OF CALIFORNIA' vs 'COLLEGIENNE'  -> tokens(1/1)
+  [OK     ] 'PEDI-RELAX' vs 'RELAX'  -> containment,tokens(1/1)
+  [ok(any)] 'CAPITAL CITY BANK' vs 'CITIBANK'  -> -
+  [ok(any)] 'THE RITZ KIDS' vs 'RITZ'  -> whole-mark-token,tokens(1/1),rare-token(RITZ)
+  [ok(any)] 'DEER-B-GON' vs 'DEER AWAY'  -> -
+  [ok(any)] 'CATFISH BOBBERS' vs 'BOBBER'  -> containment,tokens(1/1),rare-token(BOBBER)
+  [ok(any)] 'GOLDEN CRUST' vs "ADOLPH'S GOLD'N CRUST"  -> tokens(2/2),rare-token(CRUST)
+== NEGATIVE CONTROLS ==
+  [OK     ] 'BLUEFIN ANALYTICS' vs 'CARTWHEEL MEDIA'  -> -
+  [OK     ] 'SOLSTICE COFFEE' vs 'MERIDIAN BAKERY'  -> -
+  [OK     ] 'KODIAK OUTDOORS' vs 'VELVETINE COSMETICS'  -> -
+  [OK     ] 'NIMBUS SOFTWARE' vs 'ORCHARD LANE'  -> -
+  [OK     ] 'REDWOOD CAPITAL' vs 'IRONGATE SECURITY'  -> -
+  [OK     ] 'LANTERN BOOKS' vs 'PLUMB LEVEL TOOLS'  -> -
+  [OK     ] 'HARVEST MOON FARMS' vs 'CITYLINE TRANSIT'  -> -
+  [OK     ] 'QUARTZ KITCHEN' vs 'MAPLECREST DENTAL'  -> -
+  [OK     ] 'FALCON RIDGE' vs 'SUGARPINE CANDLES'  -> -
+  [OK     ] 'BRIGHTWATER LABS' vs 'ONYX MOTORWORKS'  -> -
+  [OK     ] 'PACIFIC CREST FINANCIAL' vs 'PACIFIC HARBOR MEDIA'  -> -
+  [OK     ] 'IRON HORSE BREWING' vs 'IRON PEAK CLIMBING'  -> -
+  [OK     ] 'DELTA DENTAL PLUS' vs 'ATLAS DENTAL CARE'  -> -
+  [OK     ] 'SUMMIT SOLUTIONS' vs 'SEQUOIA CONSULTING'  -> -
+  [OK     ] 'GREENFIELD ORGANICS' vs 'GRANDVIEW OPTICS'  -> -
+  [OK     ] 'MARITIME SUPPLY' vs 'MERCANTILE EXCHANGE'  -> -
+  [OK     ] 'NORTHSTAR YOGA' vs 'NORTHWIND KAYAKS'  -> -
+  [OK     ] 'CLEARBROOK FARMS' vs 'CLARINET MUSIC SCHOOL'  -> -
+  [OK     ] 'VANTAGE POINT REALTY' vs 'ADVANTAGE AUTO GLASS'  -> -
+  [OK     ] 'LUMEN ELECTRIC' vs 'LIMEHOUSE GRILL'  -> -
+
+RECALL (must-flag): 36/36 = 100%  (gate: >=80%)
+ACCEPTABLE-FLAG rows flagged: 6/9 (informational)
+NEGATIVE-CONTROL false positives: 0/20 = 0%
+GATE: PASS

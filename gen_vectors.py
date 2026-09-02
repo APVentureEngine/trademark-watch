@@ -49,6 +49,16 @@ PARITY_CASES = [
     ("AB", "BA"),  # transposition, short
     ("W", "H"),  # both metaphone-empty
     ("YELLOW", "ELLO"),  # initial vowel Y handling
+    # rule 6 (v2 rare-token) coverage — needs common-tokens.json present
+    ("VEUVE ROYALE", "VEUVE CLICQUOT"),  # rare shared token -> flag
+    ("GASPAR'S ALE", "JOSE GASPAR GOLD"),  # possessive-stripped rare share
+    ("PACIFIC CREST FINANCIAL", "PACIFIC HARBOR MEDIA"),  # common share -> no
+    ("KODIAK OUTDOORS", "KODIAK BUILDING PARTNERS"),  # rare exact share
+    ("KODIAKS OUTDOORS", "KODIAK BUILDING"),  # plural-stripped rare share
+    ("ZQX GAMES", "ZQX MEDIA"),  # rare but len<4 -> no rule 6
+    ("TESLA ENERGY", "TESLA BOND"),
+    ("FYOU PMEC", "VEUVE ROYALE"),  # phonetic-only share must NOT fire rule 6
+    ("REDWOODS PRESS", "REDWOOD CAPITAL"),
 ]
 
 

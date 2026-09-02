@@ -26,6 +26,10 @@ QUERIES = [
 ctx = quickjs.Context()
 ctx.eval("var self = this;")  # report.js UMD attaches to root
 ctx.eval(open(os.path.join(HERE, "matcher.js")).read())
+# rule 6 parity: give JS the same common-token set Python auto-loads
+_ct = os.path.join(HERE, "common-tokens.json")
+if os.path.exists(_ct):
+    ctx.eval("tmMatcher.setCommonTokens(%s);" % json.dumps(json.load(open(_ct))["tokens"]))
 ctx.eval(open(os.path.join(HERE, "site", "report.js")).read())
 ctx.eval("""
 function _shardChars(q) { return JSON.stringify(tmReport.shardChars(q)); }
