@@ -38,7 +38,7 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
 <body>
 <main>
 <h1>Is a confusingly-similar trademark about to register?</h1>
-<p class="sub">Type your brand name. This page checks it against <span id="corpus">every US trademark published for opposition or registered in the last ~4 months</span> using edit-distance + phonetic matching — the same open-source matcher we <a href="https://github.com/APVentureEngine/trademark-watch">benchmark publicly</a> on real USPTO §2(d) conflict pairs (20/20 recall, 0 false positives). Free, no login, runs entirely in your browser.</p>
+<p class="sub">Type your brand name. This page checks it against <span id="corpus">every US trademark published for opposition or registered in the last ~4 months</span> using edit-distance + phonetic matching — the same open-source matcher we <a href="https://github.com/APVentureEngine/trademark-watch">benchmark publicly</a> on 45 real USPTO §2(d) case pairs (34/36 must-flag pairs caught = 94% recall, 0 false positives on 20 negative controls). Free, no login, runs entirely in your browser.</p>
 
 <form id="f">
 <input type="text" id="q" placeholder="e.g. Northstar Coffee" autocomplete="off" maxlength="120" required>
@@ -68,7 +68,7 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
 <h2 id="faq">How it works, refunds, contact</h2>
 <div class="faq">
 <p><b>Buying.</b> Pay $49 on Gumroad, enter the exact text of your mark and your GitHub username. Within one refresh cycle (≤24h) you are invited to a private GitHub repository; from then on every Tuesday issue is matched against your mark and any hits are written there as a dated alert file. Click "Watch" on the repo and GitHub emails you each time an alert lands. Need a different delivery channel (plain email, Slack)? Ask via the contact link below — it is on the roadmap and existing buyers get it at no charge.</p>
-<p><b>What is watched.</b> Every word mark in the two Gazette sections that matter: applications published for opposition (~10,000/week) and registrations issued. Design-only marks (logos without words) are out of scope. Matching = edit distance + phonetic + variant forms; the matcher and its 24-pair §2(d) benchmark are <a href="https://github.com/APVentureEngine/trademark-watch">open source</a>, so you can verify exactly what it will and will not catch.</p>
+<p><b>What is watched.</b> Every word mark in the two Gazette sections that matter: applications published for opposition (~10,000/week) and registrations issued. Design-only marks (logos without words) are out of scope. Matching = edit distance + phonetic + variant forms; the matcher and its 45-pair §2(d) benchmark (with the two pairs it misses named) are <a href="https://github.com/APVentureEngine/trademark-watch">open source</a>, so you can verify exactly what it will and will not catch.</p>
 <p><b>Term.</b> 12 months from purchase, one mark, no auto-renewal. You get a reminder alert file two weeks before expiry. Several marks: buy once per mark (multi-mark bundles coming; ask).</p>
 <p><b>Refunds.</b> Full refund within 14 days of purchase, no questions — request it through Gumroad.</p>
 <p><b>Contact.</b> <a href="https://github.com/APVentureEngine/trademark-watch/issues/new">Open an issue on the repo</a> (no account needed to read; a free GitHub account to post) or reply to your Gumroad receipt — both reach the operator directly.</p>

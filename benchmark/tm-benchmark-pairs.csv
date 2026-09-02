@@ -23,3 +23,24 @@ TITAN,VANTAGE TITAN,yes,yes,containment-addition,"In re Toshiba Med. Sys., 91 US
 STONE LION CAPITAL,LION CAPITAL,yes,yes,containment-addition,"Stone Lion Capital Partners v. Lion Capital, 746 F.3d 1317 (Fed. Cir. 2014)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-01
 MACHO,MACHO COMBOS,yes,yes,containment-addition,"In re El Torito Rests., 9 USPQ2d 2002 (TTAB 1988)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-01
 CAREER IMAGE,CREST CAREER IMAGES,yes,yes,containment-addition-plural,"In re U.S. Shoe Corp., 229 USPQ 707 (TTAB 1985)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-01
+VEUVE ROYALE,VEUVE CLICQUOT,yes,yes,shared-dominant-token,"Palm Bay Imps. v. Veuve Clicquot Ponsardin, 396 F.3d 1369 (Fed. Cir. 2005)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+GASPAR'S ALE,JOSE GASPAR GOLD,yes,yes,shared-dominant-token-possessive,"In re Chatam Int'l Inc., 380 F.3d 1340 (Fed. Cir. 2004)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+PACKARD TECHNOLOGIES,HEWLETT PACKARD,yes,yes,shared-dominant-token,"Hewlett-Packard Co. v. Packard Press, 281 F.3d 1261 (Fed. Cir. 2002)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+STONE LION CAPITAL,LION,yes,yes,containment-addition,"Stone Lion Capital Partners v. Lion Capital, 746 F.3d 1317 (Fed. Cir. 2014)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+MAX,MAX,yes,yes,identical-word-portion,"In re Max Capital Grp., 93 USPQ2d 1243 (TTAB 2010)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+SAM EDELMAN,EDELMAN,yes,yes,containment-addition,"In re SL&E Training Stable, 88 USPQ2d 1216 (TTAB 2008)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+CORAZON BY CHICA,CORAZON,yes,yes,containment-addition,"In re Chica, Inc., 84 USPQ2d 1845 (TTAB 2007)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+CSC ADVANCED BUSINESS SYSTEMS,CSC,yes,yes,containment-short-token,"In re Computer Sys. Ctr., 5 USPQ2d 1378 (TTAB 1987)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+RESPONSE CARD,RESPONSE,yes,yes,containment-addition,"In re Equitable Bancorporation, 229 USPQ 709 (TTAB 1986)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+SPARKS BY SASSAFRAS,SPARKS,yes,yes,containment-addition,"In re Apparel Ventures, 229 USPQ 225 (TTAB 1986)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+CONFIRMCELLS,CONFIRM,yes,yes,containment-compound,"In re Corning Glass Works, 229 USPQ 65 (TTAB 1985)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+SMART-SCAN,SMART,yes,yes,containment-hyphen,"In re Energy Images, 227 USPQ 572 (TTAB 1985)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+PERRY'S PIZZA,PERRY'S,yes,yes,containment-possessive,"In re Denisi, 225 USPQ 624 (TTAB 1985)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+RICHARD PETTY'S ACCU TUNE,ACCU-TUNE,yes,yes,containment-hyphen-space,"In re Riddle, 225 USPQ 630 (TTAB 1985)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+COLLEGIAN OF CALIFORNIA,COLLEGIENNE,yes,yes,phonetic-dominant-token,"In re Collegian Sportswear, 224 USPQ 174 (TTAB 1984)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+PEDI-RELAX,RELAX,yes,yes,containment-hyphen,"In re Pierre Fabre S.A., 188 USPQ 691 (TTAB 1975)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+CAPITAL CITY BANK,CITIBANK,no,acceptable-flag,shared-generic-no-confusion,"Citigroup v. Capital City Bank Grp., 637 F.3d 1344 (Fed. Cir. 2011)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+THE RITZ KIDS,RITZ,no,acceptable-flag,containment-no-confusion-context,"Shen Mfg. v. Ritz Hotel, 393 F.3d 1238 (Fed. Cir. 2004)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+DEER-B-GON,DEER AWAY,no,acceptable-flag,shared-descriptive-token,"Safer, Inc. v. OMS Invs., 94 USPQ2d 1031 (TTAB 2010)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+CATFISH BOBBERS,BOBBER,no,acceptable-flag,shared-descriptive-token,"In re Farm Fresh Catfish, 231 USPQ 495 (TTAB 1986)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02
+GOLDEN CRUST,ADOLPH'S GOLD'N CRUST,no,acceptable-flag,shared-descriptive-phrase,"In re Shawnee Milling, 225 USPQ 747 (TTAB 1985)",TMEP 1207.01(b)(iii) via bitlaw.com fetched 2026-09-02

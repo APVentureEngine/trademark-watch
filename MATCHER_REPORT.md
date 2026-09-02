@@ -3,7 +3,22 @@
 Binding launch gate (KILL_CRITERIA #2): flag ≥80% of a ≥20-pair benchmark of
 real §2(d) opposition/refusal name pairs, without drowning in noise.
 
-## Result: PASS — 20/20 must-flag pairs (100%), 0/20 negative-control FPs
+## Result (2026-09-02, benchmark expanded to 45 pairs): PASS — 34/36 must-flag (94%), 0/20 negative-control FPs
+
+Expansion (cycle 75): +16 must-flag and +5 acceptable-flag pairs, all from
+TMEP 1207.01(b)(iii) (marks sharing a dominant term; fetch-verified on
+bitlaw.com 2026-09-02). Every containment / possessive / hyphen / short-token
+pair (SAM EDELMAN/EDELMAN, PERRY'S PIZZA/PERRY'S, PEDI-RELAX/RELAX,
+CSC ADVANCED BUSINESS SYSTEMS/CSC, COLLEGIAN OF CALIFORNIA/COLLEGIENNE …) is
+caught. Two MISSES, stated plainly: VEUVE ROYALE vs VEUVE CLICQUOT and
+GASPAR'S ALE vs JOSE GASPAR GOLD — one shared DISTINCTIVE token inside
+longer multi-word marks (1/2 and 1/3 token overlap, below the 2/3 rule).
+Fixing this needs a token-rarity signal (a shared token that is rare in the
+203k-mark Gazette corpus should flag on its own; PACIFIC/IRON/DELTA must not —
+they are negative controls). That is the top matcher item in BACKLOG.md and
+would touch matcher.py + matcher.js + the parity vectors together.
+
+Original v1 result (cycle 64, 24 pairs): 20/20 must-flag (100%), 0/20 FPs.
 
 - Benchmark: 24 real §2(d) pairs, every one cited to a TTAB/Fed. Cir. case
   via TMEP 1207.01(b) (fetch-verified on bitlaw.com 2026-09-01 across two

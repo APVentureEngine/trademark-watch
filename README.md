@@ -46,10 +46,13 @@ private alert-history repo; both idempotent per watch per day.
 
 ## Benchmark
 
-`benchmark/tm-benchmark-pairs.csv` — 24 real §2(d) opposition/refusal pairs
-from public TTAB/Federal Circuit records (cited). Matcher v1: 100% recall,
-0 false positives on `benchmark/negative-controls.csv`. See
-`MATCHER_REPORT.md`.
+`benchmark/tm-benchmark-pairs.csv` — 45 real §2(d) pairs from public TTAB /
+Federal Circuit records (every row cited; 36 must-flag, 9 where either outcome
+is defensible). Matcher v1: 34/36 must-flag pairs caught (94% recall), 0 false
+positives on the 20 pairs in `benchmark/negative-controls.csv`. The two misses
+(VEUVE ROYALE / VEUVE CLICQUOT, GASPAR'S ALE / JOSE GASPAR GOLD — one shared
+distinctive token inside longer multi-word marks) are documented in
+`MATCHER_REPORT.md` as the known v1 gap.
 
 **Not legal advice.** A flag means "a human should look" — never a legal
 opinion on likelihood of confusion.
