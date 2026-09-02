@@ -75,6 +75,7 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
 </div>
 
 <footer>
+<p><b>Who runs this.</b> TM Watch is published by APProjects — the Gumroad seller <i>approj</i> that sells the $49/yr watch; receipts and invoices come from Gumroad, and refunds are handled there (terms above). The pipeline is an automated job that fetches each Tuesday's Gazette, rebuilds this page and runs every paid watch; it is checked on every run. Contact: the Contact link on the Gumroad listing, a reply to your receipt, or a <a href="https://github.com/APVentureEngine/trademark-watch/issues/new">repo issue</a>.</p>
 <p><b>Not legal advice.</b> A flag means "a human should look", not "this is infringement"; no flag does not mean your name is clear (design-only marks, common-law rights, pending applications not yet published, and registrations older than this window are out of scope of this index). Data: USPTO Trademark Official Gazette weekly XML (applications published for opposition + registrations issued), public domain. Matcher source, benchmark and methodology: <a href="https://github.com/APVentureEngine/trademark-watch">github.com/APVentureEngine/trademark-watch</a>. Download the whole index as CSV (rolling 120 days, refreshed weekly): <a href="https://huggingface.co/datasets/APProjects/uspto-gazette-word-marks">Hugging Face dataset</a>. <a href="#faq">Refunds &amp; contact</a>.</p>
 </footer>
 </main>
@@ -156,7 +157,17 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
         else window.prompt("Copy this link:", link);
       });
       res.appendChild(share);
-      $("cta-head").textContent = "Next Tuesday's Gazette can carry a mark like \u201c" + q + "\u201d \u2014 and you get 30 days to oppose it.";
+      // c82: the CTA reacts to the result (site review #2 rec. 4).
+      var nTue = new Date(); nTue.setDate(nTue.getDate() + ((9 - nTue.getDay()) % 7 || 7));
+      var tueStr = nTue.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      if (rep.matches.length > 0) {
+        $("cta-head").textContent = rep.matches.length + " similar mark" + (rep.matches.length === 1 ? "" : "s") +
+          " already in this window. The next Gazette issue lands Tuesday " + tueStr +
+          " \u2014 have \u201c" + q + "\u201d checked against it, and every issue after, automatically.";
+      } else {
+        $("cta-head").textContent = "\u201c" + q + "\u201d is clear today. The next Gazette issue lands Tuesday " + tueStr +
+          " \u2014 a similar mark published then gives you 30 days to oppose it, and nobody checks by hand every week.";
+      }
       $("buy").textContent = "Watch \u201c" + q + "\u201d every Tuesday \u2014 $49/yr";
       $("buy").href = "https://approj.gumroad.com/l/pwvfma?wanted=true&" +
         encodeURIComponent("Trademark to watch (exact text of your mark)") + "=" + encodeURIComponent(q);
