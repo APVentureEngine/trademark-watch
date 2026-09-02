@@ -121,13 +121,19 @@
     return COMMON !== null && tok.length >= RARE_MIN_LEN && !COMMON.has(tok);
   }
 
+  var TOKEN_PHON_MIN_SIM = 0.60;
+
   function tokenMatch(t1, t2) {
     if (t1 === t2) return true;
     if (stripPlural(t1) === stripPlural(t2)) return true;
     if (t1.length >= 3 && t2.length >= 3) {
       var c1 = metaphoneLite(t1), c2 = metaphoneLite(t2);
       // v2.1: 1-2 char codes only count when the tokens are within one edit
-      if (c1 === c2 && (c1.length >= 3 || dlDistance(t1, t2) <= 1)) return true;
+      // v2.2: 3+ char codes also need the tokens themselves >= 60% similar
+      if (c1 === c2) {
+        if (dlDistance(t1, t2) <= 1) return true;
+        if (c1.length >= 3 && dlSimilarity(t1, t2) >= TOKEN_PHON_MIN_SIM) return true;
+      }
     }
     return false;
   }
@@ -194,13 +200,19 @@
         reasons.push("tokens(" + matched + "/" + smaller.length + ")");
       }
 
-      // 6. rare shared token (v2): exact/plural-stripped share only (no phonetics)
+      // 6. rare shared token (v2): exact/plural-stripped share; v2.2 adds one-edit phonetic-equal rare variants
       var rare = null;
       for (var x = 0; x < smaller.length && rare === null; x++) {
         var sa = stripPlural(smaller[x]);
         if (!isRare(sa)) continue;
         for (var y = 0; y < larger.length; y++) {
-          if (stripPlural(larger[y]) === sa) { rare = sa; break; }
+          var sb = stripPlural(larger[y]);
+          if (sb === sa) { rare = sa; break; }
+          // v2.2: rare near-variant (both rare, same code >=3 chars, one edit)
+          if (isRare(sb) && dlDistance(sa, sb) <= 1) {
+            var ca = metaphoneLite(sa);
+            if (ca.length >= 3 && ca === metaphoneLite(sb)) { rare = sa + "~" + sb; break; }
+          }
         }
       }
       if (rare !== null) reasons.push("rare-token(" + rare + ")");

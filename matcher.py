@@ -181,6 +181,9 @@ def _distinctive(tokens):
     return [t for t in tokens if t not in STOPWORDS]
 
 
+TOKEN_PHON_MIN_SIM = 0.60  # v2.2 guard for phonetic token equality
+
+
 def _token_match(t1: str, t2: str) -> bool:
     if t1 == t2:
         return True
@@ -193,8 +196,17 @@ def _token_match(t1: str, t2: str) -> bool:
         # "Gaspar's Ale" flagged ALLU/OLLY/IUL (260 and 164 token-only junk
         # hits on the live corpus). Short codes only count when the tokens
         # themselves are within one edit.
-        if c1 == c2 and (len(c1) >= 3 or dl_distance(t1, t2) <= 1):
-            return True
+        # v2.2 (c80): 3+ char codes are still lossy on short common words --
+        # IRON->ARN matched AIRN/AERION/A ARENA, BAKERY->BKR matched BCR/BGRY,
+        # APEX->APX matched APACHE/AEPOCH (57/60/25/20 token-only junk hits
+        # per query on the live corpus). Equal codes now count only when the
+        # tokens themselves are within one edit OR at least 60% similar
+        # (COLLEGIAN/COLLEGIENNE 0.73 keeps; IRON/AIRN 0.50 goes).
+        if c1 == c2:
+            if dl_distance(t1, t2) <= 1:
+                return True
+            if len(c1) >= 3 and dl_similarity(t1, t2) >= TOKEN_PHON_MIN_SIM:
+                return True
     return False
 
 
@@ -261,9 +273,20 @@ def compare(name1: str, name2: str):
             if not _is_rare(sa):
                 continue
             for b in larger:
-                if _strip_plural(b) == sa:
+                sb = _strip_plural(b)
+                if sb == sa:
                     rare = sa
                     break
+                # v2.2 (c80): a rare NEAR-variant counts too -- both tokens
+                # rare, same phonetic code of >=3 chars, one edit apart
+                # (KODIAK/KODIAC, GASPAR/GASPARI, LUMINA/LUMINE). Measured
+                # on the live corpus: +10 hits over 15 queries, every one a
+                # real variant (state/scratch/tm_rare_phon.py, c80).
+                if _is_rare(sb) and dl_distance(sa, sb) <= 1:
+                    ca = metaphone_lite(sa)
+                    if len(ca) >= 3 and ca == metaphone_lite(sb):
+                        rare = f"{sa}~{sb}"
+                        break
             if rare:
                 break
         if rare:

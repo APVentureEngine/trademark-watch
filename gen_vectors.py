@@ -64,8 +64,23 @@ PARITY_CASES = [
     ("GASPAR'S ALE", "ALLU"),  # code "AL" == "AL", dist 2 -> no
     ("GASPAR'S ALE", "ALE HOUSE"),  # exact token -> tokens(1/1) still fires
     ("BREW ALE", "BREW AILE"),  # short code, dist 1 -> phonetic token still ok
-    ("LUMINA", "LUMEENA SKIN"),  # 3+ char code -> unchanged
-    ("KODIAK COFFEE", "KODIAC BREW"),  # ratio 1/2 < 0.67 -> no (unchanged)
+    ("LUMINA", "LUMEENA SKIN"),  # 3+ char code, sim 0.71 -> still flags (edit rule too)
+    # v2.2 (c80) guard: 3+ char codes need token similarity >= 0.60
+    ("IRON PEAK FITNESS", "AIRN"),  # ARN==ARN but IRON/AIRN sim 0.50 -> no
+    ("IRON PEAK FITNESS", "AERION"),  # sim 0.50 -> no
+    ("APEX LOGISTICS", "APACHE"),  # APKS==APKS, sim 0.33 -> no
+    ("APEX LOGISTICS", "APPEX"),  # sim 0.80 -> tokens(1/1) still fires
+    ("SUNRISE BAKERY", "BCR"),  # BKR==BKR, sim 0.33 -> no
+    ("SUNRISE BAKERY", "BAKR"),  # sim 0.67 -> still fires
+    ("LUMINA SKIN", "HILLMOON"),  # LMN==LMN, sim low -> no
+    ("TESLA MOTORS", "MYTHROSY"),  # MTRS==MTRS (4 chars), sim 0.50 -> no
+    ("COLLEGIAN OF CALIFORNIA", "COLLEGIENNE"),  # benchmark pair, sim 0.73 keeps
+    ("KODIAK COFFEE", "KODIAC BREW"),  # v2.2: rare near-variant -> rare-token(KODIAK~KODIAC)
+    ("LUMINA SKIN", "LUMIN PEPTIDES"),  # v2.2 rare near-variant
+    ("GASPAR'S ALE", "GASPARI NUTRITION"),  # v2.2 rare near-variant
+    ("PATAGONIA PROVISIONS", "PATAGONIAN DELIGHT"),  # v2.2 rare near-variant
+    ("VEUVE ROYALE", "VIVI"),  # code "F" < 3 chars -> no rare near-variant
+    ("TESLA MOTORS", "TESLE"),  # TESLE not in corpus/common -> rare, dl 1, code TSL -> flags
     ("REDWOODS PRESS", "REDWOOD CAPITAL"),
 ]
 

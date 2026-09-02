@@ -226,8 +226,64 @@
    "s": "LUMINA"
   },
   {
+   "code": "ARNPKFTNS",
+   "s": "IRON PEAK FITNESS"
+  },
+  {
+   "code": "ARNPKFTNS",
+   "s": "IRON PEAK FITNESS"
+  },
+  {
+   "code": "APKSLJSTKS",
+   "s": "APEX LOGISTICS"
+  },
+  {
+   "code": "APKSLJSTKS",
+   "s": "APEX LOGISTICS"
+  },
+  {
+   "code": "SNRSBKR",
+   "s": "SUNRISE BAKERY"
+  },
+  {
+   "code": "SNRSBKR",
+   "s": "SUNRISE BAKERY"
+  },
+  {
+   "code": "LMNSKN",
+   "s": "LUMINA SKIN"
+  },
+  {
+   "code": "TSLMTRS",
+   "s": "TESLA MOTORS"
+  },
+  {
+   "code": "KLJNFKLFRN",
+   "s": "COLLEGIAN OF CALIFORNIA"
+  },
+  {
    "code": "KDKF",
    "s": "KODIAK COFFEE"
+  },
+  {
+   "code": "LMNSKN",
+   "s": "LUMINA SKIN"
+  },
+  {
+   "code": "KSPRSL",
+   "s": "GASPAR'S ALE"
+  },
+  {
+   "code": "PTKNPRFSNS",
+   "s": "PATAGONIA PROVISIONS"
+  },
+  {
+   "code": "FRL",
+   "s": "VEUVE ROYALE"
+  },
+  {
+   "code": "TSLMTRS",
+   "s": "TESLA MOTORS"
   },
   {
    "code": "RDSPRS",
@@ -1814,12 +1870,183 @@
    "expect": "parity",
    "flag": false,
    "kinds": [],
+   "m1": "IRON PEAK FITNESS",
+   "m2": "AIRN",
+   "norm1": "IRON PEAK FITNESS",
+   "norm2": "AIRN",
+   "phon1": "ARNPKFTNS",
+   "phon2": "ARN"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "IRON PEAK FITNESS",
+   "m2": "AERION",
+   "norm1": "IRON PEAK FITNESS",
+   "norm2": "AERION",
+   "phon1": "ARNPKFTNS",
+   "phon2": "ARN"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "APEX LOGISTICS",
+   "m2": "APACHE",
+   "norm1": "APEX LOGISTICS",
+   "norm2": "APACHE",
+   "phon1": "APKSLJSTKS",
+   "phon2": "APKS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "tokens"
+   ],
+   "m1": "APEX LOGISTICS",
+   "m2": "APPEX",
+   "norm1": "APEX LOGISTICS",
+   "norm2": "APPEX",
+   "phon1": "APKSLJSTKS",
+   "phon2": "APKS"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "SUNRISE BAKERY",
+   "m2": "BCR",
+   "norm1": "SUNRISE BAKERY",
+   "norm2": "BCR",
+   "phon1": "SNRSBKR",
+   "phon2": "BKR"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "tokens"
+   ],
+   "m1": "SUNRISE BAKERY",
+   "m2": "BAKR",
+   "norm1": "SUNRISE BAKERY",
+   "norm2": "BAKR",
+   "phon1": "SNRSBKR",
+   "phon2": "BKR"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "LUMINA SKIN",
+   "m2": "HILLMOON",
+   "norm1": "LUMINA SKIN",
+   "norm2": "HILLMOON",
+   "phon1": "LMNSKN",
+   "phon2": "LMN"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "TESLA MOTORS",
+   "m2": "MYTHROSY",
+   "norm1": "TESLA MOTORS",
+   "norm2": "MYTHROSY",
+   "phon1": "TSLMTRS",
+   "phon2": "MTRS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "tokens"
+   ],
+   "m1": "COLLEGIAN OF CALIFORNIA",
+   "m2": "COLLEGIENNE",
+   "norm1": "COLLEGIAN OF CALIFORNIA",
+   "norm2": "COLLEGIENNE",
+   "phon1": "KLJNFKLFRN",
+   "phon2": "KLJN"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
    "m1": "KODIAK COFFEE",
    "m2": "KODIAC BREW",
    "norm1": "KODIAK COFFEE",
    "norm2": "KODIAC BREW",
    "phon1": "KDKF",
    "phon2": "KDKBR"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "LUMINA SKIN",
+   "m2": "LUMIN PEPTIDES",
+   "norm1": "LUMINA SKIN",
+   "norm2": "LUMIN PEPTIDES",
+   "phon1": "LMNSKN",
+   "phon2": "LMNPTDS"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "GASPAR'S ALE",
+   "m2": "GASPARI NUTRITION",
+   "norm1": "GASPARS ALE",
+   "norm2": "GASPARI NUTRITION",
+   "phon1": "KSPRSL",
+   "phon2": "KSPRNTRTN"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "rare-token"
+   ],
+   "m1": "PATAGONIA PROVISIONS",
+   "m2": "PATAGONIAN DELIGHT",
+   "norm1": "PATAGONIA PROVISIONS",
+   "norm2": "PATAGONIAN DELIGHT",
+   "phon1": "PTKNPRFSNS",
+   "phon2": "PTKNDLKT"
+  },
+  {
+   "expect": "parity",
+   "flag": false,
+   "kinds": [],
+   "m1": "VEUVE ROYALE",
+   "m2": "VIVI",
+   "norm1": "VEUVE ROYALE",
+   "norm2": "VIVI",
+   "phon1": "FRL",
+   "phon2": "F"
+  },
+  {
+   "expect": "parity",
+   "flag": true,
+   "kinds": [
+    "tokens",
+    "rare-token"
+   ],
+   "m1": "TESLA MOTORS",
+   "m2": "TESLE",
+   "norm1": "TESLA MOTORS",
+   "norm2": "TESLE",
+   "phon1": "TSLMTRS",
+   "phon2": "TSL"
   },
   {
    "expect": "parity",
