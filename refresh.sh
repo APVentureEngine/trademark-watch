@@ -27,6 +27,7 @@ python3 fetch_trtdxfap.py --selftest # legacy ODP path (kept; keyless now)
 python3 tmog_parse.py --selftest     # ST.96 gazette parser
 python3 fetch_tmog.py --selftest     # merge/window/new-key logic
 python3 watch_run.py --selftest      # alert generation + expiry handling
+python3 gen_alert_pages.py --selftest # private alert pages + finder JS parity (c84)
 python3 selftest_e2e.py              # synthetic TDXF -> full pipeline
 
 # STAGE fetch: KEYLESS. Pull any new Official Gazette issue (public CDN, no
@@ -52,8 +53,22 @@ else
 fi
 
 if [ "$MODE" = "real" ]; then
+  # ORDER (c84): fulfill (new sales -> watchlist) -> watch_run (alerts +
+  # alert_history.json) -> gen_alert_pages (private pages) -> ONE site sync
+  # + push. A buyer's page therefore exists on the first refresh after the
+  # sale (receipt promises <=24h).
+  # paid fulfillment: Gumroad sale -> watchlist entry (+ optional repo invite).
+  # Live-fired (real API, 0 sales is a valid outcome); the "fulfill:" summary
+  # line in stdout is the wiring proof (lesson c65).
+  python3 fulfill.py
+  # paid watches vs today's new filings -> alert files/history -> push alerts repo.
+  # FATAL on failure (set -e): a paying subscriber silently missing alerts
+  # is the worst failure this product can have.
+  python3 watch_run.py
+  python3 gen_alert_pages.py --out site
   # sync site -> public repo (repo/ is the git clone of APVentureEngine/trademark-watch)
   cp site/index.html site/report.js site/common-tokens.json repo/
+  rm -rf repo/alerts && cp -r site/alerts repo/alerts
   cp benchmark-results.txt repo/benchmark/RESULTS.txt   # per-pair table, regenerated each refresh
   mkdir -p repo/index && cp site/index/*.json repo/index/
   cp site/sitemap.xml repo/ 2>/dev/null || echo "note: no sitemap.xml yet"
@@ -82,15 +97,9 @@ if [ "$MODE" = "real" ]; then
   else
     echo "hf_mirror: HF_TOKEN absent, skipped"
   fi
-  # paid watches vs today's new filings -> alert files -> push alerts repo.
-  # FATAL on failure (set -e): a paying subscriber silently missing alerts
-  # is the worst failure this product can have.
-  python3 watch_run.py
+else
+  # synth mode: still live-fire fulfillment so the wiring line appears.
+  python3 fulfill.py
 fi
-
-# paid fulfillment: Gumroad sale -> alerts-repo invite + watchlist entry.
-# Live-fired in BOTH modes (real API, 0 sales is a valid outcome). The
-# "fulfill:" summary line below in stdout is the wiring proof (lesson c65).
-python3 fulfill.py
 
 echo "refresh complete: mode=$MODE $(date -u)"

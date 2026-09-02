@@ -45,7 +45,10 @@ private alert-history repo; both idempotent per watch per day.
   behind the v2 rare-shared-word rule (regenerated from the live corpus each
   refresh; a word is "rare" iff it appears in <10 of the ~200k marks).
 - `watch_run.py` — paid watches vs the latest issue → alert markdown → private
-  alerts repo. `fulfill.py` — Gumroad sale → repo invite + watchlist entry.
+  alerts repo + `alert_history.json`. `gen_alert_pages.py` — one unlisted alert
+  page + RSS feed per paid watch at `alerts/<sha256(mark|email)>/` (no account
+  needed; `alerts/` is the finder, computed client-side). `fulfill.py` —
+  Gumroad sale → watchlist entry (+ optional repo invite).
 - `refresh.sh` — runs every self-test gate first (fatal), then the above.
 
 ## Benchmark

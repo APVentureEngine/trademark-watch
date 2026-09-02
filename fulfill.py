@@ -7,6 +7,10 @@ watch runner matches against new Gazette filings, plus delivery setup:
       the sale is flagged in needs_attention so nothing is silently lost.
   (b) GitHub private repo invite (secondary/optional): if the buyer gave a
       valid GitHub username, invite -> APVentureEngine/tm-watch-alerts.
+  (c) PRIVATE ALERT PAGE (c84, always): gen_alert_pages.py renders
+      <site>/alerts/<sha256(mark|email)>/ + feed.xml on the next refresh.
+      Needs no account and no key, so every sale with an email has a live
+      delivery channel. The required GitHub field accepts "none"/"-"/"n/a".
 
 Custom fields on product yqoJ16p67-UfQ1hnOtExvQ== ($49/yr, 1 mark):
   "Trademark to watch (exact text of your mark)"   required
@@ -43,6 +47,7 @@ SALES_AFTER = "2026-09-01"
 USER_RE = re.compile(r"^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$")
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 SITE = "https://apventureengine.github.io/trademark-watch/"
+NO_USER = {"none", "no", "n/a", "na", "-", "skip", "nope", "null", "x", "nil"}
 
 
 def extract_email(sale):
@@ -56,6 +61,8 @@ def welcome_message(mark, expires, user):
     text = ("Your TM Watch is active.\n\n"
             "Watched mark: %s\nActive until: %s (one-time payment; we email a reminder "
             "two weeks before expiry)\n\n"
+            "Your private alert page (bookmark it; it has an RSS feed): open "
+            "%salerts/ and enter this mark plus your purchase email.\n\n"
             "Every Tuesday the USPTO publishes the Trademark Official Gazette. The same "
             "day we run your mark against every newly published and newly registered "
             "word mark (name + phonetic + common-variant forms). If anything similar "
@@ -65,7 +72,7 @@ def welcome_message(mark, expires, user):
             "from its Gazette date.\n\n"
             "Quiet weeks mean no email. %s"
             "Refund: full refund within 14 days of purchase via Gumroad.\n"
-            % (mark, expires, repo_line))
+            % (mark, expires, SITE, repo_line))
     return "TM Watch is active for %s" % mark, text
 
 
@@ -101,6 +108,8 @@ def sanitize_username(raw):
         segs = [s for s in path.split("/") if s]
         v = segs[0] if segs else ""
     v = v.lstrip("@").strip()
+    if v.lower() in NO_USER:
+        return None
     return v if USER_RE.match(v) else None
 
 
@@ -167,6 +176,7 @@ def selftest():
         ([{"name": F_GH, "value": "octocat"}, {"name": F_TM, "value": "ACME"}], "octocat"),
         ({F_GH: "not a user!!"}, None),
         ({F_GH: "-bad"}, None),
+        ({F_GH: "none"}, None), ({F_GH: " N/A "}, None), ({F_GH: "-"}, None),
         ({F_TM: "ACME"}, None),
         ({}, None), (None, None),
     ]
@@ -191,6 +201,7 @@ def selftest():
             ok = False; print("SELFTEST FAIL email: %r -> %r (want %r)" % (sale, got, want))
     subj, body = welcome_message("ACME", "2027-09-01", None)
     assert "ACME" in subj and "2027-09-01" in body and "Tuesday" in body and "github.com" not in body
+    assert SITE + "alerts/" in body
     subj, body = welcome_message("ACME", "2027-09-01", "octocat")
     assert "octocat" in body and ALERTS_REPO in body
     for cf, want in cases_user:
@@ -272,7 +283,11 @@ def main():
             else:
                 problems.append("welcome email failed: " + info)
         elif email:
-            problems.append("email delivery not configured yet (A014) — alerts held until it is")
+            print("fulfill: sale %s: email channel not configured (A014) — page + RSS only" % sid)
+        # (c) private alert page — needs nothing but mark + email; rendered by
+        # gen_alert_pages.py on this and every later refresh.
+        if email:
+            delivery.append("page")
         watchlist[sid] = {"mark": mark, "email": email, "user": user,
                           "start": ts, "expires": expires}
         fulfilled[sid] = {"status": "watching", "delivery": delivery, "ts": ts}

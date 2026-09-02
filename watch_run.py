@@ -40,6 +40,31 @@ NEW_MARKS = os.path.join(HERE, "new_marks.jsonl")
 ALERTS_DIR = os.path.join(HERE, "alerts_repo")
 OWNER, REPO = "APVentureEngine", "tm-watch-alerts"
 SENT = os.path.join(HERE, "alerts_sent.json")
+HISTORY = os.path.join(HERE, "alert_history.json")   # feeds gen_alert_pages.py (c84)
+
+
+def record_history(watchlist, hits_by_sid, today, path=HISTORY):
+    """Persist per-watch check dates + hits so the private alert pages can
+    show the full history (idempotent: keyed by day)."""
+    hist = {}
+    if os.path.exists(path):
+        with open(path) as f:
+            hist = json.load(f)
+    for sid, hits in hits_by_sid.items():
+        h = hist.setdefault(sid, {"checked": [], "days": {}})
+        if today not in h["checked"]:
+            h["checked"].append(today)
+        if hits:
+            h["days"][today] = [{
+                "serial": f["serial"], "mark": f["mark"],
+                "date": f.get("pub_date") or f.get("filing_date"),
+                "event": {"published": "Published for opposition",
+                          "registered": "Registered"}.get(f.get("event"), "Filed"),
+                "classes": " ".join(str(c) for c in f.get("classes", [])),
+                "reasons": ", ".join(reasons)} for f, reasons in hits]
+    with open(path, "w") as f:
+        json.dump(hist, f, indent=1, sort_keys=True)
+    return hist
 BUY_URL = "https://approj.gumroad.com/l/pwvfma"
 
 DISCLAIMER = ("_Automated similarity flags for human review. Not legal advice; "
@@ -170,7 +195,8 @@ def run(watchlist, filings, today, out_dir=None, write=True, hits_out=None):
                     f.write("# Your TM Watch for %s expires on %s\n\n"
                             "Renew for another year at "
                             "https://approj.gumroad.com/l/pwvfma (enter the same "
-                            "mark and GitHub username).\n" % (w["mark"], w["expires"]))
+                            "mark and purchase email so your alert page keeps working).\n"
+                            % (w["mark"], w["expires"]))
         hits = hits_for(w["mark"], filings)
         if hits_out is not None:
             hits_out[sid] = hits
@@ -227,6 +253,7 @@ def real_run(dry=False):
             return 1
     hits_by_sid = {}
     results = run(watchlist, filings, today, out_dir=ALERTS_DIR, hits_out=hits_by_sid)
+    record_history(watchlist, hits_by_sid, today)
     total = sum(n for _s, _u, _m, n, _p in results)
     for sid, user, mark, n, path in results:
         print("watch_run: %s (%s) %r -> %d hit(s) -> %s" % (sid, user, mark, n, path))
@@ -293,6 +320,18 @@ def selftest():
         assert "tsdr.uspto.gov" in body
     # empty filings day
     assert run(watchlist, [], "2026-09-01", write=False) == []
+    # history persistence (c84): checked dates accumulate, hit days keyed by day
+    with tempfile.TemporaryDirectory() as td:
+        hp = os.path.join(td, "h.json")
+        hb = {}
+        run(watchlist, filings, "2026-09-01", write=False, hits_out=hb)
+        h = record_history(watchlist, hb, "2026-09-01", path=hp)
+        assert h["s1"]["checked"] == ["2026-09-01"] and len(h["s1"]["days"]["2026-09-01"]) == 2
+        assert "s2" in h and h["s2"]["days"] == {} and "s3" not in h
+        h = record_history(watchlist, {"s2": []}, "2026-09-08", path=hp)
+        assert h["s2"]["checked"] == ["2026-09-01", "2026-09-08"]
+        h = record_history(watchlist, hb, "2026-09-01", path=hp)   # idempotent re-run
+        assert h["s1"]["checked"] == ["2026-09-01"]
     # email dispatch: alert once per day per watch, expiry reminder once, idempotent
     for w in watchlist.values():
         w["email"] = w["user"] + "@example.com"

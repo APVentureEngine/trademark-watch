@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TM Watch — open your private alert page</title><style>body{font:16px/1.5 system-ui,sans-serif;max-width:880px;margin:2rem auto;padding:0 1rem;color:#1a1a1a}table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid #ddd;padding:6px;text-align:left;vertical-align:top}th{background:#f4f4f4}.tw{overflow-x:auto}.note{color:#555;font-size:14px}input{font:inherit;padding:.4rem;width:100%;box-sizing:border-box;margin:.2rem 0 .8rem}button{font:inherit;padding:.5rem 1rem}.ok{background:#e8f6ea;padding:.6rem 1rem;border-radius:6px}</style></head><body>
+<h1>Open your private alert page</h1>
+<p>Bought a <a href="https://approj.gumroad.com/l/pwvfma">TM Watch</a>? Type the mark exactly as you entered it at checkout and the
+email you paid with. Nothing is sent anywhere: your browser computes the page address locally
+(SHA-256) and jumps to it.</p>
+<form id="f"><label>Watched mark<input id="m" autocomplete="off" required></label>
+<label>Purchase email<input id="e" type="email" autocomplete="email" required></label>
+<button type="submit">Open my alerts</button></form>
+<p id="out" class="note"></p>
+<p class="note">Your page is created within 24 hours of purchase (the pipeline runs daily). If it shows
+"not found" after that, reply to your Gumroad receipt with the mark you entered — the operator sees
+it directly. The page has an RSS feed; subscribe to it in any feed reader to be notified.
+Run by APProjects (Gumroad seller <i>approj</i>). <a href="../">Back to the free checker</a>.</p>
+<script>
+function normMark(m){return m.toUpperCase().split(/\s+/).filter(Boolean).join(' ');}
+function normEmail(e){return e.trim().toLowerCase();}
+async function slugFor(m,e){
+  var s='tmwatch|'+normMark(m)+'|'+normEmail(e);
+  var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(function(b){return ('0'+b.toString(16)).slice(-2);}).join('').slice(0,32);
+}
+document.getElementById('f').addEventListener('submit',async function(ev){
+  ev.preventDefault();
+  var m=document.getElementById('m').value, e=document.getElementById('e').value;
+  if(!m.trim()||!e.trim()){return;}
+  var s=await slugFor(m,e);
+  var url=s+'/';
+  document.getElementById('out').innerHTML='Opening <a href="'+url+'">'+url+'</a> …';
+  location.href=url;
+});
+</script></body></html>
