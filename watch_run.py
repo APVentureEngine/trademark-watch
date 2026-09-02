@@ -63,12 +63,16 @@ def hits_for(watch_mark, filings):
 
 def render_alert(watch_mark, day, hits):
     lines = ["# TM Watch alert — %s — %s" % (watch_mark, day), "",
-             "%d new USPTO filing(s) similar to your watched mark." % len(hits),
-             "", "| Serial | Mark | Filed | Classes | Why flagged | Status link |",
-             "|---|---|---|---|---|---|"]
+             "%d mark(s) in the latest USPTO Official Gazette similar to your "
+             "watched mark. A mark *published for opposition* can be opposed "
+             "(or an extension requested) for 30 days from its Gazette date." % len(hits),
+             "", "| Serial | Mark | Gazette date | Event | Classes | Why flagged | Status link |",
+             "|---|---|---|---|---|---|---|"]
     for f, reasons in sorted(hits, key=lambda h: h[0]["serial"]):
-        lines.append("| %d | %s | %s | %s | %s | [TSDR](%s) |" % (
-            f["serial"], f["mark"].replace("|", "\\|"), f["filing_date"],
+        lines.append("| %d | %s | %s | %s | %s | %s | [TSDR](%s) |" % (
+            f["serial"], f["mark"].replace("|", "\\|"),
+            f.get("pub_date") or f["filing_date"],
+            {"published": "Published for opposition", "registered": "Registered"}.get(f.get("event"), "Filed"),
             " ".join(str(c) for c in f.get("classes", [])) or "—",
             ", ".join(reasons).replace("|", "\\|"), tsdr(f["serial"])))
     lines += ["", DISCLAIMER, ""]

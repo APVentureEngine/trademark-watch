@@ -51,10 +51,11 @@ STYLE = ("body{font:16px/1.5 -apple-system,Segoe UI,sans-serif;max-width:860px;"
 def cta(base):
     return ('<p><a class="cta" href="%s/">Run a free instant similarity check '
             'on your mark</a> &nbsp; <a href="https://approj.gumroad.com/l/pwvfma">'
-            'Automated daily watch — $49/yr</a></p>' % base)
+            'Automated weekly Gazette watch — $49/yr</a></p>' % base)
 
-FOOT = ('<p class="note">Source: USPTO trademark daily application XML files '
-        '(TRTDXFAP), regenerated daily. Informational only — not legal advice, '
+FOOT = ('<p class="note">Source: USPTO Trademark Official Gazette weekly XML '
+        '(marks published for opposition + registrations issued), regenerated '
+        'after every Tuesday issue. Informational only — not legal advice, '
         'no opinion on likelihood of confusion. '
         '<a href="https://github.com/APVentureEngine/trademark-watch">Data pipeline is '
         'open source.</a></p>')
@@ -75,17 +76,27 @@ def page(title, body_html, base, canonical, jsonld=None):
                body_html, FOOT))
 
 
+def edate(r):
+    """Event date: gazette publication date (TMOG path) else filing date."""
+    return r.get("pub_date") or r["filing_date"]
+
+
+def elabel(r):
+    return {"published": "Published for opposition",
+            "registered": "Registered"}.get(r.get("event"), "Filed")
+
+
 def row_html(r):
-    return ("<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td></tr>"
-            % (r["serial"], esc(r["mark"]), r["filing_date"],
+    return ("<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
+            % (r["serial"], esc(r["mark"]), edate(r), elabel(r),
                " ".join(str(c) for c in r.get("classes", [])) or "—"))
 
 
 def build(rows, out_dir, base):
     fdir = os.path.join(out_dir, "filings")
     os.makedirs(fdir, exist_ok=True)
-    rows = sorted(rows, key=lambda r: (r["filing_date"], r["serial"]), reverse=True)
-    newest = rows[0]["filing_date"] if rows else "n/a"
+    rows = sorted(rows, key=lambda r: (edate(r), r["serial"]), reverse=True)
+    newest = edate(rows[0]) if rows else "n/a"
     urls = [base + "/", base + "/filings/"]
 
     # per-class pages
@@ -96,29 +107,30 @@ def build(rows, out_dir, base):
     for c in range(1, 46):
         crows = by_class.get(c, [])[:MAX_ROWS]
         cname = CLASS_NAMES.get(c, "")
-        title = ("New trademark filings — Class %d (%s) — updated %s"
+        title = ("Newly published & registered trademarks — Class %d (%s) — updated %s"
                  % (c, cname, newest))
-        body = ("<h1>New USPTO trademark filings — Class %d: %s</h1>"
-                "<p class=note>Most recent %d application(s) in international "
-                "class %d from USPTO daily XML, as of %s.</p>%s"
-                "<table><tr><th>Serial</th><th>Mark</th><th>Filed</th>"
-                "<th>Classes</th></tr>%s</table>"
+        body = ("<h1>Newly published &amp; registered US trademarks — Class %d: %s</h1>"
+                "<p class=note>Most recent %d mark(s) in international "
+                "class %d from the USPTO Trademark Official Gazette, as of the %s issue. "
+                "A mark published for opposition can be opposed for 30 days from that date.</p>%s"
+                "<table><tr><th>Serial</th><th>Mark</th><th>Gazette date</th>"
+                "<th>Event</th><th>Classes</th></tr>%s</table>"
                 % (c, esc(cname), len(crows), c, newest, cta(base),
                    "".join(row_html(r) for r in crows)
-                   or "<tr><td colspan=4>No recent filings parsed.</td></tr>"))
+                   or "<tr><td colspan=5>No recent marks parsed.</td></tr>"))
         with open(os.path.join(fdir, "class-%02d.html" % c), "w") as f:
             f.write(page(title, body, base, "%s/filings/class-%02d.html" % (base, c)))
         urls.append("%s/filings/class-%02d.html" % (base, c))
 
     # overview page
-    recent = [r for r in rows if r["filing_date"] >= _minus_days(newest, RECENT_DAYS)]
+    recent = [r for r in rows if edate(r) >= _minus_days(newest, RECENT_DAYS)]
     counts = sorted(((len(v), c) for c, v in by_class.items()), reverse=True)[:10]
-    body = ("<h1>New US trademark filings — daily-updated</h1>"
-            "<p>%d applications in the current window; newest filing date %s. "
+    body = ("<h1>Newly published &amp; registered US trademarks — updated every Gazette issue</h1>"
+            "<p>%d marks in the current window; latest Official Gazette issue %s. "
             "Top classes: %s.</p>%s"
             "<h2>Browse by class</h2><p>%s</p>"
-            "<h2>Latest filings (last %d days, first %d)</h2>"
-            "<table><tr><th>Serial</th><th>Mark</th><th>Filed</th><th>Classes</th></tr>%s</table>"
+            "<h2>Latest marks (last %d days, first %d)</h2>"
+            "<table><tr><th>Serial</th><th>Mark</th><th>Gazette date</th><th>Event</th><th>Classes</th></tr>%s</table>"
             % (len(rows), newest,
                ", ".join("<a href=\"class-%02d.html\">%d (%s, %d)</a>"
                          % (c, c, esc(CLASS_NAMES.get(c, "")), n) for n, c in counts[:5]),
@@ -128,14 +140,15 @@ def build(rows, out_dir, base):
                RECENT_DAYS, MAX_ROWS,
                "".join(row_html(r) for r in recent[:MAX_ROWS])))
     jsonld = {"@context": "https://schema.org", "@type": "Dataset",
-              "name": "US trademark application filings (daily)",
-              "description": "Daily-updated normalized feed of new USPTO "
-                             "trademark applications with similarity search.",
+              "name": "US trademarks published for opposition and registered (weekly)",
+              "description": "Weekly-updated normalized feed of USPTO Official "
+                             "Gazette trademark publications and registrations "
+                             "with similarity search.",
               "url": base + "/filings/", "isAccessibleForFree": True,
               "dateModified": newest,
               "creator": {"@type": "Organization", "name": "TM Watch"}}
     with open(os.path.join(fdir, "index.html"), "w") as f:
-        f.write(page("New US trademark filings by class — updated %s" % newest,
+        f.write(page("Newly published & registered US trademarks by class — updated %s" % newest,
                      body, base, base + "/filings/", jsonld))
 
     with open(os.path.join(out_dir, "sitemap.xml"), "w") as f:

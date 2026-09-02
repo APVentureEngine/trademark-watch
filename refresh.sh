@@ -1,9 +1,10 @@
 #!/bin/bash
-# TM Watch daily refresh. Usage: bash refresh.sh   (any cwd; cds itself)
+# TM Watch refresh (run daily; data moves weekly — new Gazette every Tuesday).
+# Usage: bash refresh.sh   (any cwd; cds itself)
 # Modes:
 #   marks.jsonl present  -> REAL mode: build index from it, sync site into
 #                           repo/, commit+push public repo, run watch runner.
-#   marks.jsonl absent   -> SYNTH mode (pre-A010): build synthetic index for
+#   marks.jsonl absent   -> SYNTH mode (first run failed): build synthetic index for
 #                           LOCAL testing only. NEVER pushes product surfaces
 #                           (public site must never claim synthetic data is
 #                           real USPTO data — honesty rail).
@@ -20,16 +21,16 @@ python3 selftest_js.py               # matcher.js parity (quickjs)
 python3 selftest_site.py             # report.js sharding+pipeline parity
 python3 gen_index.py --selftest      # index build round-trip + determinism
 python3 fulfill.py --selftest        # custom-field extraction
-python3 fetch_trtdxfap.py --selftest # merge/window/new-serial logic
+python3 fetch_trtdxfap.py --selftest # legacy ODP path (kept; keyless now)
+python3 tmog_parse.py --selftest     # ST.96 gazette parser
+python3 fetch_tmog.py --selftest     # merge/window/new-key logic
 python3 watch_run.py --selftest      # alert generation + expiry handling
 python3 selftest_e2e.py              # synthetic TDXF -> full pipeline
 
-# STAGE fetch (A010): with the key in env, pull new daily files first.
-# FATAL if it fails while a key is present — a silently stale dataset is
-# worse than a loud crash (honesty rail).
-if [ -n "$USPTO_ODP_API_KEY" ]; then
-  python3 fetch_trtdxfap.py
-fi
+# STAGE fetch: KEYLESS. Pull any new Official Gazette issue (public CDN, no
+# API key — the ODP key is permanently unavailable, A010). FATAL if it fails:
+# a silently stale dataset is worse than a loud crash (honesty rail).
+python3 fetch_tmog.py
 
 if [ -f marks.jsonl ]; then
   MODE=real
@@ -37,7 +38,7 @@ if [ -f marks.jsonl ]; then
   python3 gen_seo.py --in marks.jsonl --out site
 else
   MODE=synth
-  echo "SYNTH MODE: no marks.jsonl (A010 pending) — local index only, no push"
+  echo "SYNTH MODE: no marks.jsonl (fetch never succeeded) — local index only, no push"
   python3 gen_index.py --synthetic 5000 --out site/index
 fi
 

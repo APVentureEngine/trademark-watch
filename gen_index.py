@@ -51,11 +51,15 @@ def shard_chars(mark_text):
 def build(rows, out_dir):
     shards = {}
     for r in rows:
-        serial, mark, fdate, classes = r["serial"], r["mark"], r["filing_date"], r.get("classes", [])
+        # date column = gazette publication date when present (TMOG path),
+        # else filing date (legacy daily-XML path). report.js labels it.
+        serial, mark, classes = r["serial"], r["mark"], r.get("classes", [])
+        fdate = r.get("pub_date") or r["filing_date"]
         norm = matcher.normalize(mark)
         phon = matcher.metaphone_lite(norm)
         squeezed = matcher.dedouble(matcher.squeeze(norm))
-        row = [serial, mark, fdate, sorted(classes), phon, squeezed]
+        row = [serial, mark, fdate, sorted(classes), phon, squeezed,
+               "R" if r.get("event") == "registered" else "P"]
         for ch in shard_chars(mark):
             shards.setdefault(ch, {})[serial] = row  # dedupe within shard
     os.makedirs(out_dir, exist_ok=True)
@@ -63,8 +67,9 @@ def build(rows, out_dir):
     for f in os.listdir(out_dir):
         if f.startswith("shard-") and f.endswith(".json"):
             os.remove(os.path.join(out_dir, f))
-    manifest = {"base": min((r["filing_date"] for r in rows), default=""),
-                "generated": max((r["filing_date"] for r in rows), default=""),
+    dates = [r.get("pub_date") or r["filing_date"] for r in rows]
+    manifest = {"base": min(dates, default=""), "generated": max(dates, default=""),
+                "date_kind": "published" if rows and rows[0].get("pub_date") else "filed",
                 "total": len(rows), "shards": {}}
     for ch in sorted(shards):
         srows = [shards[ch][k] for k in sorted(shards[ch])]
