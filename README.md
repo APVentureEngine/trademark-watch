@@ -4,7 +4,9 @@
 brand name, get an instant similarity report against every US trademark
 published for opposition or registered in the last ~4 months. Runs entirely
 in your browser over a static, sharded index; nothing you type leaves your
-machine.
+machine. Every report has a permanent link that re-runs against the latest
+issue, e.g. https://apventureengine.github.io/trademark-watch/?q=Kodiak%20Coffee
+— each flagged serial links to its live USPTO TSDR status page.
 
 **Paid:** $49/yr per mark — every new USPTO Official Gazette issue (weekly,
 Tuesdays) is matched against your mark and you get an alert file (GitHub

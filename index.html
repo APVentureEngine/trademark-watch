@@ -69,7 +69,7 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
 <div class="faq">
 <p><b>Buying.</b> Pay $49 on Gumroad, enter the exact text of your mark and your GitHub username. Within one refresh cycle (≤24h) you are invited to a private GitHub repository; from then on every Tuesday issue is matched against your mark and any hits are written there as a dated alert file. Click "Watch" on the repo and GitHub emails you each time an alert lands. Need a different delivery channel (plain email, Slack)? Ask via the contact link below — it is on the roadmap and existing buyers get it at no charge.</p>
 <p><b>What is watched.</b> Every word mark in the two Gazette sections that matter: applications published for opposition (~10,000/week) and registrations issued. Design-only marks (logos without words) are out of scope. Matching = edit distance + phonetic + variant forms + a rare-shared-word rule (a distinctive word both marks share that is uncommon across the ~200k-mark corpus, e.g. VEUVE, KODIAK — common words like PACIFIC or DENTAL never trigger it); the matcher and its 45-pair §2(d) benchmark are <a href="https://github.com/APVentureEngine/trademark-watch">open source</a>, so you can verify exactly what it will and will not catch.</p>
-<p><b>Term.</b> 12 months from purchase, one mark, no auto-renewal. You get a reminder alert file two weeks before expiry. Several marks: buy once per mark (multi-mark bundles coming; ask).</p>
+<p><b>Term.</b> 12 months from purchase, one mark, no auto-renewal: your card is charged once, and when the year ends the watch simply stops — nothing is billed again. Two weeks before expiry you get a reminder alert with a link to buy another year if you want it. Several marks: buy once per mark (multi-mark bundles coming; ask).</p>
 <p><b>Refunds.</b> Full refund within 14 days of purchase, no questions — request it through Gumroad.</p>
 <p><b>Contact.</b> <a href="https://github.com/APVentureEngine/trademark-watch/issues/new">Open an issue on the repo</a> (no account needed to read; a free GitHub account to post) or reply to your Gumroad receipt — both reach the operator directly.</p>
 </div>
@@ -126,14 +126,36 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
         for (var i = 0; i < top.length; i++) {
           var m = top[i], d = document.createElement("div");
           d.className = "hit";
-          d.innerHTML = "<b></b><div class='why'></div>";
+          d.innerHTML = "<b></b><div class='why'><a target='_blank' rel='noopener'></a><span></span></div>";
           d.querySelector("b").textContent = m.mark;
-          d.querySelector(".why").textContent = "Serial " + m.serial + (m.event === "R" ? " · registered " : m.event === "P" ? " · published for opposition " : " · filed ") + m.filed +
+          var a = d.querySelector("a");
+          a.textContent = "Serial " + m.serial;
+          a.title = "Live status on USPTO TSDR";
+          a.href = "https://tsdr.uspto.gov/#caseNumber=" + encodeURIComponent(m.serial) + "&caseType=SERIAL_NO&searchType=statusSearch";
+          d.querySelector("span").textContent = (m.event === "R" ? " · registered " : m.event === "P" ? " · published for opposition " : " · filed ") + m.filed +
             (m.classes && m.classes.length ? " · class " + m.classes.join(", ") : "") +
             " · why: " + m.reasons.join(", ");
           res.appendChild(d);
         }
+        if (rep.matches.length > 50) {
+          var more = document.createElement("p"); more.className = "note";
+          more.textContent = "Showing the 50 closest of " + rep.matches.length + ".";
+          res.appendChild(more);
+        }
       }
+      // Permalink: the report is reproducible from the URL (same index, same matcher).
+      var link = location.origin + location.pathname + "?q=" + encodeURIComponent(q);
+      try { history.replaceState(null, "", "?q=" + encodeURIComponent(q)); } catch (e) {}
+      var share = document.createElement("p"); share.className = "note"; share.id = "share";
+      share.innerHTML = "Link to this report (re-runs against the latest issue): <code></code> <button type='button' id='copy' style='font-size:.8rem;padding:4px 10px'>Copy link</button>";
+      share.querySelector("code").textContent = link;
+      share.querySelector("button").addEventListener("click", function () {
+        var btn = this;
+        var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy link"; }, 1500); };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(done, function () { window.prompt("Copy this link:", link); });
+        else window.prompt("Copy this link:", link);
+      });
+      res.appendChild(share);
       $("cta-head").textContent = "Next Tuesday's Gazette can carry a mark like \u201c" + q + "\u201d \u2014 and you get 30 days to oppose it.";
       $("buy").textContent = "Watch \u201c" + q + "\u201d every Tuesday \u2014 $49/yr";
       $("buy").href = "https://approj.gumroad.com/l/pwvfma?wanted=true&" +
@@ -144,6 +166,15 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
       $("status").textContent = "Something broke: " + e;
     });
   });
+
+  // ?q=<name> deep link: fill the box and run the check on load.
+  try {
+    var pre = new URLSearchParams(location.search).get("q");
+    if (pre && pre.trim()) {
+      $("q").value = pre.trim().slice(0, 120);
+      $("f").dispatchEvent(new Event("submit", { cancelable: true }));
+    }
+  } catch (e) {}
 })();
 </script>
 </body>
