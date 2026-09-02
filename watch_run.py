@@ -76,6 +76,16 @@ def tsdr(serial):
             "&searchType=statusSearch" % serial)
 
 
+def recent(day, today, max_days=21):
+    """True if ISO date `day` is within max_days before `today` (or undated)."""
+    try:
+        y, m, d = map(int, str(day).split("-"))
+        ty, tm, td = map(int, today.split("-"))
+        return (date(ty, tm, td) - date(y, m, d)).days <= max_days
+    except (ValueError, AttributeError):
+        return True
+
+
 def hits_for(watch_mark, filings):
     """[(filing, reasons)] for one watched mark. Pseudo-marks count too."""
     out = []
@@ -177,8 +187,10 @@ def run(watchlist, filings, today, out_dir=None, write=True, hits_out=None):
     for sid, w in sorted(watchlist.items()):
         if w.get("expires") and w["expires"] < today:
             continue
-        safe_user = "".join(c for c in w.get("user", "unknown")
-                            if c.isalnum() or c in "-_") or "unknown"
+        # dir per watch: GitHub user if given, else the sale id (c84 fix: a
+        # user=None watch — every no-GitHub buyer since c73 — crashed here).
+        raw = w.get("user") or ("sale-" + str(sid))
+        safe_user = "".join(c for c in raw if c.isalnum() or c in "-_") or "unknown"
         # expiry reminder promised on the landing page: one idempotent file
         # when ≤14 days remain (same filename each run -> git no-ops).
         if write and out_dir and w.get("expires"):
@@ -235,6 +247,14 @@ def real_run(dry=False):
             if line.strip():
                 filings.append(json.loads(line))
     today = date.today().isoformat()
+    # c84: backfill runs pull OLD issues (June/July) into new_marks.jsonl as
+    # "new this run"; a subscriber must only be alerted on filings whose
+    # Gazette/filing date is recent (<= 21 days), never on historical backfill.
+    n_all = len(filings)
+    filings = [x for x in filings if recent(x.get("pub_date") or x.get("filing_date"), today)]
+    if n_all != len(filings):
+        print("watch_run: %d of %d new filings are older than 21 days (backfill) — not alertable"
+              % (n_all - len(filings), n_all))
     if dry:
         for sid, user, mark, n, _p in run(watchlist, filings, today, write=False):
             print("watch_run DRY: %s (%s) %r -> %d hit(s)" % (sid, user, mark, n))
@@ -298,6 +318,8 @@ def selftest():
                "expires": "2027-09-01"},
         "s3": {"mark": "NIKE", "user": "eve", "start": "2025-01-01",
                "expires": "2026-01-01"},  # expired — must be skipped
+        "s4": {"mark": "NIKE", "user": None, "email": "n@x.io", "start": "2026-09-01",
+               "expires": "2027-09-01"},  # no GitHub user (c84): must not crash
     }
     filings = [
         {"serial": 90000001, "mark": "NYKE ATHLETICS", "filing_date": "2026-08-30",
@@ -311,8 +333,9 @@ def selftest():
     with tempfile.TemporaryDirectory() as td:
         res = run(watchlist, filings, "2026-09-01", out_dir=td)
         got = {(sid, n) for sid, _u, _m, n, _p in res}
-        assert got == {("s1", 2)}, res  # alice: NYKE + pseudo NIKEY; bob 0; eve expired
-        path = res[0][4]
+        assert got == {("s1", 2), ("s4", 2)}, res  # alice + no-user s4: NYKE + pseudo NIKEY; bob 0; eve expired
+        assert any("sale-s4" in (p or "") for _s, _u, _m, _n, p in res), res
+        path = [r for r in res if r[0] == "s1"][0][4]
         body = open(path).read()
         assert "NYKE ATHLETICS" in body and "pseudo-mark:" in body, body
         assert "90000003" not in body, body
@@ -320,6 +343,8 @@ def selftest():
         assert "tsdr.uspto.gov" in body
     # empty filings day
     assert run(watchlist, [], "2026-09-01", write=False) == []
+    assert recent("2026-08-20", "2026-09-01") and not recent("2026-06-30", "2026-09-01")
+    assert recent(None, "2026-09-01") and recent("garbage", "2026-09-01")
     # history persistence (c84): checked dates accumulate, hit days keyed by day
     with tempfile.TemporaryDirectory() as td:
         hp = os.path.join(td, "h.json")
@@ -333,6 +358,7 @@ def selftest():
         h = record_history(watchlist, hb, "2026-09-01", path=hp)   # idempotent re-run
         assert h["s1"]["checked"] == ["2026-09-01"]
     # email dispatch: alert once per day per watch, expiry reminder once, idempotent
+    watchlist.pop("s4")   # email-dispatch expectations below are for s1..s3
     for w in watchlist.values():
         w["email"] = w["user"] + "@example.com"
     watchlist["s2"]["expires"] = "2026-09-10"   # 9 days left -> reminder
