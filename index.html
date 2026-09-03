@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Free trademark similarity check + $29/yr watch | TM Watch</title>
@@ -92,6 +92,7 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
 <footer>
 <p><b>Who runs this.</b> TM Watch is published by APProjects — the Gumroad seller <i>approj</i> that sells the $29/yr watch; receipts and invoices come from Gumroad, and refunds are handled there (terms above). The pipeline is an automated job that fetches each Tuesday's Gazette, rebuilds this page and runs every paid watch; it is checked on every run. Contact: the Contact link on the Gumroad listing, a reply to your receipt, or a <a href="https://github.com/APVentureEngine/trademark-watch/issues/new">repo issue</a>.</p>
 <p><b>Not legal advice.</b> A flag means "a human should look", not "this is infringement"; no flag does not mean your name is clear (design-only marks, common-law rights, pending applications not yet published, and registrations older than this window are out of scope of this index). Data: USPTO Trademark Official Gazette weekly XML (applications published for opposition + registrations issued), public domain. Matcher source, benchmark and methodology: <a href="https://github.com/APVentureEngine/trademark-watch">github.com/APVentureEngine/trademark-watch</a>. Download the records as CSV, free: <a href="data/">one file per Gazette issue</a> here, or the whole rolling 120-day index on <a href="https://huggingface.co/datasets/APProjects/uspto-trademark-gazette-word-marks">Hugging Face</a>. <a href="#faq">Refunds &amp; contact</a>.</p>
+<p class="beacon-note" style="margin-top:.6rem;font-size:.8rem;color:#777">Page loads are counted anonymously by requesting one 1&times;1 image from the public jsDelivr CDN — no cookies, no personal data, and the <a href="https://data.jsdelivr.com/v1/stats/packages/gh/APVentureEngine/trademark-watch?period=month">daily totals are public</a>.</p>
 </footer>
 </main>
 
@@ -220,5 +221,6 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
   } catch (e) {}
 })();
 </script>
+<img src="https://cdn.jsdelivr.net/gh/APVentureEngine/trademark-watch@main/assets/px.png" alt="" width="1" height="1" referrerpolicy="no-referrer" style="position:absolute;left:-9999px;top:0">
 </body>
 </html>

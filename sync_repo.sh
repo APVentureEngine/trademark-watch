@@ -29,13 +29,18 @@ fi
 # c107 gate: a mirrored module that imports a NON-mirrored one publishes source
 # that cannot run. sync_check.py fails the sync rather than shipping that.
 python3 sync_check.py
-cp alertkey.py csp_inject.py pricing.py fetch_tmog.py fetch_trtdxfap.py fulfill.py gen_alert_pages.py gen_covers.py gen_compare.py gen_data.py gen_guides.py gen_index.py gen_jsonld.py gen_llms.py gen_rarity.py gen_seo.py gen_vectors.py gum_assets.py hf_mirror.py indexnow_submit.py mailer.py matcher.js matcher.py parity-vectors.json pipeline.sh publish.sh refresh.sh repo_meta.py sync_repo.sh selftest.js selftest.py selftest_e2e.py selftest_js.py selftest_site.py tdxf_parse.py tmog_parse.py watch_run.py repo/
+cp alertkey.py beacon.py csp_inject.py pricing.py fetch_tmog.py fetch_trtdxfap.py fulfill.py gen_alert_pages.py gen_covers.py gen_compare.py gen_data.py gen_guides.py gen_index.py gen_jsonld.py gen_llms.py gen_rarity.py gen_seo.py gen_vectors.py gum_assets.py hf_mirror.py indexnow_submit.py mailer.py matcher.js matcher.py parity-vectors.json pipeline.sh publish.sh refresh.sh repo_meta.py sync_repo.sh selftest.js selftest.py selftest_e2e.py selftest_js.py selftest_site.py tdxf_parse.py tmog_parse.py watch_run.py repo/
 rm -rf repo/site   # pre-c104 stale copy of an old landing page; never recreate it
 # price literals: every shipped surface must agree with pricing.py (audited AFTER generation)
 python3 pricing.py --audit
 python3 repo_meta.py || echo "WARN: repo_meta failed (non-fatal)"
 # c108: <meta> Content-Security-Policy on every page (Pages cannot set headers);
 # post-processes the repo tree, --check fatal (set -e). See csp_inject.py.
+# c113: anonymous page-load counter (see beacon.py). Same pattern as the CSP
+# post-processor: walks the OUTPUT tree so a new generator is covered for free.
+python3 beacon.py --selftest
+python3 beacon.py repo --repo APVentureEngine/trademark-watch
+python3 beacon.py repo --repo APVentureEngine/trademark-watch --check
 python3 csp_inject.py --selftest
 python3 csp_inject.py repo
 python3 csp_inject.py repo --check

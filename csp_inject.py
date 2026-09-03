@@ -25,7 +25,7 @@ import re
 import sys
 
 POLICY = ("default-src 'self'; script-src 'self' 'unsafe-inline'; "
-          "style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+          "style-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn.jsdelivr.net; "
           "connect-src 'self'; font-src 'self'; object-src 'none'; "
           "base-uri 'self'; form-action 'self'; "
           "upgrade-insecure-requests")
