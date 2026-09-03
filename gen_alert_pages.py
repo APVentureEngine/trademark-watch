@@ -8,13 +8,15 @@ optional; these pages remain the account-free default channel.) The site review 
 the declared buyer (SMB brand owner) bounces at "GitHub username". This is
 the delivery channel that needs NO account, NO email key and NO human:
 
-  slug = sha256("tmwatch|" + MARK + "|" + email)[:32]
-    MARK  = watched mark, upper-cased, whitespace collapsed, trimmed
-    email = purchase email, lower-cased, trimmed
+  slug = sha256("tmwatch|" + MARK + "|" + email + "|" + passphrase)[:32]
+    MARK       = watched mark, upper-cased, whitespace collapsed, trimmed
+    email      = purchase email, lower-cased, trimmed
+    passphrase = the REQUIRED checkout box the buyer fills (c107)
+  All of it lives in alertkey.py — never retype the derivation or its wording.
   page  = <site>/alerts/<slug>/            (HTML, noindex, not in sitemap)
   feed  = <site>/alerts/<slug>/feed.xml    (RSS: one item per alert day)
 
-The buyer opens <site>/alerts/, types the mark + purchase email; the browser
+The buyer opens <site>/alerts/, types the mark + purchase email + passphrase; the browser
 computes the same SHA-256 (WebCrypto) and jumps to the page. The URL is
 unlisted, but the hosting repo is PUBLIC (its tree lists every slug), so the
 page holds only the watched mark and public USPTO records — never name or
@@ -36,6 +38,8 @@ import sys
 import tempfile
 from datetime import date
 from pricing import PRICE_YEAR, EMAIL_ROUTE_HTML
+from alertkey import (slug, norm_mark, norm_email, passphrase_key,  # noqa: F401
+                      HOWTO_LONG, NO_PASSPHRASE_NOTE)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WATCHLIST = os.path.join(HERE, "watchlist.json")
@@ -44,19 +48,6 @@ SITE = "https://apventureengine.github.io/trademark-watch/"
 BUY_URL = "https://approj.gumroad.com/l/pwvfma"
 DISCLAIMER = ("Automated similarity flags for human review. Not legal advice; no "
               "opinion on likelihood of confusion. Verify at the TSDR link.")
-
-
-def norm_mark(m):
-    return " ".join(str(m).upper().split())
-
-
-def norm_email(e):
-    return str(e).strip().lower()
-
-
-def slug(mark, email):
-    s = "tmwatch|%s|%s" % (norm_mark(mark), norm_email(email))
-    return hashlib.sha256(s.encode("utf-8")).hexdigest()[:32]
 
 
 def _h(x):
@@ -95,12 +86,12 @@ def render_page(w, hist, today):
         parts.append(("<p><b>Your free 30-day watch ended on %s.</b> The alert history below stays "
                      "online and nothing was charged. To keep this page updating every Tuesday, "
                      "<a href=\"%s\">continue for " + PRICE_YEAR + "</a> — one payment, no auto-renewal; enter "
-                     "the same mark and the same email so this page keeps working.</p>")
+                     "the same mark, the same email and the same passphrase so this page keeps working.</p>")
                      % (expires, BUY_URL))
     elif expired:
         parts.append("<p><b>This watch expired on %s.</b> The alert history below stays online; "
-                     "<a href=\"%s\">renew for another year</a> (enter the same mark and purchase "
-                     "email so this page keeps working).</p>" % (expires, BUY_URL))
+                     "<a href=\"%s\">renew for another year</a> (enter the same mark, purchase "
+                     "email and passphrase so this page keeps working).</p>" % (expires, BUY_URL))
     elif free:
         parts.append(("<p class=\"ok\">Free watch active until <b>%s</b> — no card, nothing renews. "
                      "Bookmark this page or subscribe to its <a href=\"feed.xml\">RSS feed</a>: a new "
@@ -135,7 +126,9 @@ def render_page(w, hist, today):
         ", ".join(checked) if checked else
         "none yet — the first check runs with the next Gazette issue (Tuesdays)."))
     parts.append("<p class=\"note\">Privacy, plainly: this page is unlisted (not indexed, not linked, not in "
-                 "the sitemap) and its address is derived from your purchase email, but the site is served "
+                 "the sitemap) and its address is a SHA-256 of your mark, your purchase email and the "
+                 "passphrase you chose at checkout — so knowing your trademark and your email is not enough "
+                 "to find it. The site is served "
                  "from a public GitHub repository, so anyone browsing that repository can see it. It "
                  "therefore holds only your watched mark and public USPTO records — never your name or "
                  "email. Lost the link? Rebuild it at "
@@ -176,14 +169,18 @@ FINDER = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>TM Watch — open your private alert page</title><style>%s</style></head><body>
 <h1>Open your private alert page</h1>
-<p>Bought a <a href="%s">TM Watch</a>? Type the mark exactly as you entered it at checkout and the
-email you paid with. Nothing is sent anywhere: your browser computes the page address locally
-(SHA-256) and jumps to it. Your page never shows your name or email — only the watched mark and
-public USPTO records — because the site is hosted from a public repository.</p>
+<p>Bought a <a href="%s">TM Watch</a>? Type the mark exactly as you entered it at checkout, the
+email you paid with, and the passphrase you chose in the checkout box. Nothing is sent anywhere:
+your browser computes the page address locally (SHA-256) and jumps to it. Because the passphrase is
+yours alone, knowing your trademark and your email is not enough to open your page. The page itself
+never shows your name, email or passphrase — only the watched mark and public USPTO records —
+because the site is hosted from a public repository.</p>
 <form id="f"><label>Watched mark<input id="m" autocomplete="off" required></label>
 <label>Purchase email<input id="e" type="email" autocomplete="email" required></label>
+<label>Passphrase (from the checkout box)<input id="k" autocomplete="off"></label>
 <button type="submit">Open my alerts</button></form>
 <p id="out" class="note"></p>
+<p class="note">%s</p>
 <p class="note">Your page is created within 24 hours of purchase (the pipeline runs daily). If it shows
 "not found" after that, reply to your Gumroad receipt with the mark you entered — the operator sees
 it directly. The page has an RSS feed; subscribe to it in any feed reader to be notified.
@@ -191,16 +188,18 @@ Run by APProjects (Gumroad seller <i>approj</i>). <a href="../">Back to the free
 <script>
 function normMark(m){return m.toUpperCase().split(/\\s+/).filter(Boolean).join(' ');}
 function normEmail(e){return e.trim().toLowerCase();}
-async function slugFor(m,e){
-  var s='tmwatch|'+normMark(m)+'|'+normEmail(e);
+function normPass(k){return k.trim().toLowerCase().replace(/\\s+/g,' ');}
+async function slugFor(m,e,k){
+  var s='tmwatch|'+normMark(m)+'|'+normEmail(e)+'|'+normPass(k);
   var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
   return Array.from(new Uint8Array(buf)).map(function(b){return ('0'+b.toString(16)).slice(-2);}).join('').slice(0,32);
 }
 document.getElementById('f').addEventListener('submit',async function(ev){
   ev.preventDefault();
   var m=document.getElementById('m').value, e=document.getElementById('e').value;
+  var k=document.getElementById('k').value;
   if(!m.trim()||!e.trim()){return;}
-  var s=await slugFor(m,e);
+  var s=await slugFor(m,e,k);
   var url=s+'/';
   document.getElementById('out').innerHTML='Opening <a href="'+url+'">'+url+'</a> …';
   location.href=url;
@@ -212,13 +211,16 @@ def build(watchlist, history, out_dir, today):
     adir = os.path.join(out_dir, "alerts")
     os.makedirs(adir, exist_ok=True)
     with open(os.path.join(adir, "index.html"), "w") as f:
-        f.write(FINDER % (CSS, BUY_URL))
+        f.write(FINDER % (CSS, BUY_URL, NO_PASSPHRASE_NOTE))
     keep = set()
     n = 0
     for sid, w in sorted(watchlist.items()):
         if not w.get("mark") or not w.get("email"):
             continue
-        s = slug(w["mark"], w["email"])
+        # fulfill.py records the slug at sale time because only it sees the
+        # checkout passphrase; fall back to the passphrase-less address for a
+        # legacy/hand-added entry so such a watch still renders somewhere.
+        s = w.get("slug") or slug(w["mark"], w["email"])
         keep.add(s)
         d = os.path.join(adir, s)
         os.makedirs(d, exist_ok=True)
@@ -237,24 +239,48 @@ def build(watchlist, history, out_dir, today):
 
 def selftest():
     import xml.dom.minidom
-    assert slug(" kodiak  coffee ", "A@B.com") == slug("KODIAK COFFEE", "a@b.com")
-    assert slug("KODIAK COFFEE", "a@b.com") != slug("KODIAK COFFEE", "c@b.com")
-    assert len(slug("x", "y@z")) == 32
+    import alertkey
+    alertkey.selftest()
+    assert slug(" kodiak  coffee ", "A@B.com", " Blue Moon ") == slug("KODIAK COFFEE", "a@b.com", "blue moon")
+    assert slug("KODIAK COFFEE", "a@b.com", "p") != slug("KODIAK COFFEE", "c@b.com", "p")
+    assert slug("KODIAK COFFEE", "a@b.com", "p") != slug("KODIAK COFFEE", "a@b.com", "q")
+    assert len(slug("x", "y@z", "p")) == 32
+    # the finder page must ask for, and hash, the passphrase (c107)
+    assert "passphrase" in FINDER.lower() and "normPass" in FINDER
+    assert "'tmwatch|'+normMark(m)+'|'+normEmail(e)+'|'+normPass(k)" in FINDER
     # normalisation parity with the finder page's JS (quickjs, if installed)
     try:
         import quickjs
         ctx = quickjs.Context()
         ctx.eval("function normMark(m){return m.toUpperCase().split(/\\s+/).filter(Boolean).join(' ');}"
                  "function normEmail(e){return e.trim().toLowerCase();}")
+        ctx.eval("function normPass(k){return k.trim().toLowerCase().replace(/\\s+/g,' ');}")
         for m, e in [(" kodiak  coffee ", " A@B.com "), ("Lumina\tSkin", "X@Y.ORG"), ("ÉCLAT", "u@v.w")]:
             assert ctx.eval("normMark(%s)" % json.dumps(m)) == norm_mark(m), m
             assert ctx.eval("normEmail(%s)" % json.dumps(e)) == norm_email(e), e
+        for k in ["  Blue   Moon-42! ", "ZETA", "a  b", "", "  ", "l'étoile  bleue"]:
+            assert ctx.eval("normPass(%s)" % json.dumps(k)) == passphrase_key(k), k
+        # END-TO-END: take the pre-hash expression out of the SHIPPED page and
+        # evaluate it, so a copy/paste slip in the HTML cannot pass this gate.
+        import re as _re
+        m_expr = _re.search(r"var s=('tmwatch\|'\+[^;]+);", FINDER)
+        assert m_expr, "finder JS no longer builds the pre-hash string the way this test reads it"
+        for mk, em, kk in [("Kodiak Coffee", "A@B.com", " Blue Moon "),
+                           ("  lumina   skin ", " X@Y.ORG ", "ZETA!"),
+                           ("ÉCLAT", "u@v.w", "")]:
+            js_s = ctx.eval("(function(m,e,k){return %s;})(%s,%s,%s)"
+                            % (m_expr.group(1), json.dumps(mk), json.dumps(em), json.dumps(kk)))
+            py_s = "tmwatch|%s|%s|%s" % (norm_mark(mk), norm_email(em), passphrase_key(kk))
+            assert js_s == py_s, (js_s, py_s)
+            import hashlib as _hl
+            assert _hl.sha256(js_s.encode()).hexdigest()[:32] == slug(mk, em, kk)
         js_ok = True
     except ImportError:
         js_ok = False
     tmp = tempfile.mkdtemp()
     try:
         wl = {"s1": {"mark": "Kodiak Coffee", "email": "a@b.com", "user": None,
+                     "slug": slug("Kodiak Coffee", "a@b.com", "blue moon"),
                      "start": "2026-09-02T00:00:00Z", "expires": "2027-09-02"},
               "s2": {"mark": "Old Mark", "email": "o@b.com", "user": None,
                      "start": "2025-01-01T00:00:00Z", "expires": "2026-01-01"}}
@@ -264,14 +290,15 @@ def selftest():
                                                "classes": "30", "reasons": "rare-token KODIAK~KODIAC"}]}}}
         n = build(wl, hist, tmp, "2026-09-09")
         assert n == 2
-        s1 = slug("Kodiak Coffee", "a@b.com")
+        s1 = slug("Kodiak Coffee", "a@b.com", "blue moon")
         page = open(os.path.join(tmp, "alerts", s1, "index.html")).read()
         assert "KODIAC BREW" in page and "noindex" in page and "Watch active until <b>2027-09-02" in page
         assert "a@b.com" not in page, "email must never appear on the page"
+        assert "blue moon" not in page.lower(), "passphrase must never appear on the page"
         feed = open(os.path.join(tmp, "alerts", s1, "feed.xml")).read()
         xml.dom.minidom.parseString(feed)
         assert "1 similar mark(s)" in feed
-        s2 = slug("Old Mark", "o@b.com")
+        s2 = slug("Old Mark", "o@b.com")   # legacy entry with no recorded slug
         p2 = open(os.path.join(tmp, "alerts", s2, "index.html")).read()
         assert "expired on 2026-01-01" in p2 and "No similar filings so far" in p2
         assert os.path.exists(os.path.join(tmp, "alerts", "index.html"))

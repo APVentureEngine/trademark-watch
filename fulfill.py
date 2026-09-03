@@ -8,13 +8,17 @@ watch runner matches against new Gazette filings, plus delivery setup:
   (b) GitHub private repo invite (secondary/optional): if the buyer gave a
       valid GitHub username, invite -> APVentureEngine/tm-watch-alerts.
   (c) PRIVATE ALERT PAGE (c84, always): gen_alert_pages.py renders
-      <site>/alerts/<sha256(mark|email)>/ + feed.xml on the next refresh.
+      <site>/alerts/<sha256(mark|email|passphrase)>/ + feed.xml on the next
+      refresh. The slug is COMPUTED HERE and stored on the watchlist entry,
+      because only fulfilment sees the checkout passphrase (alertkey.py owns
+      the derivation; c107). The passphrase itself is never stored.
       Needs no account and no key, so every sale with an email has a live
       delivery channel. The required GitHub field accepts "none"/"-"/"n/a".
 
 Custom fields on product yqoJ16p67-UfQ1hnOtExvQ== (paid, 1 mark; price in pricing.py):
   "Trademark to watch (exact text of your mark)"   required
   "GitHub username ..."                            optional once email is live
+  "Passphrase (required) ..."                       required (c107, both listings)
 watchlist.json: sale_id -> {mark, email, user|null, start, expires(+365d)}.
 Expiry enforcement is the runner's job; fulfill only records dates.
 
@@ -34,6 +38,7 @@ from datetime import datetime, timezone, timedelta
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import mailer  # noqa: E402
 from pricing import PRICE_YEAR, OLD_PRICE  # noqa: E402
+from alertkey import slug, sale_passphrase, HOWTO_LONG, PASSPHRASE_HINT  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FULFILLED = os.path.join(HERE, "fulfilled.json")
@@ -69,8 +74,8 @@ def welcome_message(mark, expires, user, plan="paid"):
         return ("Your free trademark watch for %s is active" % mark,
                 ("Your free 30-day watch is active.\n\n"
                 "Watched mark: %s\nFree watch runs until: %s\n\n"
-                "Your private alert page (bookmark it; it has an RSS feed): open %salerts/ and enter "
-                "this mark plus this email address. The page is live within one refresh cycle (at most 24h).\n\n"
+                "Your private alert page (bookmark it; it has an RSS feed): %s The page is live "
+                "within one refresh cycle (at most 24h).\n\n"
                 "Every Tuesday the USPTO publishes the Trademark Official Gazette. The same day we run your "
                 "mark against every newly published and newly registered word mark (name + phonetic + variant "
                 "forms) and put anything similar on your page, with the USPTO TSDR link. Quiet weeks mean an "
@@ -78,12 +83,11 @@ def welcome_message(mark, expires, user, plan="paid"):
                 "After %s the watch stops and the page tells you how to continue for " + PRICE_YEAR + " (one payment, "
                 "no auto-renewal). Nothing renews automatically and there is no card on file.\n\n"
                 "Not legal advice: a flag means a human should look, not that anything is infringing.\n")
-                % (mark, expires, SITE, expires))
+                % (mark, expires, HOWTO_LONG, expires))
     text = ("Your TM Watch is active.\n\n"
             "Watched mark: %s\nActive until: %s (one-time payment; we email a reminder "
             "two weeks before expiry)\n\n"
-            "Your private alert page (bookmark it; it has an RSS feed): open "
-            "%salerts/ and enter this mark plus your purchase email.\n\n"
+            "Your private alert page (bookmark it; it has an RSS feed): %s\n\n"
             "Every Tuesday the USPTO publishes the Trademark Official Gazette. The same "
             "day we run your mark against every newly published and newly registered "
             "word mark (name + phonetic + common-variant forms). If anything similar "
@@ -93,7 +97,7 @@ def welcome_message(mark, expires, user, plan="paid"):
             "from its Gazette date.\n\n"
             "Quiet weeks mean no email. %s"
             "Refund: full refund within 14 days of purchase via Gumroad.\n"
-            % (mark, expires, SITE, repo_line))
+            % (mark, expires, HOWTO_LONG, repo_line))
     return "TM Watch is active for %s" % mark, text
 
 
@@ -115,8 +119,17 @@ def extract_username(custom_fields):
 
 
 def extract_mark(custom_fields):
-    for name, value in _pairs(custom_fields):
-        if MARK_FIELD_HINT in name.lower() or "mark" in name.lower().split():
+    """The watched mark. NOTE (c107): the passphrase field is literally named
+    "...you type it with your mark and email...", so a bare "mark" token match
+    would happily return the buyer's passphrase as their trademark. Passphrase
+    fields are excluded first, and the trademark hint wins over a loose match."""
+    pairs = [(n, v) for n, v in _pairs(custom_fields) if PASSPHRASE_HINT not in n.lower()]
+    for name, value in pairs:
+        if MARK_FIELD_HINT in name.lower():
+            v = value.strip()
+            return v if 0 < len(v) <= 120 else None
+    for name, value in pairs:
+        if "mark" in name.lower().split():
             v = value.strip()
             return v if 0 < len(v) <= 120 else None
     return None
@@ -189,6 +202,7 @@ def iter_sales(gr_token):
 
 def selftest():
     F_GH = "GitHub username (for private alert repo access)"
+    from alertkey import PASSPHRASE_FIELD as PASSPHRASE_FIELD_NAME
     F_TM = "Trademark to watch (exact text of your mark)"
     cases_user = [
         ({F_GH: "octocat", F_TM: "ACME"}, "octocat"),
@@ -203,6 +217,12 @@ def selftest():
     ]
     cases_mark = [
         ({F_TM: " Acme Robotics "}, "Acme Robotics"),
+        # c107: the passphrase field name contains the word "mark" — it must
+        # never be mistaken for the trademark, in either field order.
+        ({PASSPHRASE_FIELD_NAME: "blue moon", F_TM: "ACME"}, "ACME"),
+        ([{"name": PASSPHRASE_FIELD_NAME, "value": "blue moon"},
+          {"name": F_TM, "value": "ACME"}], "ACME"),
+        ({PASSPHRASE_FIELD_NAME: "blue moon"}, None),
         ([{"name": F_TM, "value": "NYKE"}], "NYKE"),
         ({F_TM: ""}, None),
         ({F_TM: "x" * 121}, None),
@@ -215,7 +235,18 @@ def selftest():
         ({"email": " x@y.zz "}, "x@y.zz"),
         ({"email": "nope"}, None), ({"email": ""}, None), ({}, None), (None, None),
     ]
+    cases_pp = [
+        ({PASSPHRASE_FIELD_NAME: "  Blue  Moon "}, "blue moon"),
+        ([{"name": PASSPHRASE_FIELD_NAME, "value": "Zeta"}], "zeta"),
+        ({F_TM: "ACME"}, ""), ({}, ""), (None, ""),
+    ]
     ok = True
+    for cf, want in cases_pp:
+        got = sale_passphrase(cf)
+        if got != want:
+            ok = False; print("SELFTEST FAIL passphrase: %r -> %r (want %r)" % (cf, got, want))
+    # the recorded slug must equal what the finder page computes from the same three inputs
+    assert slug("Acme Robotics", "Buyer@Example.com", " Blue Moon ") == slug("ACME ROBOTICS", "buyer@example.com", "blue moon")
     for sale, want in cases_email:
         got = extract_email(sale)
         if got != want:
@@ -238,7 +269,7 @@ def selftest():
         if got != want:
             ok = False; print("SELFTEST FAIL mark: %r -> %r (want %r)" % (cf, got, want))
     print("selftest: %s (%d cases)" % ("PASS" if ok else "FAIL",
-                                       len(cases_user) + len(cases_mark) + len(cases_email) + 2))
+                                       len(cases_user) + len(cases_mark) + len(cases_email) + len(cases_pp) + 2))
     return 0 if ok else 1
 
 
@@ -315,7 +346,27 @@ def main():
         # gen_alert_pages.py on this and every later refresh.
         if email:
             delivery.append("page")
+        pp = sale_passphrase(s.get("custom_fields"))
+        if email and not pp:
+            problems.append("no passphrase at checkout — alert page uses the empty-passphrase address")
+            print("FULFILL-ATTENTION: sale %s has no passphrase — buyer must leave the "
+                  "passphrase box empty on the finder page" % sid)
+        if email:
+            # A renewal that types a DIFFERENT passphrase lands on a different
+            # address, so the buyer's bookmark and RSS stop working. Every
+            # surface tells them to reuse it; if one does not, say so loudly
+            # rather than silently orphaning their page.
+            new_slug = slug(mark, email, pp)
+            for prev in watchlist.values():
+                if (prev.get("email") == email
+                        and str(prev.get("mark", "")).upper().split() == str(mark).upper().split()
+                        and prev.get("slug") and prev["slug"] != new_slug):
+                    print("FULFILL-ATTENTION: sale %s renews %r with a DIFFERENT passphrase — "
+                          "old alert page %s is orphaned; tell the buyer the new address exists"
+                          % (sid, mark, prev["slug"]))
+                    break
         watchlist[sid] = {"mark": mark, "email": email, "user": user,
+                          "slug": slug(mark, email, pp) if email else None,
                           "start": ts, "expires": expires, "plan": plan}
         fulfilled[sid] = {"status": "watching", "plan": plan, "delivery": delivery, "ts": ts}
         n_new += 1

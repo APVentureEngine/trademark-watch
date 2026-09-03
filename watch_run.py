@@ -207,7 +207,7 @@ def run(watchlist, filings, today, out_dir=None, write=True, hits_out=None):
                     f.write("# Your TM Watch for %s expires on %s\n\n"
                             "Renew for another year at "
                             "https://approj.gumroad.com/l/pwvfma (enter the same "
-                            "mark and purchase email so your alert page keeps working).\n"
+                            "mark, purchase email and passphrase so your alert page keeps working).\n"
                             % (w["mark"], w["expires"]))
         hits = hits_for(w["mark"], filings)
         if hits_out is not None:

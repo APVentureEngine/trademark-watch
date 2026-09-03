@@ -82,6 +82,11 @@ def check_index(root=None):
             want = "$%d/yr" % c["price_usd_year"]
             if want not in s:
                 problems.append("index.html names %s but not its price %s" % (c["name"], want))
+    # c107: the alert-page address includes the checkout passphrase; the page a
+    # buyer decides on must say so, or the finder form asks for something the
+    # sales copy never mentioned.
+    if "passphrase" not in s.lower():
+        problems.append("index.html never mentions the checkout passphrase (alert-page address needs it)")
     cheaper = cheaper_competitors(comps)
     if cheaper and "Priced below every single-mark watch" in s:
         problems.append("index.html claims lowest price but %s is cheaper" % cheaper[0]["name"])

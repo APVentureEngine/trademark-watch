@@ -14,6 +14,7 @@ if ! flock -n 9; then echo "publish: another run holds .pipeline.lock — skippe
 [ -n "${GITHUB_ORG_TOKEN:-}" ] || { echo "publish: GITHUB_ORG_TOKEN missing"; exit 1; }
 
 # gates for the generators this stage touches (fast; the matcher gates are refresh.sh's job)
+python3 alertkey.py --selftest          # c107: alert-page address + its wording
 python3 gen_compare.py --selftest
 python3 gen_guides.py --selftest
 python3 gen_llms.py --selftest
