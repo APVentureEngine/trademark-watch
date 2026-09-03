@@ -51,6 +51,16 @@ python3 csp_inject.py repo --check
     echo "sync_repo: nothing changed"
   fi
 )
+# HF Space mirror of the free checker (c111; moved here c112). It DERIVES
+# space/index.html from repo/index.html, so it must run after the copy above —
+# on BOTH the refresh and the publish-only path, or the Space drifts from the
+# site for days. Hash-gated upload; non-fatal here, fatal selftest inside.
+if [ -n "${HF_TOKEN:-}" ]; then
+  python3 gen_space.py --sync 2>&1 | grep -v -i warning
+  if [ "${PIPESTATUS[0]}" = "0" ]; then echo "gen_space: OK"; else echo "gen_space: FAILED (non-fatal — Space may be stale/broken)"; fi
+else
+  echo "gen_space: HF_TOKEN absent, skipped"
+fi
 # IndexNow only when the URL set changed (warn-feed c52 policy); non-fatal.
 if [ -f .sitemap_changed ]; then
   rm -f .sitemap_changed
