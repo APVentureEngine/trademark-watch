@@ -83,5 +83,32 @@
       });
   }
 
-  return { shardChars: shardChars, runReport: runReport, report: report };
+  /* CSV export of a report: one row per flagged mark, ALL matches (the page
+   * shows only the 50 closest). Columns are stable — downstream scripts may
+   * depend on them. `gazette_date` is the date of the Gazette event (the
+   * `filed` field on the TMOG path); `tsdr_url` is the live USPTO record. */
+  var CSV_HEADER = ["query", "serial", "mark", "event", "gazette_date", "classes",
+                    "reasons", "edit_similarity", "tsdr_url"];
+  function csvCell(v) {
+    v = (v === null || v === undefined) ? "" : String(v);
+    return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+  }
+  function eventLabel(e) {
+    return e === "R" ? "registered" : e === "P" ? "published for opposition" : e === "" ? "filed" : String(e);
+  }
+  function hitsCsv(query, matches) {
+    var lines = [CSV_HEADER.join(",")];
+    for (var i = 0; i < matches.length; i++) {
+      var m = matches[i];
+      lines.push([query, m.serial, m.mark, eventLabel(m.event), m.filed,
+                  (m.classes || []).join(";"), (m.reasons || []).join("; "),
+                  (typeof m.editSim === "number" ? m.editSim.toFixed(2) : ""),
+                  "https://tsdr.uspto.gov/statusview/sn" + encodeURIComponent(m.serial)
+                 ].map(csvCell).join(","));
+    }
+    return lines.join("\r\n") + "\r\n";
+  }
+
+  return { shardChars: shardChars, runReport: runReport, report: report,
+           hitsCsv: hitsCsv, CSV_HEADER: CSV_HEADER };
 });

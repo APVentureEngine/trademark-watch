@@ -82,6 +82,38 @@ with tempfile.TemporaryDirectory() as td:
             mismatch += 1
             print("REPORT MISMATCH %r:\n  py=%s\n  js=%s" % (q, py_out[:5], js_out[:5]))
 
-print("selftest_site: %s (%d texts sharded, %d queries end-to-end)"
-      % ("PASS" if mismatch == 0 else "FAIL(%d)" % mismatch, len(texts), len(QUERIES)))
+# 3. hitsCsv: the "Download all hits as CSV" export must contain EVERY match
+#    (not the 50 shown), one row each, stable header, RFC-4180 quoting that
+#    survives a round trip, serial order identical to the report.
+import csv, io  # noqa: E402
+ctx.eval("""
+function _csv(q, rowsJson) { return tmReport.hitsCsv(q, tmReport.runReport(q, JSON.parse(rowsJson))); }
+""")
+csv_checked = 0
+for q in QUERIES + ['he said "hi", ok']:
+    seen, sel = set(), []
+    for ch in sorted(gen_index.shard_chars(q)):
+        for r in shards.get(ch, []):
+            if r[0] not in seen:
+                seen.add(r[0]); sel.append(r)
+    # a synthetic row with a comma, a quote and a newline in the mark text
+    sel.append([1, q.upper() + ', "X"\nY', "2026-01-06", [9, 35], "", "", "P"])
+    n = len(json.loads(ctx.eval("_runReport(%s, %s)" % (json.dumps(q), json.dumps(json.dumps(sel))))))
+    text = ctx.eval("_csv(%s, %s)" % (json.dumps(q), json.dumps(json.dumps(sel))))
+    rows = list(csv.reader(io.StringIO(text)))
+    hdr = ["query", "serial", "mark", "event", "gazette_date", "classes", "reasons", "edit_similarity", "tsdr_url"]
+    ok = (rows and rows[0] == hdr and len(rows) - 1 == n and all(len(r) == len(hdr) for r in rows)
+          and all(r[0] == q for r in rows[1:])
+          and all(r[8] == "https://tsdr.uspto.gov/statusview/sn" + r[1] for r in rows[1:])
+          and text.endswith("\r\n"))
+    if ok and n:
+        awk = [r for r in rows[1:] if r[1] == "1"]
+        ok = bool(awk) and awk[0][2] == q.upper() + ', "X"\nY' and awk[0][3] == "published for opposition" and awk[0][5] == "9;35"
+    if not ok:
+        mismatch += 1
+        print("CSV MISMATCH %r: %d matches, %d csv rows, header=%s" % (q, n, len(rows) - 1, rows[:1]))
+    csv_checked += 1
+
+print("selftest_site: %s (%d texts sharded, %d queries end-to-end, %d CSV exports)"
+      % ("PASS" if mismatch == 0 else "FAIL(%d)" % mismatch, len(texts), len(QUERIES), csv_checked))
 sys.exit(0 if mismatch == 0 else 1)

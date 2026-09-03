@@ -163,8 +163,22 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
       var link = location.origin + location.pathname + "?q=" + encodeURIComponent(q);
       try { history.replaceState(null, "", "?q=" + encodeURIComponent(q)); } catch (e) {}
       var share = document.createElement("p"); share.className = "note"; share.id = "share";
-      share.innerHTML = "Link to this report (re-runs against the latest issue): <code></code> <button type='button' id='copy' style='font-size:.8rem;padding:4px 10px'>Copy link</button>";
+      share.innerHTML = "Link to this report (re-runs against the latest issue): <code></code> <button type='button' id='copy' style='font-size:.8rem;padding:4px 10px'>Copy link</button>" +
+        (rep.matches.length ? " <button type='button' id='dlcsv' style='font-size:.8rem;padding:4px 10px'></button>" : "");
       share.querySelector("code").textContent = link;
+      if (rep.matches.length) {
+        var dl = share.querySelector("#dlcsv");
+        dl.textContent = "Download all " + rep.matches.length + " hit" + (rep.matches.length === 1 ? "" : "s") + " as CSV";
+        dl.title = "Every flagged mark (not just the 50 shown), with serial, event, Gazette date, classes, why flagged and its TSDR link";
+        dl.addEventListener("click", function () {
+          var blob = new Blob(["\ufeff" + tmReport.hitsCsv(q, rep.matches)], { type: "text/csv;charset=utf-8" });
+          var a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "trademark-similarity-" + q.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) + "-" + (manifest && manifest.generated ? manifest.generated : "latest") + ".csv";
+          document.body.appendChild(a); a.click();
+          setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+        });
+      }
       share.querySelector("button").addEventListener("click", function () {
         var btn = this;
         var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy link"; }, 1500); };
