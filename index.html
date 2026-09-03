@@ -40,7 +40,7 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
 <body>
 <main>
 <h1>Is a confusingly-similar trademark about to register?</h1>
-<p class="sub">Type your brand name. This page checks it against <span id="corpus">every US trademark published for opposition or registered in the last ~4 months</span> using edit-distance + phonetic + rare-shared-word matching — the same open-source matcher we <a href="https://github.com/APVentureEngine/trademark-watch">benchmark publicly</a> on 45 real USPTO §2(d) case pairs (36/36 must-flag pairs caught, 0 false positives on 20 negative controls; the full per-pair table is regenerated on every refresh). Free, no login, runs entirely in your browser.</p>
+<p class="sub">Type your brand name. This page checks it against <span id="corpus">every US trademark published for opposition or registered in the last ~4 months</span> using edit-distance + phonetic + rare-shared-word matching — the same open-source matcher we <a href="https://github.com/APVentureEngine/trademark-watch">benchmark publicly</a> on 45 real USPTO §2(d) case pairs — 36 must-flag pairs (36/36 caught) plus 9 borderline pairs where either outcome is acceptable (6/9 flagged, informational) — and 20 unrelated-name negative controls (0 false positives); the full 65-row table is regenerated on every refresh. Free, no login, runs entirely in your browser.</p>
 
 <form id="f">
 <input type="text" id="q" placeholder="e.g. Northstar Coffee" autocomplete="off" maxlength="120" required>
