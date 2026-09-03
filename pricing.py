@@ -105,3 +105,17 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+# c106: delivery wording. We do NOT send email ourselves (no mail key; A014).
+# What IS true today: every alert page has an RSS feed, and a free RSS-to-email
+# forwarder turns that into an inbox alert the same day. Say exactly that —
+# never "on the roadmap" — on every surface. Verified 2026-09-03: blogtrottr.com
+# is live, free, offers "As soon as possible" delivery.
+EMAIL_ROUTE_HTML = ('Want it in your inbox? We do not send email ourselves yet: paste your alert page\'s '
+                    '<code>feed.xml</code> address into a free RSS-to-email forwarder such as '
+                    '<a href="https://blogtrottr.com/" rel="nofollow">Blogtrottr</a> (choose "as soon as possible") '
+                    'and each hit lands in your email the same day it reaches the page. Takes about a minute, no account with us.')
+EMAIL_ROUTE_TEXT = ("Want it in your inbox? We do not send email ourselves yet: paste the page's feed.xml address into a "
+                    "free RSS-to-email forwarder such as Blogtrottr (blogtrottr.com, choose 'as soon as possible') and each "
+                    "hit lands in your email the same day it reaches the page.")

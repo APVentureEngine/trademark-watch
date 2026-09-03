@@ -59,7 +59,7 @@ def build(total, base_date, gen_date, issues):
     A("")
     A("- Free 30-day watch of one mark (no card): https://approj.gumroad.com/l/tm-free-watch")
     A("- " + PRICE_YEAR + " watch of one mark, one payment, no auto-renewal: https://approj.gumroad.com/l/pwvfma")
-    A("- Alerts are delivered as a private alert page plus an RSS feed. Email alerts are not built yet.")
+    A("- Alerts are delivered as a private alert page plus an RSS feed. We do not send email ourselves; a free RSS-to-email forwarder (e.g. Blogtrottr) delivers the feed to an inbox the same day.")
     A("")
     A("## Limits worth quoting accurately")
     A("")
@@ -80,7 +80,7 @@ def main(argv=None):
         t2 = build(361260, "2026-05-05", "2026-09-01", 18)
         assert t1 == t2
         assert "361,260" in t1 and "18 weekly issues" in t1
-        assert "not built yet" in t1          # email honesty
+        assert "do not send email ourselves" in t1 and "Blogtrottr" in t1   # email honesty (c106)
         assert "%s" not in t1 and "%d" not in t1
         print("gen_llms selftest: OK (%d bytes)" % len(t1))
         return 0

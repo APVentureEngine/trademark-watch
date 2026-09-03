@@ -35,7 +35,7 @@ import shutil
 import sys
 import tempfile
 from datetime import date
-from pricing import PRICE_YEAR
+from pricing import PRICE_YEAR, EMAIL_ROUTE_HTML
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WATCHLIST = os.path.join(HERE, "watchlist.json")
@@ -113,6 +113,8 @@ def render_page(w, hist, today):
                      "a new entry appears here every Tuesday a USPTO Official Gazette issue contains "
                      "a similar mark. Quiet weeks add a line to the checked list, nothing else.</p>"
                      % expires)
+    if not expired:
+        parts.append("<p class=\"note\"><b>Email.</b> " + EMAIL_ROUTE_HTML + "</p>")
     parts.append("<p class=\"note\">A mark <i>published for opposition</i> can be opposed (or an "
                  "extension requested) for 30 days from its Gazette date. %s</p>" % DISCLAIMER)
     if not days:

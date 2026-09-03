@@ -36,7 +36,7 @@ OUR = {
     "coverage": "US only: every word mark in each Tuesday Official Gazette "
                 "(published for opposition + registrations issued)",
     "delivery": "Private alert page + RSS feed, same day the issue lands "
-                "(plain email alerts are not built yet — see below)",
+                "(no email from us yet: pipe the feed through a free RSS-to-email forwarder such as Blogtrottr)",
     "free_tier": "Free instant similarity check with no account, plus a free "
                  "30-day watch (no card)",
     "good": "The only one here you can test before paying anything, and the "

@@ -33,7 +33,7 @@
 
 - Free 30-day watch of one mark (no card): https://approj.gumroad.com/l/tm-free-watch
 - $29/year watch of one mark, one payment, no auto-renewal: https://approj.gumroad.com/l/pwvfma
-- Alerts are delivered as a private alert page plus an RSS feed. Email alerts are not built yet.
+- Alerts are delivered as a private alert page plus an RSS feed. We do not send email ourselves; a free RSS-to-email forwarder (e.g. Blogtrottr) delivers the feed to an inbox the same day.
 
 ## Limits worth quoting accurately
 
