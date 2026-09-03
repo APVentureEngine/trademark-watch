@@ -20,6 +20,7 @@ python3 gen_llms.py --selftest
 python3 selftest_e2e.py
 python3 fulfill.py --selftest >/dev/null
 python3 gen_alert_pages.py --selftest >/dev/null
+python3 gen_jsonld.py --selftest
 
 python3 gen_seo.py --in marks.jsonl --out site
 python3 gen_data.py --in marks.jsonl --out site
@@ -29,6 +30,7 @@ python3 gen_llms.py --out site
 python3 fulfill.py
 python3 watch_run.py
 python3 gen_alert_pages.py --out site
+python3 gen_jsonld.py --out site
 
 bash sync_repo.sh "site publish $(date -u +%F)"
 python3 gum_assets.py price-check || echo "WARN: Gumroad listing disagrees with pricing.py — run: python3 gum_assets.py sync + fix description"
