@@ -24,6 +24,7 @@
 - [Permalink form](https://apventureengine.github.io/trademark-watch/?q=BRAND+NAME): pre-fills and runs the check on load — safe to link to
 - [Newly published marks by class](https://apventureengine.github.io/trademark-watch/filings/): 45 pages, rebuilt after each issue
 - [Trademark watch services compared](https://apventureengine.github.io/trademark-watch/compare.html): dated prices for the paid alternatives, including where they beat us
+- [What happens in the 30-day opposition window](https://apventureengine.github.io/trademark-watch/opposition-window.html): timeline, extension deadlines and current TTAB fees, dated
 - [Source, matcher and pipeline](https://github.com/APVentureEngine/trademark-watch)
 
 ## Paid
