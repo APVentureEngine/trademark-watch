@@ -12,7 +12,7 @@ watch runner matches against new Gazette filings, plus delivery setup:
       Needs no account and no key, so every sale with an email has a live
       delivery channel. The required GitHub field accepts "none"/"-"/"n/a".
 
-Custom fields on product yqoJ16p67-UfQ1hnOtExvQ== ($49/yr, 1 mark):
+Custom fields on product yqoJ16p67-UfQ1hnOtExvQ== (paid, 1 mark; price in pricing.py):
   "Trademark to watch (exact text of your mark)"   required
   "GitHub username ..."                            optional once email is live
 watchlist.json: sale_id -> {mark, email, user|null, start, expires(+365d)}.
@@ -33,6 +33,7 @@ from datetime import datetime, timezone, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import mailer  # noqa: E402
+from pricing import PRICE_YEAR, OLD_PRICE  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FULFILLED = os.path.join(HERE, "fulfilled.json")
@@ -41,6 +42,12 @@ WATCHLIST = os.path.join(HERE, "watchlist.json")
 OWNER = "APVentureEngine"
 ALERTS_REPO = "tm-watch-alerts"
 PRODUCT_IDS = {"yqoJ16p67-UfQ1hnOtExvQ=="}
+# c95: a FREE 30-day watch (Gumroad $0+ listing /l/tm-free-watch, created by
+# API) is the top-of-funnel. Same pipeline, same alert page, shorter clock.
+# plan -> (label, days). Anything not in PLANS is ignored by fulfilment.
+FREE_PRODUCT_ID = "DXbAI_1fRuKYAp8J7GUz0Q=="
+PLANS = {"yqoJ16p67-UfQ1hnOtExvQ==": ("paid", 365),
+         FREE_PRODUCT_ID: ("free30", 30)}
 GH_FIELD_HINT = "github"
 MARK_FIELD_HINT = "trademark"
 SALES_AFTER = "2026-09-01"
@@ -55,9 +62,23 @@ def extract_email(sale):
     return v if EMAIL_RE.match(v) and len(v) <= 254 else None
 
 
-def welcome_message(mark, expires, user):
+def welcome_message(mark, expires, user, plan="paid"):
     repo_line = ("Your GitHub user %s has also been invited to the private alert-history "
                  "repo github.com/%s/%s.\n" % (user, OWNER, ALERTS_REPO)) if user else ""
+    if plan == "free30":
+        return ("Your free trademark watch for %s is active" % mark,
+                ("Your free 30-day watch is active.\n\n"
+                "Watched mark: %s\nFree watch runs until: %s\n\n"
+                "Your private alert page (bookmark it; it has an RSS feed): open %salerts/ and enter "
+                "this mark plus this email address. The page is live within one refresh cycle (at most 24h).\n\n"
+                "Every Tuesday the USPTO publishes the Trademark Official Gazette. The same day we run your "
+                "mark against every newly published and newly registered word mark (name + phonetic + variant "
+                "forms) and put anything similar on your page, with the USPTO TSDR link. Quiet weeks mean an "
+                "empty page — they are logged as checked.\n\n"
+                "After %s the watch stops and the page tells you how to continue for " + PRICE_YEAR + " (one payment, "
+                "no auto-renewal). Nothing renews automatically and there is no card on file.\n\n"
+                "Not legal advice: a flag means a human should look, not that anything is infringing.\n")
+                % (mark, expires, SITE, expires))
     text = ("Your TM Watch is active.\n\n"
             "Watched mark: %s\nActive until: %s (one-time payment; we email a reminder "
             "two weeks before expiry)\n\n"
@@ -204,6 +225,10 @@ def selftest():
     assert SITE + "alerts/" in body
     subj, body = welcome_message("ACME", "2027-09-01", "octocat")
     assert "octocat" in body and ALERTS_REPO in body
+    subj, body = welcome_message("ACME", "2026-10-02", None, "free30")
+    assert "free" in subj.lower() and "2026-10-02" in body and PRICE_YEAR in body and OLD_PRICE not in body
+    assert "github.com" not in body and SITE + "alerts/" in body
+    assert PLANS[FREE_PRODUCT_ID] == ("free30", 30) and PLANS["yqoJ16p67-UfQ1hnOtExvQ=="][1] == 365
     for cf, want in cases_user:
         got = extract_username(cf)
         if got != want:
@@ -231,8 +256,10 @@ def main():
     watchlist = load(WATCHLIST)
     n_seen = n_new = 0
     for s in iter_sales(gr):
-        if s.get("product_id") not in PRODUCT_IDS:
+        plan_days = PLANS.get(s.get("product_id"))
+        if not plan_days:
             continue
+        plan, days = plan_days
         n_seen += 1
         sid = str(s.get("id"))
         if sid in fulfilled:
@@ -245,7 +272,7 @@ def main():
         email = extract_email(s)
         stamp = datetime.now(timezone.utc)
         ts = stamp.strftime("%Y-%m-%dT%H:%M:%SZ")
-        expires = (stamp + timedelta(days=365)).strftime("%Y-%m-%d")
+        expires = (stamp + timedelta(days=days)).strftime("%Y-%m-%d")
         if not mark or not (email or user):
             attention[sid] = {"why": "missing mark text, or neither email nor username",
                               "raw": s.get("custom_fields"), "ts": ts}
@@ -276,7 +303,7 @@ def main():
                     user = None
         # (a) email welcome (primary channel)
         if email and mailer.configured():
-            subj, text = welcome_message(mark, expires, user)
+            subj, text = welcome_message(mark, expires, user, plan)
             ok, info = mailer.send(email, subj, text)
             if ok:
                 delivery.append("email")
@@ -289,8 +316,8 @@ def main():
         if email:
             delivery.append("page")
         watchlist[sid] = {"mark": mark, "email": email, "user": user,
-                          "start": ts, "expires": expires}
-        fulfilled[sid] = {"status": "watching", "delivery": delivery, "ts": ts}
+                          "start": ts, "expires": expires, "plan": plan}
+        fulfilled[sid] = {"status": "watching", "plan": plan, "delivery": delivery, "ts": ts}
         n_new += 1
         if delivery:
             attention.pop(sid, None)
@@ -299,12 +326,13 @@ def main():
                               "user": user, "ts": ts}
         for pr in problems:
             print("FULFILL-ATTENTION: sale %s: %s" % (sid, pr))
-        print("fulfill: watching %r for sale %s via %s" % (mark, sid, "+".join(delivery) or "NONE"))
+        print("fulfill: watching %r (%s, expires %s) for sale %s via %s"
+              % (mark, plan, expires, sid, "+".join(delivery) or "NONE"))
     if not dry:
         save(FULFILLED, fulfilled)
         save(ATTENTION, attention)
         save(WATCHLIST, watchlist)
-    print("fulfill: %d paid sales seen, %d newly fulfilled, %d watching, %d needing attention"
+    print("fulfill: %d watch orders seen, %d newly fulfilled, %d watching, %d needing attention"
           % (n_seen, n_new, len(watchlist), len(attention)))
     sys.exit(0)
 

@@ -1,4 +1,4 @@
-# TM Watch — free trademark similarity check + $49/yr automated Gazette watch
+# TM Watch — free trademark similarity check + $29/yr automated Gazette watch
 
 **Free tool:** https://apventureengine.github.io/trademark-watch/ — type a
 brand name, get an instant similarity report against every US trademark
@@ -8,9 +8,12 @@ machine. Every report has a permanent link that re-runs against the latest
 issue, e.g. https://apventureengine.github.io/trademark-watch/?q=Kodiak%20Coffee
 — each flagged serial links to its live USPTO TSDR status page.
 
-**Paid:** $49/yr per mark — every new USPTO Official Gazette issue (weekly,
-Tuesdays) is matched against your mark and you get an alert file (GitHub
-notifies you) the same day, while the 30-day opposition window is open.
+**Paid:** $29/yr per mark, one payment, no auto-renewal — every new USPTO
+Official Gazette issue (weekly, Tuesdays) is matched against your mark and any
+hit lands on your private alert page + RSS feed the same day, while the 30-day
+opposition window is open (a private GitHub alert repo is optional; plain email
+alerts are not built yet). First 30 days free, no card:
+https://approj.gumroad.com/l/tm-free-watch
 https://approj.gumroad.com/l/pwvfma
 
 ## Data

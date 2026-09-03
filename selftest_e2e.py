@@ -12,7 +12,7 @@ Asserts:
   index: gen_index.build accepts parser output
   watch: planted collision (NYKE ATHLETICS vs watched NIKE) alerts; noise
          doesn't; alert file honest (TSDR link + disclaimer)
-  seo:   sitemap has 47 URLs (report + overview + 45 classes); planted mark
+  seo:   sitemap has 52 URLs (report + filings + data + compare + opposition-window + diy + cost + 45 classes); planted mark
          on its class page; determinism (two builds byte-identical)
 
 Fatal on any failure (exit 1) — wired into refresh.sh gates.
@@ -124,11 +124,11 @@ def main():
         for sd in (site1, site2):
             os.makedirs(sd)
             n = gen_seo.build(marks, sd, "https://example.test/tm")
-            assert n == 47, n
+            assert n == 52, n   # 45 classes + filings index + /data/ + /compare.html (c97) + /opposition-window.html (c98) + /diy-trademark-watch.html (c99) + /trademark-watch-cost.html (c100)
         c25 = open(os.path.join(site1, "filings", "class-25.html")).read()
         assert "NYKE ATHLETICS" in c25
         sm1 = open(os.path.join(site1, "sitemap.xml")).read()
-        assert sm1.count("<url>") == 47
+        assert sm1.count("<url>") == 52
         for rel in ("sitemap.xml", os.path.join("filings", "index.html"),
                     os.path.join("filings", "class-25.html")):
             b1 = open(os.path.join(site1, rel), "rb").read()

@@ -32,7 +32,7 @@
 ## Paid
 
 - Free 30-day watch of one mark (no card): https://approj.gumroad.com/l/tm-free-watch
-- $49/year watch of one mark, one payment, no auto-renewal: https://approj.gumroad.com/l/pwvfma
+- $29/year watch of one mark, one payment, no auto-renewal: https://approj.gumroad.com/l/pwvfma
 - Alerts are delivered as a private alert page plus an RSS feed. Email alerts are not built yet.
 
 ## Limits worth quoting accurately

@@ -801,8 +801,7 @@
    "flag": true,
    "kinds": [
     "containment",
-    "tokens",
-    "rare-token"
+    "tokens"
    ],
    "m1": "PERRY'S PIZZA",
    "m2": "PERRY'S",
@@ -816,8 +815,7 @@
    "flag": true,
    "kinds": [
     "containment",
-    "tokens",
-    "rare-token"
+    "tokens"
    ],
    "m1": "RICHARD PETTY'S ACCU TUNE",
    "m2": "ACCU-TUNE",
@@ -909,8 +907,7 @@
    "expect": "any",
    "flag": true,
    "kinds": [
-    "tokens",
-    "rare-token"
+    "tokens"
    ],
    "m1": "GOLDEN CRUST",
    "m2": "ADOLPH'S GOLD'N CRUST",
@@ -1570,8 +1567,7 @@
     "identical",
     "edit",
     "phonetic-equal",
-    "tokens",
-    "rare-token"
+    "tokens"
    ],
    "m1": "A+ TUTORS",
    "m2": "A PLUS TUTORS",
@@ -1735,10 +1731,8 @@
   },
   {
    "expect": "parity",
-   "flag": true,
-   "kinds": [
-    "rare-token"
-   ],
+   "flag": false,
+   "kinds": [],
    "m1": "KODIAK OUTDOORS",
    "m2": "KODIAK BUILDING PARTNERS",
    "norm1": "KODIAK OUTDOORS",
@@ -1748,10 +1742,8 @@
   },
   {
    "expect": "parity",
-   "flag": true,
-   "kinds": [
-    "rare-token"
-   ],
+   "flag": false,
+   "kinds": [],
    "m1": "KODIAKS OUTDOORS",
    "m2": "KODIAK BUILDING",
    "norm1": "KODIAKS OUTDOORS",
@@ -1973,10 +1965,8 @@
   },
   {
    "expect": "parity",
-   "flag": true,
-   "kinds": [
-    "rare-token"
-   ],
+   "flag": false,
+   "kinds": [],
    "m1": "KODIAK COFFEE",
    "m2": "KODIAC BREW",
    "norm1": "KODIAK COFFEE",
@@ -1986,10 +1976,8 @@
   },
   {
    "expect": "parity",
-   "flag": true,
-   "kinds": [
-    "rare-token"
-   ],
+   "flag": false,
+   "kinds": [],
    "m1": "LUMINA SKIN",
    "m2": "LUMIN PEPTIDES",
    "norm1": "LUMINA SKIN",
@@ -2050,10 +2038,8 @@
   },
   {
    "expect": "parity",
-   "flag": true,
-   "kinds": [
-    "rare-token"
-   ],
+   "flag": false,
+   "kinds": [],
    "m1": "REDWOODS PRESS",
    "m2": "REDWOOD CAPITAL",
    "norm1": "REDWOODS PRESS",

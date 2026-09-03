@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Private alert pages: one unlisted page + RSS feed per paid watch (c84).
 
-Why: the Gumroad checkout REQUIRES a GitHub username (custom fields are not
-editable via API) and email delivery has no key (A014). The site review said
+Why: at the time (c84) the Gumroad checkout REQUIRED a GitHub username and
+email delivery had no key (A014). (c88 correction: custom fields ARE editable
+via PUT /v2/products/<id>/custom_fields/<name> — the GitHub field is now
+optional; these pages remain the account-free default channel.) The site review said
 the declared buyer (SMB brand owner) bounces at "GitHub username". This is
 the delivery channel that needs NO account, NO email key and NO human:
 
@@ -33,6 +35,7 @@ import shutil
 import sys
 import tempfile
 from datetime import date
+from pricing import PRICE_YEAR
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WATCHLIST = os.path.join(HERE, "watchlist.json")
@@ -87,10 +90,23 @@ def render_page(w, hist, today):
              "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"TM Watch alerts — %s\" href=\"feed.xml\">"
              % _h(mark), "<style>%s</style></head><body>" % CSS,
              "<h1>TM Watch — %s</h1>" % _h(mark)]
-    if expired:
+    free = w.get("plan") == "free30"   # c95: free 30-day watch, same pipeline
+    if expired and free:
+        parts.append(("<p><b>Your free 30-day watch ended on %s.</b> The alert history below stays "
+                     "online and nothing was charged. To keep this page updating every Tuesday, "
+                     "<a href=\"%s\">continue for " + PRICE_YEAR + "</a> — one payment, no auto-renewal; enter "
+                     "the same mark and the same email so this page keeps working.</p>")
+                     % (expires, BUY_URL))
+    elif expired:
         parts.append("<p><b>This watch expired on %s.</b> The alert history below stays online; "
                      "<a href=\"%s\">renew for another year</a> (enter the same mark and purchase "
                      "email so this page keeps working).</p>" % (expires, BUY_URL))
+    elif free:
+        parts.append(("<p class=\"ok\">Free watch active until <b>%s</b> — no card, nothing renews. "
+                     "Bookmark this page or subscribe to its <a href=\"feed.xml\">RSS feed</a>: a new "
+                     "entry appears every Tuesday a USPTO Official Gazette issue contains a similar "
+                     "mark, and quiet weeks add a line to the checked list. When the 30 days are up "
+                     "you can <a href=\"%s\">continue for " + PRICE_YEAR + "</a>.</p>") % (expires, BUY_URL))
     else:
         parts.append("<p class=\"ok\">Watch active until <b>%s</b> (one-time payment, no auto-renewal). "
                      "Bookmark this page or subscribe to its <a href=\"feed.xml\">RSS feed</a> — "

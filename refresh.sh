@@ -28,6 +28,9 @@ python3 tmog_parse.py --selftest     # ST.96 gazette parser
 python3 fetch_tmog.py --selftest     # merge/window/new-key logic
 python3 watch_run.py --selftest      # alert generation + expiry handling
 python3 gen_alert_pages.py --selftest # private alert pages + finder JS parity (c84)
+python3 gen_compare.py --selftest    # comparison page: determinism + staleness marker (c97)
+python3 gen_guides.py --selftest     # opposition-window guide: fees + staleness marker (c98)
+python3 gen_llms.py --selftest       # llms.txt renders live corpus numbers (c97)
 python3 selftest_e2e.py              # synthetic TDXF -> full pipeline
 
 # STAGE fetch: KEYLESS. Pull any new Official Gazette issue (public CDN, no
@@ -42,10 +45,27 @@ if [ -f marks.jsonl ]; then
   # df>=10 line, and the published benchmark claim must reflect the shipped
   # table, not last week's. Fatal (set -e).
   python3 gen_rarity.py --in marks.jsonl
+  # c96: the frozen parity vectors bake in the rarity table; a token crossing
+  # the df>=10 line makes them "STALE-VECTORS" and failed the whole refresh
+  # (Sep 3, first run after 5 new issues). Re-freeze from live matcher.py
+  # first; selftest_js still compares JS against LIVE python, so the gate
+  # keeps its teeth (and the recall floor below is unchanged).
+  python3 gen_vectors.py
   python3 selftest.py > benchmark-results.txt
   python3 selftest_js.py
   python3 gen_index.py --in marks.jsonl --out site/index
   python3 gen_seo.py --in marks.jsonl --out site
+  # public CSV downloads + dataset page (c87). Issue files are immutable and
+  # accumulate past the 120-day marks.jsonl window, so this never rewrites
+  # history; git only sees the new issue each Tuesday.
+  python3 gen_data.py --in marks.jsonl --out site
+  # buyer-intent comparison page (c97): prices are hand-verified facts in
+  # competitors.json, everything else is rendered from the live index.
+  python3 gen_compare.py --out site
+  # procedural explainer ("published for opposition, what now") -> free-watch CTA (c98)
+  python3 gen_guides.py --out site
+  # llms.txt for answer engines / coding agents (c97), rendered live.
+  python3 gen_llms.py --out site
 else
   MODE=synth
   echo "SYNTH MODE: no marks.jsonl (fetch never succeeded) — local index only, no push"
@@ -66,30 +86,8 @@ if [ "$MODE" = "real" ]; then
   # is the worst failure this product can have.
   python3 watch_run.py
   python3 gen_alert_pages.py --out site
-  # sync site -> public repo (repo/ is the git clone of APVentureEngine/trademark-watch)
-  cp site/index.html site/report.js site/common-tokens.json repo/
-  rm -rf repo/alerts && cp -r site/alerts repo/alerts
-  cp benchmark-results.txt repo/benchmark/RESULTS.txt   # per-pair table, regenerated each refresh
-  mkdir -p repo/index && cp site/index/*.json repo/index/
-  cp site/sitemap.xml repo/ 2>/dev/null || echo "note: no sitemap.xml yet"
-  cp site/robots.txt repo/robots.txt
-  cp indexnow_key.txt "repo/$(cat indexnow_key.txt).txt"
-  if [ -d site/filings ]; then
-    mkdir -p repo/filings && cp site/filings/*.html repo/filings/
-  fi
-  ( cd repo
-    git add -A
-    if ! git diff --cached --quiet; then
-      if ! git diff --cached --quiet -- sitemap.xml; then touch ../.sitemap_changed; fi
-      git commit -m "index refresh $(date -u +%F)"
-      git push https://x-access-token:$GITHUB_ORG_TOKEN@github.com/APVentureEngine/trademark-watch.git main
-    fi
-  )
-  # IndexNow only when the URL set changed (warn-feed c52 policy); non-fatal.
-  if [ -f .sitemap_changed ]; then
-    rm -f .sitemap_changed
-    python3 indexnow_submit.py || echo "WARN: indexnow submit failed (non-fatal)"
-  fi
+  # sync site (+ current source) -> public repo and push: ONE script shared with publish.sh (c104)
+  bash sync_repo.sh "index refresh $(date -u +%F)"
   # Hugging Face mirror (second discovery channel, c73). Non-fatal.
   if [ -n "${HF_TOKEN:-}" ]; then
     python3 hf_mirror.py 2>&1 | grep -v -i warning

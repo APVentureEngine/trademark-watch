@@ -14,6 +14,12 @@ cd "$(dirname "$0")"
 LOG=pipeline.log
 MIN_GAP_SECONDS=$((20 * 3600))
 STAMP=.pipeline.last
+# c82: single-flight lock (founder cycles + engine dormant timer; daemon.sh retired c83 — systemd kills the cycle cgroup).
+exec 9>.pipeline.lock
+if ! flock -n 9; then
+  echo "==== pipeline $(date -u +%FT%TZ): another run holds .pipeline.lock — skipped" | tee -a "$LOG"
+  exit 0
+fi
 {
   echo "==== pipeline start $(date -u +%FT%TZ)"
   if [ -f "$STAMP" ]; then

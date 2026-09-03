@@ -19,10 +19,12 @@ import html
 import json
 import os
 import sys
+from pricing import PRICE_YR
 
 BASE_DEFAULT = "https://apventureengine.github.io/trademark-watch"
 MAX_ROWS = 200
 RECENT_DAYS = 14  # overview table window
+WINDOW_DAYS = 120  # marks.jsonl retention window (fetch_tmog.py)
 
 CLASS_NAMES = {
     1: "Chemicals", 2: "Paints", 3: "Cosmetics & cleaning", 4: "Lubricants & fuels",
@@ -51,7 +53,9 @@ STYLE = ("body{font:16px/1.5 -apple-system,Segoe UI,sans-serif;max-width:860px;"
 def cta(base):
     return ('<p><a class="cta" href="%s/">Run a free instant similarity check '
             'on your mark</a> &nbsp; <a href="https://approj.gumroad.com/l/pwvfma">'
-            'Automated weekly Gazette watch — $49/yr</a></p>' % base)
+            'Automated weekly Gazette watch — %s</a> &nbsp; '
+            '<a href="%s/compare.html">Compare trademark watch services and '
+            'prices</a></p>' % (base, PRICE_YR, base))
 
 FOOT = ('<p class="note">Source: USPTO Trademark Official Gazette weekly XML '
         '(marks published for opposition + registrations issued), regenerated '
@@ -86,6 +90,28 @@ def elabel(r):
             "registered": "Registered"}.get(r.get("event"), "Filed")
 
 
+def issue_changelog(rows, limit=12):
+    """Per-Gazette-issue counts (published / registered) for a set of rows —
+    a dated, data-derived changelog so every page carries visible proof of
+    the weekly cadence. Empty string when there is nothing to show."""
+    per = {}
+    for r in rows:
+        d = edate(r)
+        ev = r.get("event") or "filed"
+        per.setdefault(d, {})[ev] = per.setdefault(d, {}).get(ev, 0) + 1
+    if not per:
+        return ""
+    trs = "".join("<tr><td>%s</td><td>%d</td><td>%d</td><td>%d</td></tr>"
+                  % (d, v.get("published", 0), v.get("registered", 0), sum(v.values()))
+                  for d, v in sorted(per.items(), reverse=True)[:limit])
+    return ("<h2>Change log by Gazette issue</h2>"
+            "<p class=note>Counts of marks in this class per weekly USPTO Official Gazette "
+            "issue currently in the %d-day window (newest first). A new row appears after "
+            "each Tuesday issue is ingested.</p>"
+            "<table><tr><th>Gazette issue</th><th>Published for opposition</th>"
+            "<th>Registered</th><th>Total</th></tr>%s</table>" % (WINDOW_DAYS, trs))
+
+
 def row_html(r):
     return ("<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"
             % (r["serial"], esc(r["mark"]), edate(r), elabel(r),
@@ -97,7 +123,11 @@ def build(rows, out_dir, base):
     os.makedirs(fdir, exist_ok=True)
     rows = sorted(rows, key=lambda r: (edate(r), r["serial"]), reverse=True)
     newest = edate(rows[0]) if rows else "n/a"
-    urls = [base + "/", base + "/filings/"]
+    urls = [base + "/", base + "/filings/", base + "/data/",
+            base + "/compare.html",
+            base + "/opposition-window.html",
+            base + "/diy-trademark-watch.html",
+            base + "/trademark-watch-cost.html"]
 
     # per-class pages
     by_class = {}
@@ -105,8 +135,10 @@ def build(rows, out_dir, base):
         for c in r.get("classes", []):
             by_class.setdefault(c, []).append(r)
     for c in range(1, 46):
-        crows = by_class.get(c, [])[:MAX_ROWS]
+        call = by_class.get(c, [])
+        crows = call[:MAX_ROWS]
         cname = CLASS_NAMES.get(c, "")
+        chlog = issue_changelog(call)
         title = ("Newly published & registered trademarks — Class %d (%s) — updated %s"
                  % (c, cname, newest))
         body = ("<h1>Newly published &amp; registered US trademarks — Class %d: %s</h1>"
@@ -114,10 +146,11 @@ def build(rows, out_dir, base):
                 "class %d from the USPTO Trademark Official Gazette, as of the %s issue. "
                 "A mark published for opposition can be opposed for 30 days from that date.</p>%s"
                 "<table><tr><th>Serial</th><th>Mark</th><th>Gazette date</th>"
-                "<th>Event</th><th>Classes</th></tr>%s</table>"
+                "<th>Event</th><th>Classes</th></tr>%s</table>%s"
                 % (c, esc(cname), len(crows), c, newest, cta(base),
                    "".join(row_html(r) for r in crows)
-                   or "<tr><td colspan=5>No recent marks parsed.</td></tr>"))
+                   or "<tr><td colspan=5>No recent marks parsed.</td></tr>",
+                   chlog))
         with open(os.path.join(fdir, "class-%02d.html" % c), "w") as f:
             f.write(page(title, body, base, "%s/filings/class-%02d.html" % (base, c)))
         urls.append("%s/filings/class-%02d.html" % (base, c))
@@ -128,13 +161,16 @@ def build(rows, out_dir, base):
     body = ("<h1>Newly published &amp; registered US trademarks — updated every Gazette issue</h1>"
             "<p>%d marks in the current window; latest Official Gazette issue %s. "
             "Top classes: %s.</p>%s"
+            "%s<p class=note>Want the raw records? Every Gazette issue is a "
+            "free CSV on the <a href=\"../data/\">data downloads page</a> "
+            "(public domain, no login).</p>"
             "<h2>Browse by class</h2><p>%s</p>"
             "<h2>Latest marks (last %d days, first %d)</h2>"
             "<table><tr><th>Serial</th><th>Mark</th><th>Gazette date</th><th>Event</th><th>Classes</th></tr>%s</table>"
             % (len(rows), newest,
                ", ".join("<a href=\"class-%02d.html\">%d (%s, %d)</a>"
                          % (c, c, esc(CLASS_NAMES.get(c, "")), n) for n, c in counts[:5]),
-               cta(base),
+               cta(base), issue_changelog(rows),
                " · ".join("<a href=\"class-%02d.html\">%d</a>" % (c, c)
                           for c in range(1, 46)),
                RECENT_DAYS, MAX_ROWS,

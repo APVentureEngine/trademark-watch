@@ -21,7 +21,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 MARKS = os.path.join(HERE, "marks.jsonl")
 STAGE = os.environ.get("HF_STAGE_DIR", os.path.join(HERE, "hf_staging"))
-DATASET_NAME = "uspto-gazette-word-marks"
+DATASET_NAME = "uspto-trademark-gazette-word-marks"  # renamed c91: HF search matches repo-id tokens; "trademark" had to be in the id (old id 307-redirects)
 COLS = ["serial", "mark", "event", "pub_date", "filing_date", "classes", "owner", "status"]
 
 CARD = """---
@@ -29,13 +29,26 @@ pretty_name: USPTO Trademark Official Gazette — word marks (rolling 120 days, 
 license: cc0-1.0
 language:
   - en
+task_categories:
+  - text-classification
+  - text-retrieval
 tags:
   - trademarks
   - uspto
+  - trademark-search
+  - public-records
+  - government-data
+  - weekly-updated
   - intellectual-property
   - official-gazette
   - brand-names
   - united-states
+  - trademark
+  - trademark-monitoring
+  - brand-protection
+  - legal
+  - nlp
+  - entity-matching
 size_categories:
   - 100K<n<1M
 configs:
@@ -59,6 +72,21 @@ in-browser similarity check (edit distance + phonetic + variant forms,
 benchmarked on real §2(d) pairs; matcher and benchmark are open source at
 [github.com/APVentureEngine/trademark-watch](https://github.com/APVentureEngine/trademark-watch)).
 
+## Quickstart
+
+```python
+from datasets import load_dataset
+ds = load_dataset("APProjects/uspto-trademark-gazette-word-marks", split="train")
+print(ds[0])
+```
+
+```python
+import pandas as pd
+df = pd.read_csv("https://huggingface.co/datasets/APProjects/"
+                 "uspto-trademark-gazette-word-marks/resolve/main/data/gazette_word_marks.csv")
+df[df["event"] == "published"].head()
+```
+
 ## Schema
 
 | column | meaning |
@@ -71,6 +99,14 @@ benchmarked on real §2(d) pairs; matcher and benchmark are open source at
 | `classes` | space-separated Nice international classes |
 | `owner` | applicant / registrant name as published |
 | `status` | USPTO status code at publication |
+
+## Permanent per-issue copies
+
+This mirror is a rolling ~120-day window. If you need a **citable, immutable**
+copy of a single Gazette issue, the same records are published as one CSV per
+issue (never rewritten) at
+[apventureengine.github.io/trademark-watch/data/](https://apventureengine.github.io/trademark-watch/data/)
+— public domain (CC0), no login, with a `manifest.json` listing every issue.
 
 ## Why a rolling window
 
