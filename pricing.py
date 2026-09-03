@@ -93,6 +93,30 @@ def check_index(root=None):
     return problems
 
 
+def check_readme(root=None):
+    """repo/README.md is HAND-maintained and is the artifact a stranger inspects
+    to decide we are real. c108 found it still saying email was the primary
+    delivery (retired c106) and alerts/<sha256(mark|email)> (passphrase added
+    c107). Assert the current truths and ban the retired claims."""
+    root = root or os.path.dirname(os.path.abspath(__file__))
+    p = os.path.join(root, "repo", "README.md")
+    if not os.path.exists(p):
+        return ["repo/README.md missing"]
+    s = open(p, encoding="utf-8").read()
+    problems = []
+    for bad, why in (
+        ("sha256(mark|email)>", "alert address omits the passphrase (c107)"),
+        ("email (primary", "email is NOT a delivery route we run (c106)"),
+        ("uspto-gazette-word-marks**", "old HF dataset id (renamed c91)"),
+    ):
+        if bad in s:
+            problems.append("README says %r — %s" % (bad, why))
+    for need in ("passphrase", "RSS-to-email", "not built yet", PRICE_YR):
+        if need not in s:
+            problems.append("README lacks %r" % need)
+    return problems
+
+
 def main():
     if "--audit" in sys.argv:
         hits = audit()
@@ -101,6 +125,10 @@ def main():
         probs = check_index()
         for p in probs:
             print("INDEX PRICE: " + p)
+        rp = check_readme()
+        for p in rp:
+            print("README CLAIM: " + p)
+        probs = probs + rp
         print("pricing audit: %d stray literal(s), %d index problem(s); price is %s"
               % (len(hits), len(probs), PRICE_YR))
         return 1 if (hits or probs) else 0

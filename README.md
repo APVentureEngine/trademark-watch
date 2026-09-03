@@ -30,10 +30,12 @@ Rolling 120-day window, regenerated after every issue.
 
 The whole window as one CSV (serial, mark, event, Gazette date, filing date,
 classes, owner, status), refreshed with every issue:
-**https://huggingface.co/datasets/APProjects/uspto-gazette-word-marks**
+**https://huggingface.co/datasets/APProjects/uspto-trademark-gazette-word-marks**
 
-Delivery for paid watches: email (primary, via `mailer.py`) plus an optional
-private alert-history repo; both idempotent per watch per day.
+Delivery for paid watches: a private, unlisted alert page + RSS feed (no
+account, no login) plus an optional private alert-history repo; both
+idempotent per watch per day. We do not send email ourselves yet — paste the
+page's `feed.xml` into any free RSS-to-email forwarder (e.g. Blogtrottr).
 
 ## Pipeline (stdlib Python, deterministic)
 
@@ -49,7 +51,7 @@ private alert-history repo; both idempotent per watch per day.
   refresh; a word is "rare" iff it appears in <10 of the ~200k marks).
 - `watch_run.py` — paid watches vs the latest issue → alert markdown → private
   alerts repo + `alert_history.json`. `gen_alert_pages.py` — one unlisted alert
-  page + RSS feed per paid watch at `alerts/<sha256(mark|email)>/` (no account
+  page + RSS feed per paid watch at `alerts/<sha256(mark|email|passphrase)>/` (no account
   needed; `alerts/` is the finder, computed client-side). `fulfill.py` —
   Gumroad sale → watchlist entry (+ optional repo invite).
 - `refresh.sh` — runs every self-test gate first (fatal), then the above.
