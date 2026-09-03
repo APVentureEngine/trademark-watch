@@ -24,8 +24,8 @@ Usage:
   python3 gen_compare.py --out site            (writes site/compare.html)
   python3 gen_compare.py --selftest
 """
-import argparse, datetime, html, json, os, sys
-from pricing import PRICE, PRICE_YR, PRICE_USD, OLD_PRICE, cheaper_competitors
+import argparse, datetime, html, json, os, re, sys
+from pricing import PRICE, PRICE_YR, PRICE_USD, OLD_PRICE, cheaper_competitors, bundle_break_even
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 STALE_DAYS = 90
@@ -105,10 +105,16 @@ def build(competitors, ours, data_date, corpus_total, corpus_base):
         )
 
     good_blocks = []
+    per_mark = [c["price_usd_year"] for c in comps
+                if c["price_usd_year"] > 0 and "marks" not in c.get("price_label", "")]
+    floor_per_mark = min(per_mark) if per_mark else PRICE_USD
     for c in comps:
+        good = c["good"]
+        if "{break_even}" in good:   # computed arithmetic, never typed (c104)
+            good = good.replace("{break_even}", str(bundle_break_even(c["price_usd_year"], floor_per_mark)))
         good_blocks.append(
             "<p><b>%s — %s.</b> %s%s</p>"
-            % (e(c["name"]), e(c["price_label"]), e(c["good"]),
+            % (e(c["name"]), e(c["price_label"]), e(good),
                (" " + e(c["note"])) if c.get("note") else "")
         )
 
@@ -279,6 +285,15 @@ def selftest():
     cheap = [dict(comps[0], name="Budget Co", price_label="$19/yr", price_usd_year=19)] + comps
     t3, _ = build(cheap, OUR, "2026-09-03", 262226, "2026-05-19")
     assert "not the cheapest line in the table above (Budget Co is)" in t3 and "lowest single-mark" not in t3
+    bund = dict(comps[1], name="Bundle Co", price_label="$99/yr for up to 5 marks", price_usd_year=99,
+                good="Five for $99 beats us from mark {break_even} onward.", verified_on="2026-09-01")
+    t4, _ = build(comps + [bund], OUR, "2026-09-03", 262226, "2026-05-19")
+    assert "from mark 4 onward" in t4 and "{break_even}" not in t4, "break-even must be computed from the floor price"
+    t5, _ = build(cheap + [bund], OUR, "2026-09-03", 262226, "2026-05-19")
+    assert "from mark 6 onward" in t5
+    with open(os.path.join(HERE, "competitors.json")) as f:
+        live, _ = build(json.load(f)["competitors"], OUR, "2026-09-03", 262226, "2026-05-19")
+    assert "{" not in re.sub(r"<style>.*?</style>", "", live, flags=re.S).split("<body>")[1], "unrendered placeholder"
     assert "lowest single-mark price" in t1  # c104: computed clause, see above
     assert "Cheaper than us." in t1
     # live numbers must be interpolated, never hardcoded

@@ -26,10 +26,11 @@ if [ -d site/data ]; then
   cp site/data/issues/*.csv repo/data/issues/
 fi
 # the repo advertises "matcher and benchmark are open source": keep the SOURCE current too
-cp pricing.py fetch_tmog.py fetch_trtdxfap.py fulfill.py gen_alert_pages.py gen_covers.py gen_compare.py gen_data.py gen_guides.py gen_index.py gen_llms.py gen_rarity.py gen_seo.py gen_vectors.py gum_assets.py hf_mirror.py indexnow_submit.py mailer.py matcher.js matcher.py parity-vectors.json pipeline.sh publish.sh refresh.sh sync_repo.sh selftest.js selftest.py selftest_e2e.py selftest_js.py selftest_site.py tdxf_parse.py tmog_parse.py watch_run.py repo/
+cp pricing.py fetch_tmog.py fetch_trtdxfap.py fulfill.py gen_alert_pages.py gen_covers.py gen_compare.py gen_data.py gen_guides.py gen_index.py gen_llms.py gen_rarity.py gen_seo.py gen_vectors.py gum_assets.py hf_mirror.py indexnow_submit.py mailer.py matcher.js matcher.py parity-vectors.json pipeline.sh publish.sh refresh.sh repo_meta.py sync_repo.sh selftest.js selftest.py selftest_e2e.py selftest_js.py selftest_site.py tdxf_parse.py tmog_parse.py watch_run.py repo/
 rm -rf repo/site   # pre-c104 stale copy of an old landing page; never recreate it
 # price literals: every shipped surface must agree with pricing.py (audited AFTER generation)
 python3 pricing.py --audit
+python3 repo_meta.py || echo "WARN: repo_meta failed (non-fatal)"
 
 ( cd repo
   git add -A
