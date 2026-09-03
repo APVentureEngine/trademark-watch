@@ -1,0 +1,39 @@
+# TM Watch — US trademark similarity check + weekly Gazette watch
+
+
+> Free instant similarity report for a brand name against every word mark
+> in the US Trademark Official Gazette (applications published for
+> opposition + registrations issued). The index covers 361,260 marks from 2026-05-05
+> to 2026-09-01 (18 weekly issues, a new one every Tuesday). The report runs
+> entirely in the reader's browser — no account, no server, nothing
+> typed is transmitted. Matching = edit distance + phonetic + variant
+> forms + a rare-shared-word rule; the matcher and its 45-pair USPTO
+> §2(d) benchmark are open source. Source data is US public domain.
+
+## Free data (stable, keyless HTTPS URLs)
+
+- [Latest Gazette issue, CSV](https://raw.githubusercontent.com/APVentureEngine/trademark-watch/main/data/latest.csv): every word mark in the newest issue
+- [Per-issue CSV archive](https://apventureengine.github.io/trademark-watch/data/): one immutable file per Gazette issue, plus a manifest
+- [Issue manifest, JSON](https://raw.githubusercontent.com/APVentureEngine/trademark-watch/main/data/manifest.json): every published issue file with row counts
+- [Full rolling index on Hugging Face](https://huggingface.co/datasets/APProjects/uspto-trademark-gazette-word-marks): the same records as a dataset
+- [Matcher benchmark results](https://raw.githubusercontent.com/APVentureEngine/trademark-watch/main/benchmark/RESULTS.txt): per-pair recall/false-positive table, regenerated every run
+
+## Tools and pages
+
+- [Instant similarity report](https://apventureengine.github.io/trademark-watch/): type a name, get flagged marks with USPTO TSDR links
+- [Permalink form](https://apventureengine.github.io/trademark-watch/?q=BRAND+NAME): pre-fills and runs the check on load — safe to link to
+- [Newly published marks by class](https://apventureengine.github.io/trademark-watch/filings/): 45 pages, rebuilt after each issue
+- [Trademark watch services compared](https://apventureengine.github.io/trademark-watch/compare.html): dated prices for the paid alternatives, including where they beat us
+- [Source, matcher and pipeline](https://github.com/APVentureEngine/trademark-watch)
+
+## Paid
+
+- Free 30-day watch of one mark (no card): https://approj.gumroad.com/l/tm-free-watch
+- $49/year watch of one mark, one payment, no auto-renewal: https://approj.gumroad.com/l/pwvfma
+- Alerts are delivered as a private alert page plus an RSS feed. Email alerts are not built yet.
+
+## Limits worth quoting accurately
+
+- United States only; word marks only (design-only logos are out of scope).
+- The searchable window is a rolling ~4 months of Gazette issues, not the whole US register.
+- A flag means "a human should look", not "this is infringement". Not legal advice.
