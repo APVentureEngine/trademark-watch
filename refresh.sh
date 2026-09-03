@@ -96,6 +96,15 @@ if [ "$MODE" = "real" ]; then
   else
     echo "hf_mirror: HF_TOKEN absent, skipped"
   fi
+  # HF Space mirror of the free checker (third discovery channel, c111). Derived
+  # from repo/index.html AFTER sync_repo.sh, so the Space can never show older
+  # copy than the site. Non-fatal; its own selftest is fatal to itself only.
+  if [ -n "${HF_TOKEN:-}" ]; then
+    python3 gen_space.py --sync 2>&1 | grep -v -i warning
+    if [ "${PIPESTATUS[0]}" = "0" ]; then echo "gen_space: OK"; else echo "gen_space: FAILED (non-fatal — Space may be stale/broken)"; fi
+  else
+    echo "gen_space: HF_TOKEN absent, skipped"
+  fi
 else
   # synth mode: still live-fire fulfillment so the wiring line appears.
   python3 fulfill.py
