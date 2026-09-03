@@ -21,6 +21,7 @@ python3 selftest_js.py               # matcher.js parity (quickjs)
 python3 selftest_site.py             # report.js sharding+pipeline parity
 python3 gen_index.py --selftest      # index build round-trip + determinism
 python3 gen_rarity.py --selftest     # common-token table (matcher rule 6)
+python3 alertkey.py --selftest       # c107: alert-page address + its wording
 python3 fulfill.py --selftest        # custom-field extraction + email welcome
 python3 mailer.py --selftest         # Brevo payload/rails (no network)
 python3 fetch_trtdxfap.py --selftest # legacy ODP path (kept; keyless now)
