@@ -26,6 +26,7 @@
 - [Trademark watch services compared](https://apventureengine.github.io/trademark-watch/compare.html): dated prices for the paid alternatives, including where they beat us
 - [What happens in the 30-day opposition window](https://apventureengine.github.io/trademark-watch/opposition-window.html): timeline, extension deadlines and current TTAB fees, dated
 - [Watch your own trademark for free: the weekly routine](https://apventureengine.github.io/trademark-watch/diy-trademark-watch.html): the DIY steps, the measured weekly volume, and where DIY breaks
+- [How much does a trademark watch cost](https://apventureengine.github.io/trademark-watch/trademark-watch-cost.html): published prices cheapest first with the date each was read, what moves the price, and the opposition fee that dwarfs all of them
 - [Source, matcher and pipeline](https://github.com/APVentureEngine/trademark-watch)
 
 ## Paid
