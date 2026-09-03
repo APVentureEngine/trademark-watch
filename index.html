@@ -28,6 +28,8 @@ button:disabled{opacity:.5}
 .cta{margin:34px 0;padding:18px;border:1px solid #dfe5f0;border-radius:10px;background:var(--soft)}
 .cta a.btn{display:inline-block;margin-top:8px;background:var(--acc);color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none}
 .price{font-size:1.25rem;font-weight:700}
+.cta a.btn2{display:inline-block;margin:8px 0 0 10px;background:#fff;color:var(--acc);border:1px solid var(--acc);padding:10px 18px;border-radius:8px;text-decoration:none}
+@media (max-width:520px){.cta a.btn2{margin-left:0;display:block;text-align:center}}
 table.sample{width:100%;border-collapse:collapse;font-size:.82rem;margin:8px 0}table.sample td,table.sample th{border-bottom:1px solid #dfe5f0;padding:5px 6px;text-align:left;vertical-align:top}
 h2{font-size:1.2rem;margin:34px 0 .4em}
 .faq p{margin:.5em 0}
@@ -54,6 +56,8 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
 <p class="price">$49 for one mark, 12 months — one-time payment, no auto-renewal</p>
 <p class="note">Attorney watch services start around $200/yr; the cheapest software watch we could find is $55/yr.</p>
 <a class="btn" id="buy" href="https://approj.gumroad.com/l/pwvfma?wanted=true">Watch my mark every Tuesday — $49/yr</a>
+<a class="btn2" id="tryfree" href="https://approj.gumroad.com/l/tm-free-watch?wanted=true">Or watch it free for 30 days</a>
+<p class="note">The free watch is the same matcher, the same private alert page and RSS feed, one mark, 30 days — no card, nothing renews. Keep it if it earns its keep.</p>
 </div>
 
 <h2>What an alert looks like</h2>
@@ -70,6 +74,7 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
 
 <h2 id="faq">How it works, refunds, contact</h2>
 <div class="faq">
+<p><b>Try it free first.</b> The <a href="https://approj.gumroad.com/l/tm-free-watch?wanted=true">free 30-day watch</a> costs nothing and asks for no card: give one mark and an email, and you get the same private alert page and RSS feed for 30 days, updated after every Tuesday Gazette issue. It stops on its own after 30 days — the page stays online and shows you how to continue.</p>
 <p><b>Buying.</b> Pay $49 on Gumroad and enter the exact text of your mark. No account of any kind is needed: within one refresh cycle (≤24h) you get a <b>private alert page</b> with its own RSS feed — open <a href="alerts/">alerts/</a>, type your mark and the email you paid with, and your browser computes the unlisted address locally (the page shows only your mark and public USPTO records — never your name or email — because this site is served from a public repository). Every Tuesday issue is matched against your mark and any hits appear on that page (subscribe to its feed in any reader to be notified; quiet weeks are logged as "checked"). The checkout also has an <b>optional</b> GitHub username field: leave it blank unless you want the private GitHub repository as a second copy of the alerts (then you are invited within 24h and can click "Watch" for GitHub emails). Plain email alerts are on the roadmap; existing buyers get them at no charge.</p>
 <p><b>What is watched.</b> Every word mark in the two Gazette sections that matter: applications published for opposition (~10,000/week) and registrations issued. Design-only marks (logos without words) are out of scope. Matching = edit distance + phonetic + variant forms + a rare-shared-word rule (a distinctive word both marks share that is uncommon across the ~200k-mark corpus, e.g. VEUVE, KODIAK — common words like PACIFIC or DENTAL never trigger it); the matcher and its 45-pair §2(d) benchmark are <a href="https://github.com/APVentureEngine/trademark-watch">open source</a>, so you can verify exactly what it will and will not catch.</p>
 <p><b>Term.</b> 12 months from purchase, one mark, no auto-renewal: your card is charged once, and when the year ends the watch simply stops — nothing is billed again. Two weeks before expiry you get a reminder alert with a link to buy another year if you want it. Several marks: buy once per mark (multi-mark bundles coming; ask).</p>
@@ -174,6 +179,9 @@ code{background:var(--soft);padding:1px 5px;border-radius:4px}
       $("buy").textContent = "Watch \u201c" + q + "\u201d every Tuesday \u2014 $49/yr";
       $("buy").href = "https://approj.gumroad.com/l/pwvfma?wanted=true&" +
         encodeURIComponent("Trademark to watch (exact text of your mark)") + "=" + encodeURIComponent(q);
+      $("tryfree").textContent = "Or watch \u201c" + q + "\u201d free for 30 days";
+      $("tryfree").href = "https://approj.gumroad.com/l/tm-free-watch?wanted=true&" +
+        encodeURIComponent("Trademark or brand name to watch (exact text)") + "=" + encodeURIComponent(q);
       $("cta").scrollIntoView({ behavior: "smooth", block: "nearest" });
     }).catch(function (e) {
       $("go").disabled = false;

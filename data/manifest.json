@@ -12,6 +12,36 @@
  ],
  "dataset": "USPTO Official Gazette word marks",
  "issues": {
+  "2026-05-19": {
+   "bytes": 1881289,
+   "csv": "issues/2026-05-19.csv",
+   "rows": 19270
+  },
+  "2026-05-26": {
+   "bytes": 1932593,
+   "csv": "issues/2026-05-26.csv",
+   "rows": 19857
+  },
+  "2026-06-02": {
+   "bytes": 1975794,
+   "csv": "issues/2026-06-02.csv",
+   "rows": 20266
+  },
+  "2026-06-09": {
+   "bytes": 1906612,
+   "csv": "issues/2026-06-09.csv",
+   "rows": 19628
+  },
+  "2026-06-16": {
+   "bytes": 1848983,
+   "csv": "issues/2026-06-16.csv",
+   "rows": 19031
+  },
+  "2026-06-23": {
+   "bytes": 1990478,
+   "csv": "issues/2026-06-23.csv",
+   "rows": 20420
+  },
   "2026-06-30": {
    "bytes": 1930596,
    "csv": "issues/2026-06-30.csv",
@@ -65,5 +95,5 @@
  },
  "latest_issue": "2026-09-01",
  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
- "total_rows": 203147
+ "total_rows": 321619
 }

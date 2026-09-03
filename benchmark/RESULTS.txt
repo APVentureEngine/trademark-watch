@@ -35,7 +35,7 @@
   [OK     ] 'SPARKS BY SASSAFRAS' vs 'SPARKS'  -> containment,tokens(1/1)
   [OK     ] 'CONFIRMCELLS' vs 'CONFIRM'  -> containment
   [OK     ] 'SMART-SCAN' vs 'SMART'  -> containment,tokens(1/1)
-  [OK     ] "PERRY'S PIZZA" vs "PERRY'S"  -> containment,tokens(1/1),rare-token(PERRY)
+  [OK     ] "PERRY'S PIZZA" vs "PERRY'S"  -> containment,tokens(1/1)
   [OK     ] "RICHARD PETTY'S ACCU TUNE" vs 'ACCU-TUNE'  -> containment,tokens(2/2),rare-token(ACCU)
   [OK     ] 'COLLEGIAN OF CALIFORNIA' vs 'COLLEGIENNE'  -> tokens(1/1)
   [OK     ] 'PEDI-RELAX' vs 'RELAX'  -> containment,tokens(1/1)
@@ -43,7 +43,7 @@
   [ok(any)] 'THE RITZ KIDS' vs 'RITZ'  -> whole-mark-token,tokens(1/1),rare-token(RITZ)
   [ok(any)] 'DEER-B-GON' vs 'DEER AWAY'  -> -
   [ok(any)] 'CATFISH BOBBERS' vs 'BOBBER'  -> containment,tokens(1/1),rare-token(BOBBER)
-  [ok(any)] 'GOLDEN CRUST' vs "ADOLPH'S GOLD'N CRUST"  -> tokens(2/2),rare-token(CRUST)
+  [ok(any)] 'GOLDEN CRUST' vs "ADOLPH'S GOLD'N CRUST"  -> tokens(2/2)
 == NEGATIVE CONTROLS ==
   [OK     ] 'BLUEFIN ANALYTICS' vs 'CARTWHEEL MEDIA'  -> -
   [OK     ] 'SOLSTICE COFFEE' vs 'MERIDIAN BAKERY'  -> -
