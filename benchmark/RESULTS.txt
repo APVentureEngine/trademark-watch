@@ -36,7 +36,7 @@
   [OK     ] 'CONFIRMCELLS' vs 'CONFIRM'  -> containment
   [OK     ] 'SMART-SCAN' vs 'SMART'  -> containment,tokens(1/1)
   [OK     ] "PERRY'S PIZZA" vs "PERRY'S"  -> containment,tokens(1/1)
-  [OK     ] "RICHARD PETTY'S ACCU TUNE" vs 'ACCU-TUNE'  -> containment,tokens(2/2),rare-token(ACCU)
+  [OK     ] "RICHARD PETTY'S ACCU TUNE" vs 'ACCU-TUNE'  -> containment,tokens(2/2)
   [OK     ] 'COLLEGIAN OF CALIFORNIA' vs 'COLLEGIENNE'  -> tokens(1/1)
   [OK     ] 'PEDI-RELAX' vs 'RELAX'  -> containment,tokens(1/1)
   [ok(any)] 'CAPITAL CITY BANK' vs 'CITIBANK'  -> -

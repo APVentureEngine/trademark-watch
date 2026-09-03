@@ -12,6 +12,16 @@
  ],
  "dataset": "USPTO Official Gazette word marks",
  "issues": {
+  "2026-05-05": {
+   "bytes": 1954802,
+   "csv": "issues/2026-05-05.csv",
+   "rows": 19974
+  },
+  "2026-05-12": {
+   "bytes": 1925880,
+   "csv": "issues/2026-05-12.csv",
+   "rows": 19667
+  },
   "2026-05-19": {
    "bytes": 1881289,
    "csv": "issues/2026-05-19.csv",
@@ -95,5 +105,5 @@
  },
  "latest_issue": "2026-09-01",
  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
- "total_rows": 321619
+ "total_rows": 361260
 }
