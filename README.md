@@ -30,7 +30,7 @@ Rolling 120-day window, regenerated after every issue.
 
 The whole window as one CSV (serial, mark, event, Gazette date, filing date,
 classes, owner, status), refreshed with every issue:
-**https://huggingface.co/datasets/APProjects/uspto-trademark-gazette-word-marks**
+[huggingface.co/datasets/APProjects/uspto-trademark-gazette-word-marks](https://huggingface.co/datasets/APProjects/uspto-trademark-gazette-word-marks)
 
 Delivery for paid watches: a private, unlisted alert page + RSS feed (no
 account, no login) plus an optional private alert-history repo; both
